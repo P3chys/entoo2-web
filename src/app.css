@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	* {
+		@apply border-light-border-primary dark:border-dark-border-primary;
+	}
+
+	html {
+		@apply bg-light-bg-primary dark:bg-dark-bg-primary;
+		@apply text-light-text-primary dark:text-dark-text-primary;
+	}
+
+	body {
+		@apply antialiased;
+	}
+
+	h1 {
+		@apply text-3xl font-bold;
+	}
+
+	h2 {
+		@apply text-2xl font-semibold;
+	}
+
+	h3 {
+		@apply text-xl font-semibold;
+	}
+
+	h4 {
+		@apply text-lg font-medium;
+	}
+
+	a {
+		@apply text-accent-primary hover:text-accent-hover transition-colors;
+	}
+}
+
+@layer components {
+	.btn {
+		@apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+		@apply focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2;
+		@apply dark:focus:ring-offset-dark-bg-primary;
+	}
+
+	.btn-primary {
+		@apply bg-accent-primary text-white hover:bg-accent-hover;
+		@apply active:scale-95;
+	}
+
+	.btn-secondary {
+		@apply bg-light-bg-tertiary dark:bg-dark-bg-tertiary;
+		@apply text-light-text-primary dark:text-dark-text-primary;
+		@apply hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover;
+	}
+
+	.btn-ghost {
+		@apply bg-transparent hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover;
+		@apply text-light-text-primary dark:text-dark-text-primary;
+	}
+
+	.input {
+		@apply w-full px-4 py-2 rounded-lg border;
+		@apply bg-light-bg-primary dark:bg-dark-bg-secondary;
+		@apply text-light-text-primary dark:text-dark-text-primary;
+		@apply border-light-border-primary dark:border-dark-border-primary;
+		@apply focus:outline-none focus:ring-2 focus:ring-accent-primary;
+		@apply transition-all duration-200;
+	}
+
+	.card {
+		@apply bg-light-bg-secondary dark:bg-dark-bg-secondary;
+		@apply border border-light-border-primary dark:border-dark-border-primary;
+		@apply rounded-lg p-6;
+		@apply shadow-sm hover:shadow-md transition-shadow;
+	}
+
+	.link {
+		@apply text-accent-primary hover:text-accent-hover;
+		@apply hover:underline transition-colors;
+	}
+}

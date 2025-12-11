@@ -1,0 +1,107 @@
+{
+	"common": {
+		"appName": "Entoo2",
+		"loading": "Loading...",
+		"error": "Error",
+		"success": "Success",
+		"save": "Save",
+		"cancel": "Cancel",
+		"delete": "Delete",
+		"edit": "Edit",
+		"search": "Search",
+		"filter": "Filter",
+		"close": "Close",
+		"back": "Back",
+		"next": "Next",
+		"previous": "Previous",
+		"upload": "Upload",
+		"download": "Download",
+		"logout": "Logout"
+	},
+	"auth": {
+		"login": "Login",
+		"register": "Register",
+		"email": "Email",
+		"password": "Password",
+		"confirmPassword": "Confirm Password",
+		"forgotPassword": "Forgot Password",
+		"noAccount": "Don't have an account?",
+		"haveAccount": "Already have an account?",
+		"emailRequired": "Email is required",
+		"passwordRequired": "Password is required",
+		"passwordMismatch": "Passwords do not match",
+		"loginSuccess": "Successfully logged in",
+		"loginError": "Login error",
+		"registerSuccess": "Successfully registered",
+		"registerError": "Registration error"
+	},
+	"navigation": {
+		"home": "Home",
+		"semesters": "Semesters",
+		"subjects": "Subjects",
+		"favorites": "Favorites",
+		"profile": "Profile",
+		"admin": "Administration"
+	},
+	"semesters": {
+		"title": "Semesters",
+		"create": "Create Semester",
+		"name": "Name",
+		"description": "Description",
+		"startDate": "Start Date",
+		"endDate": "End Date",
+		"noSemesters": "No semesters"
+	},
+	"subjects": {
+		"title": "Subjects",
+		"create": "Create Subject",
+		"name": "Name",
+		"code": "Code",
+		"description": "Description",
+		"credits": "Credits",
+		"semester": "Semester",
+		"teachers": "Teachers",
+		"noSubjects": "No subjects",
+		"addToFavorites": "Add to Favorites",
+		"removeFromFavorites": "Remove from Favorites"
+	},
+	"documents": {
+		"title": "Documents",
+		"upload": "Upload Document",
+		"name": "Name",
+		"description": "Description",
+		"file": "File",
+		"uploadedBy": "Uploaded by",
+		"uploadedAt": "Uploaded at",
+		"noDocuments": "No documents",
+		"maxSize": "Maximum file size is 50 MB",
+		"supportedFormats": "Supported formats: PDF, DOCX, PPTX, images, TXT, XLS, XLSX"
+	},
+	"comments": {
+		"title": "Comments",
+		"add": "Add Comment",
+		"edit": "Edit Comment",
+		"delete": "Delete Comment",
+		"noComments": "No comments",
+		"writeComment": "Write a comment..."
+	},
+	"questions": {
+		"title": "Questions & Answers",
+		"ask": "Ask Question",
+		"answer": "Answer",
+		"noQuestions": "No questions",
+		"question": "Question",
+		"answers": "Answers"
+	},
+	"search": {
+		"placeholder": "Search documents...",
+		"results": "Search Results",
+		"noResults": "No results",
+		"searching": "Searching..."
+	},
+	"theme": {
+		"light": "Light Mode",
+		"dark": "Dark Mode",
+		"toggle": "Toggle Theme"
+	}
+}

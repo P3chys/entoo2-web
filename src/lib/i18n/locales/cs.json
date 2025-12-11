@@ -1,0 +1,107 @@
+{
+	"common": {
+		"appName": "Entoo2",
+		"loading": "Načítání...",
+		"error": "Chyba",
+		"success": "Úspěch",
+		"save": "Uložit",
+		"cancel": "Zrušit",
+		"delete": "Smazat",
+		"edit": "Upravit",
+		"search": "Hledat",
+		"filter": "Filtrovat",
+		"close": "Zavřít",
+		"back": "Zpět",
+		"next": "Další",
+		"previous": "Předchozí",
+		"upload": "Nahrát",
+		"download": "Stáhnout",
+		"logout": "Odhlásit se"
+	},
+	"auth": {
+		"login": "Přihlásit se",
+		"register": "Registrovat se",
+		"email": "E-mail",
+		"password": "Heslo",
+		"confirmPassword": "Potvrdit heslo",
+		"forgotPassword": "Zapomenuté heslo",
+		"noAccount": "Nemáte účet?",
+		"haveAccount": "Již máte účet?",
+		"emailRequired": "E-mail je povinný",
+		"passwordRequired": "Heslo je povinné",
+		"passwordMismatch": "Hesla se neshodují",
+		"loginSuccess": "Úspěšně přihlášen",
+		"loginError": "Chyba při přihlášení",
+		"registerSuccess": "Úspěšně zaregistrován",
+		"registerError": "Chyba při registraci"
+	},
+	"navigation": {
+		"home": "Domů",
+		"semesters": "Semestry",
+		"subjects": "Předměty",
+		"favorites": "Oblíbené",
+		"profile": "Profil",
+		"admin": "Administrace"
+	},
+	"semesters": {
+		"title": "Semestry",
+		"create": "Vytvořit semestr",
+		"name": "Název",
+		"description": "Popis",
+		"startDate": "Datum zahájení",
+		"endDate": "Datum ukončení",
+		"noSemesters": "Žádné semestry"
+	},
+	"subjects": {
+		"title": "Předměty",
+		"create": "Vytvořit předmět",
+		"name": "Název",
+		"code": "Kód",
+		"description": "Popis",
+		"credits": "Kredity",
+		"semester": "Semestr",
+		"teachers": "Vyučující",
+		"noSubjects": "Žádné předměty",
+		"addToFavorites": "Přidat do oblíbených",
+		"removeFromFavorites": "Odebrat z oblíbených"
+	},
+	"documents": {
+		"title": "Dokumenty",
+		"upload": "Nahrát dokument",
+		"name": "Název",
+		"description": "Popis",
+		"file": "Soubor",
+		"uploadedBy": "Nahráno uživatelem",
+		"uploadedAt": "Nahráno",
+		"noDocuments": "Žádné dokumenty",
+		"maxSize": "Maximální velikost souboru je 50 MB",
+		"supportedFormats": "Podporované formáty: PDF, DOCX, PPTX, obrázky, TXT, XLS, XLSX"
+	},
+	"comments": {
+		"title": "Komentáře",
+		"add": "Přidat komentář",
+		"edit": "Upravit komentář",
+		"delete": "Smazat komentář",
+		"noComments": "Žádné komentáře",
+		"writeComment": "Napsat komentář..."
+	},
+	"questions": {
+		"title": "Otázky a odpovědi",
+		"ask": "Položit otázku",
+		"answer": "Odpovědět",
+		"noQuestions": "Žádné otázky",
+		"question": "Otázka",
+		"answers": "Odpovědi"
+	},
+	"search": {
+		"placeholder": "Hledat v dokumentech...",
+		"results": "Výsledky vyhledávání",
+		"noResults": "Žádné výsledky",
+		"searching": "Vyhledávání..."
+	},
+	"theme": {
+		"light": "Světlý režim",
+		"dark": "Tmavý režim",
+		"toggle": "Přepnout téma"
+	}
+}
