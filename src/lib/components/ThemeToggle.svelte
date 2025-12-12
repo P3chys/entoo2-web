@@ -10,7 +10,7 @@
 </script>
 
 <button
-	onclick={toggle}
+	on:click={toggle}
 	class="p-2 rounded-lg hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover transition-colors"
 	aria-label={$_('theme.toggle')}
 	title={theme === 'dark' ? $_('theme.light') : $_('theme.dark')}
@@ -18,6 +18,7 @@
 	{#if theme === 'dark'}
 		<!-- Sun icon -->
 		<svg
+			aria-hidden="true"
 			xmlns="http://www.w3.org/2000/svg"
 			class="h-5 w-5"
 			fill="none"
@@ -34,6 +35,7 @@
 	{:else}
 		<!-- Moon icon -->
 		<svg
+			aria-hidden="true"
 			xmlns="http://www.w3.org/2000/svg"
 			class="h-5 w-5"
 			fill="none"

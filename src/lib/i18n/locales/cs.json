@@ -16,7 +16,14 @@
 		"previous": "Předchozí",
 		"upload": "Nahrát",
 		"download": "Stáhnout",
-		"logout": "Odhlásit se"
+		"logout": "Odhlásit se",
+		"welcome": "Vítej zpět"
+	},
+	"dashboard": {
+		"quickActions": "Rychlé akce",
+		"recentActivity": "Poslední aktivita",
+		"noActivity": "Žádná aktivita",
+		"noActivityDesc": "Začněte procházením semestrů a předmětů, abyste zde viděli svou aktivitu."
 	},
 	"auth": {
 		"login": "Přihlásit se",

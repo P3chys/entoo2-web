@@ -35,13 +35,26 @@
 	a {
 		@apply text-accent-primary hover:text-accent-hover transition-colors;
 	}
+
+	/* Improved focus styles using focus-visible */
+	*:focus-visible {
+		@apply outline-2 outline-offset-2 outline-accent-primary;
+	}
 }
 
 @layer components {
+	/* Skip link for accessibility */
+	.skip-link {
+		@apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4;
+		@apply z-50 px-4 py-2 bg-accent-primary text-white rounded-lg;
+		@apply font-medium shadow-lg;
+	}
+
 	.btn {
 		@apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
-		@apply focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2;
-		@apply dark:focus:ring-offset-dark-bg-primary;
+		@apply focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2;
+		@apply dark:focus-visible:ring-offset-dark-bg-primary;
+		@apply disabled:opacity-50 disabled:cursor-not-allowed;
 	}
 
 	.btn-primary {
@@ -53,11 +66,18 @@
 		@apply bg-light-bg-tertiary dark:bg-dark-bg-tertiary;
 		@apply text-light-text-primary dark:text-dark-text-primary;
 		@apply hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover;
+		@apply active:scale-95;
 	}
 
 	.btn-ghost {
 		@apply bg-transparent hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover;
 		@apply text-light-text-primary dark:text-dark-text-primary;
+		@apply active:scale-95;
+	}
+
+	.btn-danger {
+		@apply bg-error text-white hover:bg-error/90;
+		@apply active:scale-95;
 	}
 
 	.input {
@@ -65,7 +85,7 @@
 		@apply bg-light-bg-primary dark:bg-dark-bg-secondary;
 		@apply text-light-text-primary dark:text-dark-text-primary;
 		@apply border-light-border-primary dark:border-dark-border-primary;
-		@apply focus:outline-none focus:ring-2 focus:ring-accent-primary;
+		@apply focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary;
 		@apply transition-all duration-200;
 	}
 
@@ -80,4 +100,97 @@
 		@apply text-accent-primary hover:text-accent-hover;
 		@apply hover:underline transition-colors;
 	}
+
+	/* Hero section styling */
+	.hero {
+		@apply relative overflow-hidden;
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		@apply text-white py-12 px-6 rounded-xl;
+	}
+
+	/* Stats bar styling */
+	.stats-bar {
+		@apply flex flex-wrap gap-6 items-center justify-between;
+		@apply py-4 px-6 rounded-lg;
+		@apply bg-light-bg-secondary dark:bg-dark-bg-secondary;
+		@apply border border-light-border-primary dark:border-dark-border-primary;
+	}
+
+	.stat-item {
+		@apply flex flex-col items-center gap-1;
+	}
+
+	.stat-value {
+		@apply text-3xl font-bold text-accent-primary;
+	}
+
+	.stat-label {
+		@apply text-sm text-light-text-secondary dark:text-dark-text-secondary;
+	}
+
+	/* Empty state styling */
+	.empty-state {
+		@apply text-center py-12 px-6;
+		@apply max-w-md mx-auto;
+	}
+
+	.empty-icon {
+		@apply w-24 h-24 mx-auto mb-4;
+		@apply text-light-text-tertiary dark:text-dark-text-tertiary;
+		@apply opacity-0 animate-fade-in;
+	}
+
+	.empty-title {
+		@apply text-xl font-semibold mb-2;
+	}
+
+	.empty-description {
+		@apply text-light-text-secondary dark:text-dark-text-secondary mb-6;
+	}
+
+	/* Activity list styling */
+	.activity-list {
+		@apply space-y-3;
+	}
+
+	.activity-item {
+		@apply flex items-start gap-3 p-3 rounded-lg;
+		@apply hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover;
+		@apply transition-colors duration-150;
+	}
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+/* Screen reader only utility */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}
+
+.focus\:not-sr-only:focus {
+	position: static;
+	width: auto;
+	height: auto;
+	padding: inherit;
+	margin: inherit;
+	overflow: visible;
+	clip: auto;
+	white-space: normal;
 }

@@ -16,7 +16,14 @@
 		"previous": "Previous",
 		"upload": "Upload",
 		"download": "Download",
-		"logout": "Logout"
+		"logout": "Logout",
+		"welcome": "Welcome back"
+	},
+	"dashboard": {
+		"quickActions": "Quick Actions",
+		"recentActivity": "Recent Activity",
+		"noActivity": "No Recent Activity",
+		"noActivityDesc": "Start by browsing semesters and subjects to see your activity here."
 	},
 	"auth": {
 		"login": "Login",
