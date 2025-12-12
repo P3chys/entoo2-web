@@ -24,24 +24,36 @@ export interface RegisterRequest {
 
 export interface Semester {
 	id: string;
-	name: string;
-	description: string;
-	start_date: string;
-	end_date: string;
+	name_cs: string;
+	name_en: string;
+	order_index: number;
 	created_at: string;
 	updated_at: string;
+	subjects?: Subject[];
+}
+
+export interface SubjectTeacher {
+	id: string;
+	subject_id: string;
+	teacher_name: string;
+	topic_cs: string;
+	topic_en: string;
+	created_at: string;
 }
 
 export interface Subject {
 	id: string;
 	semester_id: string;
-	name: string;
+	name_cs: string;
+	name_en: string;
 	code: string;
-	description: string;
+	description_cs: string;
+	description_en: string;
 	credits: number;
 	created_at: string;
 	updated_at: string;
 	semester?: Semester;
+	teachers?: SubjectTeacher[];
 }
 
 export interface Document {

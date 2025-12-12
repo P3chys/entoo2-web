@@ -30,48 +30,50 @@ function createAuthStore() {
 
 			update((state) => ({ ...state, loading: true }));
 
-			const { data, error } = await api.get<User>('/api/v1/auth/me');
+			const { data, error } = await api.get<{ success: boolean; data: User }>('/api/v1/auth/me');
 
-			if (error || !data) {
+			if (error || !data || !data.success) {
 				// Token is invalid, clear it
 				api.setToken(null);
 				update((state) => ({ ...state, user: null, loading: false, initialized: true }));
 				return;
 			}
 
-			update((state) => ({ ...state, user: data, loading: false, initialized: true }));
+			update((state) => ({ ...state, user: data.data, loading: false, initialized: true }));
 		},
 
 		async login(credentials: LoginRequest) {
 			update((state) => ({ ...state, loading: true }));
 
-			const { data, error } = await api.post<AuthResponse>('/api/v1/auth/login', credentials);
+			const { data, error } = await api.post<{ success: boolean; data: AuthResponse }>('/api/v1/auth/login', credentials);
 
-			if (error || !data) {
+			if (error || !data || !data.success) {
 				update((state) => ({ ...state, loading: false }));
 				return { error: error || { error: 'Unknown error', message: 'Login failed', status: 500 } };
 			}
 
-			api.setToken(data.access_token);
-			update((state) => ({ ...state, user: data.user, loading: false }));
+			const authData = data.data;
+			api.setToken(authData.access_token);
+			update((state) => ({ ...state, user: authData.user, loading: false }));
 
-			return { data };
+			return { data: authData };
 		},
 
 		async register(credentials: RegisterRequest) {
 			update((state) => ({ ...state, loading: true }));
 
-			const { data, error } = await api.post<AuthResponse>('/api/v1/auth/register', credentials);
+			const { data, error } = await api.post<{ success: boolean; data: AuthResponse }>('/api/v1/auth/register', credentials);
 
-			if (error || !data) {
+			if (error || !data || !data.success) {
 				update((state) => ({ ...state, loading: false }));
 				return { error: error || { error: 'Unknown error', message: 'Registration failed', status: 500 } };
 			}
 
-			api.setToken(data.access_token);
-			update((state) => ({ ...state, user: data.user, loading: false }));
+			const authData = data.data;
+			api.setToken(authData.access_token);
+			update((state) => ({ ...state, user: authData.user, loading: false }));
 
-			return { data };
+			return { data: authData };
 		},
 
 		async logout() {
