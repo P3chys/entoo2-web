@@ -40,7 +40,14 @@
 		"loginSuccess": "Successfully logged in",
 		"loginError": "Login error",
 		"registerSuccess": "Successfully registered",
-		"registerError": "Registration error"
+		"registerError": "Registration error",
+		"tagline": "Organize. Share. Succeed.",
+		"description": "Your central hub for managing study materials, collaborating with peers, and staying organized throughout your academic journey.",
+		"welcomeMessage": "Welcome back! Please enter your credentials.",
+		"registerMessage": "Create your account to get started.",
+		"feature1": "Organize semesters and subjects",
+		"feature2": "Share documents seamlessly",
+		"feature3": "Collaborate with classmates"
 	},
 	"navigation": {
 		"home": "Home",
@@ -110,5 +117,8 @@
 		"light": "Light Mode",
 		"dark": "Dark Mode",
 		"toggle": "Toggle Theme"
+	},
+	"language": {
+		"select": "Select Language"
 	}
 }

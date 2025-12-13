@@ -4,7 +4,7 @@ import os from 'os';
 import path from 'path';
 
 test.describe('File Upload Feature', () => {
-	test('complete file upload workflow', async ({ page }) => {
+	test('complete file upload, preview, and download workflow', async ({ page }) => {
 		console.log('Starting file upload test...');
 
 		// Step 1: Login
@@ -60,14 +60,56 @@ test.describe('File Upload Feature', () => {
 		const hasFile = await page.locator('text=test-document.txt').isVisible();
 		console.log('File visible in list:', hasFile);
 
-		// Clean up test file
-		fs.unlinkSync(testFilePath);
+		// Step 4: Test file preview
+		console.log('Step 4: Testing file preview...');
+		// Click the preview button (eye icon) - it's the first square button in the actions
+		const previewButton = page.locator('button[title="Preview"]').first();
+		await previewButton.click();
+		await page.waitForTimeout(2000);
+		console.log('Preview button clicked');
+		await page.screenshot({ path: 'tests/screenshots/07-file-preview-modal.png', fullPage: true });
 
-		// Step 4: Check dashboard for recent activity
-		console.log('Step 4: Checking dashboard...');
+		// Verify preview modal is visible
+		const previewModal = page.locator('div[role="dialog"]');
+		const isPreviewVisible = await previewModal.isVisible();
+		console.log('Preview modal visible:', isPreviewVisible);
+
+		// Verify the file content is displayed
+		const previewContent = page.locator('pre');
+		const hasContent = await previewContent.isVisible();
+		console.log('Preview content visible:', hasContent);
+
+		// Close preview modal
+		const closeButton = page.locator('button[aria-label="Close preview"]');
+		await closeButton.click();
+		await page.waitForTimeout(500);
+		console.log('Preview modal closed');
+		await page.screenshot({ path: 'tests/screenshots/08-preview-closed.png', fullPage: true });
+
+		// Step 5: Test file download
+		console.log('Step 5: Testing file download...');
+		// The download button is the second button (after preview)
+		const downloadButton = page.getByTitle('Download').first();
+
+		// Set up download handler
+		const downloadPromise = page.waitForEvent('download');
+		await downloadButton.click();
+		const download = await downloadPromise;
+		console.log('Download initiated:', download.suggestedFilename());
+		await page.screenshot({ path: 'tests/screenshots/09-after-download.png', fullPage: true });
+
+		// Clean up test file
+		try {
+			fs.unlinkSync(testFilePath);
+		} catch (e) {
+			// Ignore if file is locked
+		}
+
+		// Step 6: Check dashboard for recent activity
+		console.log('Step 6: Checking dashboard...');
 		await page.goto('/');
 		await page.waitForTimeout(2000);
-		await page.screenshot({ path: 'tests/screenshots/07-dashboard-with-activity.png', fullPage: true });
+		await page.screenshot({ path: 'tests/screenshots/10-dashboard-with-activity.png', fullPage: true });
 
 		const hasActivitySection = await page.locator('text=Recent Activity').isVisible();
 		console.log('Recent Activity section visible:', hasActivitySection);

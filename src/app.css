@@ -16,6 +16,24 @@
 		@apply antialiased;
 	}
 
+	/* Smooth theme transitions for all elements */
+	*,
+	*::before,
+	*::after {
+		transition-property: background-color, border-color, color, fill, stroke, box-shadow, opacity;
+		transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+		transition-duration: 0.5s;
+	}
+
+	/* Faster transitions for interactive elements */
+	button,
+	a,
+	input,
+	select,
+	textarea {
+		transition-duration: 0.3s;
+	}
+
 	h1 {
 		@apply text-3xl font-bold;
 	}
@@ -160,6 +178,39 @@
 	}
 }
 
+/* View Transitions API for smooth theme switching */
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: 0.5s;
+	animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-old(root) {
+	animation-name: theme-fade-out;
+}
+
+::view-transition-new(root) {
+	animation-name: theme-fade-in;
+}
+
+@keyframes theme-fade-out {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes theme-fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
 	*,
@@ -168,6 +219,11 @@
 		animation-duration: 0.01ms !important;
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.01ms !important;
+	}
+
+	::view-transition-old(root),
+	::view-transition-new(root) {
+		animation-duration: 0.01ms !important;
 	}
 }
 

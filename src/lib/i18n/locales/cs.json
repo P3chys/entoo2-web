@@ -40,7 +40,14 @@
 		"loginSuccess": "Úspěšně přihlášen",
 		"loginError": "Chyba při přihlášení",
 		"registerSuccess": "Úspěšně zaregistrován",
-		"registerError": "Chyba při registraci"
+		"registerError": "Chyba při registraci",
+		"tagline": "Organizuj. Sdílej. Uspěj.",
+		"description": "Váš centrální hub pro správu studijních materiálů, spolupráci se spolužáky a organizaci během celé akademické cesty.",
+		"welcomeMessage": "Vítejte zpět! Zadejte prosím své přihlašovací údaje.",
+		"registerMessage": "Vytvořte si účet a začněte.",
+		"feature1": "Organizujte semestry a předměty",
+		"feature2": "Sdílejte dokumenty bez námahy",
+		"feature3": "Spolupracujte se spolužáky"
 	},
 	"navigation": {
 		"home": "Domů",
@@ -110,5 +117,8 @@
 		"light": "Světlý režim",
 		"dark": "Tmavý režim",
 		"toggle": "Přepnout téma"
+	},
+	"language": {
+		"select": "Vybrat jazyk"
 	}
 }

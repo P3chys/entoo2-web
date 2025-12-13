@@ -79,7 +79,7 @@
 				</div>
 				<div class="hidden md:block ml-3">
 					<button
-						on:click={logout}
+						onclick={logout}
 						class="px-4 py-2 text-sm font-medium rounded-lg bg-light-bg-tertiary dark:bg-dark-bg-tertiary text-light-text-primary dark:text-dark-text-primary hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover transition-colors"
 					>
 						{$_('common.logout')}
@@ -93,7 +93,7 @@
 					aria-controls="mobile-menu"
 					aria-expanded={mobileMenuOpen}
 					aria-label="Toggle navigation menu"
-					on:click={toggleMobileMenu}
+					onclick={toggleMobileMenu}
 				>
 					<span class="sr-only">Open main menu</span>
 					{#if !mobileMenuOpen}
@@ -120,7 +120,7 @@
 					<a
 						href={item.href}
 						aria-current={$page.url.pathname === item.href ? 'page' : undefined}
-						on:click={closeMobileMenu}
+						onclick={closeMobileMenu}
 						class="block px-3 py-2 rounded-lg text-base font-medium no-underline {$page.url.pathname === item.href
 							? 'bg-accent-primary text-white'
 							: 'text-light-text-primary dark:text-dark-text-primary hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover'}"
@@ -132,7 +132,7 @@
 					<a
 						href="/admin"
 						aria-current={$page.url.pathname.startsWith('/admin') ? 'page' : undefined}
-						on:click={closeMobileMenu}
+						onclick={closeMobileMenu}
 						class="block px-3 py-2 rounded-lg text-base font-medium no-underline {$page.url.pathname.startsWith('/admin')
 							? 'bg-accent-primary text-white'
 							: 'text-light-text-primary dark:text-dark-text-primary hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover'}"
@@ -149,7 +149,7 @@
 					</div>
 					<div class="mt-3 px-2">
 						<button
-							on:click={logout}
+							onclick={logout}
 							class="w-full text-left px-3 py-2 rounded-lg text-base font-medium bg-light-bg-tertiary dark:bg-dark-bg-tertiary text-light-text-primary dark:text-dark-text-primary hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover transition-colors"
 						>
 							{$_('common.logout')}

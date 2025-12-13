@@ -6,7 +6,7 @@
 	import { themeStore } from '$stores/theme';
 	import '$lib/i18n';
 
-	let theme = $state($themeStore);
+	let theme = $derived($themeStore);
 
 	// Apply theme class to document
 	$effect(() => {

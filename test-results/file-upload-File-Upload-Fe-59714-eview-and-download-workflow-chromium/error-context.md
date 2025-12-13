@@ -1,0 +1,106 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - link "Skip to main content" [ref=e5] [cursor=pointer]:
+      - /url: "#main-content"
+    - navigation "Main navigation" [ref=e6]:
+      - generic [ref=e8]:
+        - link "Entoo2" [ref=e10] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e12]:
+          - link "Home" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - link "Semesters" [ref=e14] [cursor=pointer]:
+            - /url: /semesters
+          - link "Subjects" [ref=e15] [cursor=pointer]:
+            - /url: /subjects
+          - link "Favorites" [ref=e16] [cursor=pointer]:
+            - /url: /favorites
+          - link "Administration" [ref=e17] [cursor=pointer]:
+            - /url: /admin
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - combobox "language.select" [ref=e21]:
+              - option "Čeština"
+              - option "English"
+            - button "Toggle Theme" [ref=e22] [cursor=pointer]:
+              - img [ref=e23]
+          - button "Logout" [ref=e26] [cursor=pointer]
+    - main [ref=e27]:
+      - generic [ref=e28]:
+        - link "Back" [ref=e29] [cursor=pointer]:
+          - /url: /subjects
+          - img [ref=e30]
+          - text: Back
+        - generic [ref=e34]:
+          - generic [ref=e35]:
+            - generic [ref=e36]: CS101
+            - heading "Úvod" [level=1] [ref=e37]
+            - generic [ref=e38]: 5 kr.
+          - heading "Intro" [level=2] [ref=e39]
+          - generic [ref=e40]:
+            - paragraph [ref=e41]: hhh
+            - paragraph
+        - generic [ref=e42]:
+          - heading "Documents" [level=2] [ref=e44]
+          - generic [ref=e45]:
+            - region "Upload Document" [ref=e47]:
+              - generic [ref=e48]:
+                - img [ref=e50]
+                - generic [ref=e52]:
+                  - heading "Upload Document" [level=3] [ref=e53]
+                  - paragraph [ref=e54]: "Supported formats: PDF, DOCX, PPTX, images, TXT, XLS, XLSX"
+                - button "Upload" [ref=e55] [cursor=pointer]
+            - generic [ref=e57]:
+              - generic [ref=e58]:
+                - generic [ref=e59]:
+                  - img "File icon" [ref=e60]: 📄
+                  - generic [ref=e61]:
+                    - heading "pechova_cv_pdf.pdf" [level=4] [ref=e62]
+                    - generic [ref=e63]:
+                      - generic [ref=e64]: 73 KB
+                      - generic [ref=e65]: •
+                      - generic [ref=e66]: 12/13/2025
+                      - generic [ref=e67]: •
+                      - generic [ref=e68]: Admin
+                - generic [ref=e69]:
+                  - button "Download" [ref=e70] [cursor=pointer]:
+                    - img [ref=e71]
+                  - button "Delete" [ref=e73] [cursor=pointer]:
+                    - img [ref=e74]
+              - generic [ref=e76]:
+                - generic [ref=e77]:
+                  - img "File icon" [ref=e78]: 🖼️
+                  - generic [ref=e79]:
+                    - heading "001.jpg" [level=4] [ref=e80]
+                    - generic [ref=e81]:
+                      - generic [ref=e82]: 133.2 KB
+                      - generic [ref=e83]: •
+                      - generic [ref=e84]: 12/13/2025
+                      - generic [ref=e85]: •
+                      - generic [ref=e86]: Admin
+                - generic [ref=e87]:
+                  - button "Download" [ref=e88] [cursor=pointer]:
+                    - img [ref=e89]
+                  - button "Delete" [ref=e91] [cursor=pointer]:
+                    - img [ref=e92]
+              - generic [ref=e94]:
+                - generic [ref=e95]:
+                  - img "File icon" [ref=e96]: 📎
+                  - generic [ref=e97]:
+                    - heading "test-document.txt" [level=4] [ref=e98]
+                    - generic [ref=e99]:
+                      - generic [ref=e100]: 85 B
+                      - generic [ref=e101]: •
+                      - generic [ref=e102]: 12/13/2025
+                      - generic [ref=e103]: •
+                      - generic [ref=e104]: Admin
+                - generic [ref=e105]:
+                  - button "Download" [ref=e106] [cursor=pointer]:
+                    - img [ref=e107]
+                  - button "Delete" [ref=e109] [cursor=pointer]:
+                    - img [ref=e110]
+  - generic [ref=e112]: untitled page
+```

@@ -74,10 +74,9 @@
 
 			<!-- Brand Title and Tagline -->
 			<h1 class="text-4xl font-bold mb-4">{$_('common.appName')}</h1>
-			<p class="text-xl opacity-90 mb-6">Organize. Share. Succeed.</p>
+			<p class="text-xl opacity-90 mb-6">{$_('auth.tagline')}</p>
 			<p class="opacity-80 leading-relaxed">
-				Your central hub for managing study materials, collaborating with peers, and staying
-				organized throughout your academic journey.
+				{$_('auth.description')}
 			</p>
 
 			<!-- Features List -->
@@ -90,7 +89,7 @@
 							clip-rule="evenodd"
 						/>
 					</svg>
-					<span>Organize semesters and subjects</span>
+					<span>{$_('auth.feature1')}</span>
 				</div>
 				<div class="flex items-center gap-3">
 					<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -100,7 +99,7 @@
 							clip-rule="evenodd"
 						/>
 					</svg>
-					<span>Share documents seamlessly</span>
+					<span>{$_('auth.feature2')}</span>
 				</div>
 				<div class="flex items-center gap-3">
 					<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -110,7 +109,7 @@
 							clip-rule="evenodd"
 						/>
 					</svg>
-					<span>Collaborate with classmates</span>
+					<span>{$_('auth.feature3')}</span>
 				</div>
 			</div>
 		</div>
@@ -123,7 +122,7 @@
 			<div class="md:hidden mb-8 text-center">
 				<h1 class="text-3xl font-bold text-accent-primary mb-2">{$_('common.appName')}</h1>
 				<p class="text-light-text-secondary dark:text-dark-text-secondary">
-					Organize. Share. Succeed.
+					{$_('auth.tagline')}
 				</p>
 			</div>
 
@@ -131,12 +130,12 @@
 			<div class="mb-8">
 				<h2 class="text-3xl font-bold mb-2">{$_('auth.login')}</h2>
 				<p class="text-light-text-secondary dark:text-dark-text-secondary">
-					Welcome back! Please enter your credentials.
+					{$_('auth.welcomeMessage')}
 				</p>
 			</div>
 
 			<!-- Form -->
-			<form on:submit|preventDefault={handleSubmit} class="space-y-5">
+			<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-5">
 				{#if generalError}
 					<div
 						class="p-4 bg-error/10 border border-error rounded-lg text-error"

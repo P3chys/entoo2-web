@@ -29,13 +29,13 @@ export default {
 					bg: {
 						primary: '#0d1117',
 						secondary: '#161b22',
-						tertiary: '#1c2128',
-						hover: '#21262d'
+						tertiary: '#21262d',
+						hover: '#30363d'
 					},
 					text: {
-						primary: '#e6edf3',
-						secondary: '#8d96a0',
-						tertiary: '#636e7b',
+						primary: '#f0f6fc',
+						secondary: '#9198a1',
+						tertiary: '#768390',
 						inverse: '#0d1117'
 					},
 					border: {

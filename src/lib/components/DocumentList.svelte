@@ -3,11 +3,18 @@
 	import { api } from '$lib/utils/api';
 	import type { Document } from '$lib/types';
 	import Button from './Button.svelte';
+	import DocumentPreview from './DocumentPreview.svelte';
 
-	export let subjectId: string;
-	export let documents: Document[] = [];
-	export let currentUserId: string | undefined = undefined;
-	export let onDelete: (docId: string) => void = () => {};
+	interface Props {
+		subjectId: string;
+		documents?: Document[];
+		currentUserId?: string;
+		onDelete?: (docId: string) => void;
+	}
+
+	let { subjectId, documents = [], currentUserId = undefined, onDelete = () => {} }: Props = $props();
+
+	let previewDocument = $state<Document | null>(null);
 
 	const getFileIcon = (mimeType: string) => {
 		if (mimeType.includes('pdf')) return '📄';
@@ -27,11 +34,6 @@
 	};
 
 	const downloadDocument = async (doc: Document) => {
-		// Use window.open or fetch blob for download
-		// Direct link is easiest if token handling is transparent, but here we likely need auth header.
-		// However, browser download via link needs cookies or query param token.
-		// Since we use parsing of token in API, "DownloadDocument" handler checks header.
-		// A common way is to make a fetch request, get blob, and create object URL.
 		try {
 			const response = await fetch(`${api['baseUrl']}/api/v1/documents/${doc.id}/download`, {
 				headers: {
@@ -58,7 +60,7 @@
 
 	const deleteDocument = async (doc: Document) => {
 		if (!confirm($t('common.delete') + '?')) return;
-		
+
 		const { error } = await api.delete(`/api/v1/documents/${doc.id}`);
 		if (!error) {
 			onDelete(doc.id);
@@ -98,22 +100,35 @@
 					</div>
 
 					<div class="flex items-center gap-2">
-						<button 
+						<!-- Preview button -->
+						<button
 							class="btn btn-ghost btn-sm btn-square"
-							title={$t('common.download')}
-							on:click={() => downloadDocument(doc)}
+							title="Preview"
+							onclick={() => previewDocument = doc}
 						>
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M12 9.75l-3 3m0 0l3 3m-3-3l-3 3M9 12.75V1.5" />
+								<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+								<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
 							</svg>
 						</button>
 
+						<!-- Download button -->
+						<button
+							class="btn btn-ghost btn-sm btn-square"
+							title={$t('common.download')}
+							onclick={() => downloadDocument(doc)}
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+							</svg>
+						</button>
+
+						<!-- Delete button -->
 						{#if currentUserId && (doc.uploaded_by === currentUserId || /* Admin check handled by backend, UI assumes admin if can delete, or we pass isAdmin prop */ false)}
-							<!-- Note: simple check on ID. isAdmin logic could be passed via props -->
-							<button 
+							<button
 								class="btn btn-ghost btn-sm btn-square text-error"
 								title={$t('common.delete')}
-								on:click={() => deleteDocument(doc)}
+								onclick={() => deleteDocument(doc)}
 							>
 								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
 									<path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
@@ -126,3 +141,9 @@
 		</div>
 	{/if}
 </div>
+
+<!-- Preview Modal -->
+<DocumentPreview
+	document={previewDocument}
+	onClose={() => previewDocument = null}
+/>

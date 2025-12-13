@@ -4,12 +4,16 @@
 	import type { Document } from '$lib/types';
 	import Button from './Button.svelte';
 
-	export let subjectId: string;
-	export let onSuccess: (document: Document) => void = () => {};
-	export let onError: (error: string) => void = () => {};
+	interface Props {
+		subjectId: string;
+		onSuccess?: (document: Document) => void;
+		onError?: (error: string) => void;
+	}
 
-	let dragging = false;
-	let uploading = false;
+	let { subjectId, onSuccess = () => {}, onError = () => {} }: Props = $props();
+
+	let dragging = $state(false);
+	let uploading = $state(false);
 	let fileInput: HTMLInputElement;
 
 	const handleDragEnter = (e: DragEvent) => {
