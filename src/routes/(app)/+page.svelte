@@ -2,13 +2,16 @@
 	import { _ } from 'svelte-i18n';
 	import { currentUser } from '$stores/auth';
 	import { fade } from 'svelte/transition';
+	import { onMount, onDestroy } from 'svelte';
+	import { api } from '$lib/utils/api';
+	import type { Activity } from '$types';
 
-	const stats = [
+	let stats = $state([
 		{ label: $_('navigation.semesters'), value: '0', href: '/semesters', icon: '📅' },
 		{ href: '/subjects', icon: '📚', label: $_('navigation.subjects'), value: '0' },
-		{ label: $_('documents.title'), value: '0', href: '/subjects', icon: '📄' },
+		{ label: $_('documents.title'), value: '0', href: '/subjects', icon: '📄' }, // we don't really have a documents count endpoint easily accessible without iterating all subjects or adding a stats endpoint. I'll leave as 0 or ? for now, or fetch all subjects and sum documents if available.
 		{ label: $_('navigation.favorites'), value: '0', href: '/favorites', icon: '⭐' }
-	];
+	]);
 
 	const quickActions = [
 		{ href: '/semesters', icon: '📅', label: $_('navigation.semesters'), desc: 'Manage your academic terms' },
@@ -16,7 +19,75 @@
 		{ href: '/favorites', icon: '⭐', label: $_('navigation.favorites'), desc: 'Quick access to saved items' }
 	];
 
-	const recentActivity = [];
+	interface ActivityDisplay {
+		id: string;
+		icon: string;
+		title: string;
+		description: string;
+		time: string;
+		href?: string;
+	}
+
+	let recentActivity: ActivityDisplay[] = $state([]);
+	let interval: any;
+
+	function formatTimeAgo(dateString: string) {
+		const date = new Date(dateString);
+		const now = new Date();
+		const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+		if (seconds < 60) return 'just now';
+		const minutes = Math.floor(seconds / 60);
+		if (minutes < 60) return `${minutes}m ago`;
+		const hours = Math.floor(minutes / 60);
+		if (hours < 24) return `${hours}h ago`;
+		const days = Math.floor(hours / 24);
+		return `${days}d ago`;
+	}
+
+	async function loadData() {
+		// Fetch stats (subjects, semesters)
+		// For documents count, we might skip or Implement a stats endpoint later.
+		// Use placeholder for now for docs.
+		
+		const [semestersRes, subjectsRes] = await Promise.all([
+			api.get<{data: any[]}>('/api/v1/semesters'),
+			api.get<{data: any[]}>('/api/v1/subjects')
+		]);
+
+		if (semestersRes.data?.data) stats[0].value = semestersRes.data.data.length.toString();
+		if (subjectsRes.data?.data) stats[1].value = subjectsRes.data.data.length.toString();
+
+		// Fetch activities
+		const activityRes = await api.get<{success: boolean, data: Activity[]}>('/api/v1/activities/recent?limit=10');
+		if (activityRes.data?.success) {
+			recentActivity = (activityRes.data.data || []).map(a => {
+				const isUpload = a.activity_type === 'document_uploaded';
+				const userName = a.user?.displayName || a.user?.email || 'Unknown user';
+				const subjectName = a.subject?.name_en || 'Unknown subject'; // Prefer english name or use based on locale? using fixed for now
+				const docName = a.document?.original_name || 'document';
+				
+				return {
+					id: a.id,
+					icon: isUpload ? '📄' : '🗑️',
+					title: isUpload ? `${userName} uploaded "${docName}"` : `${userName} deleted a document`,
+					description: `in ${subjectName}`,
+					time: formatTimeAgo(a.created_at),
+					href: a.subject_id ? `/subjects/${a.subject_id}` : undefined
+				};
+			});
+		}
+	}
+
+	onMount(() => {
+		loadData();
+		// Refresh specific data periodically if needed
+		interval = setInterval(loadData, 60000);
+	});
+
+	onDestroy(() => {
+		if (interval) clearInterval(interval);
+	});
 </script>
 
 <div class="space-y-10" in:fade={{ duration: 200 }}>
@@ -92,19 +163,33 @@
 
 			{#if recentActivity.length > 0}
 				<div class="space-y-2">
-					{#each recentActivity as activity}
-						<div class="flex items-center gap-3 py-3 border-b border-light-border-secondary dark:border-dark-border-secondary last:border-0">
-							<span class="text-xl">{activity.icon}</span>
-							<div class="flex-1 min-w-0">
-								<p class="font-medium text-light-text-primary dark:text-dark-text-primary truncate">{activity.title}</p>
-								<p class="text-sm text-light-text-secondary dark:text-dark-text-secondary truncate">{activity.description}</p>
+					{#each recentActivity as activity (activity.id)}
+						{#if activity.href}
+							<a href={activity.href} class="block no-underline">
+								<div class="flex items-center gap-3 py-3 border-b border-light-border-secondary dark:border-dark-border-secondary last:border-0 hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover transition-colors px-3 -mx-3 rounded-lg">
+									<span class="text-xl">{activity.icon}</span>
+									<div class="flex-1 min-w-0">
+										<p class="font-medium text-light-text-primary dark:text-dark-text-primary truncate">{activity.title}</p>
+										<p class="text-sm text-light-text-secondary dark:text-dark-text-secondary truncate">{activity.description}</p>
+									</div>
+									<span class="text-xs text-light-text-tertiary dark:text-dark-text-tertiary whitespace-nowrap">{activity.time}</span>
+								</div>
+							</a>
+						{:else}
+							<div class="flex items-center gap-3 py-3 border-b border-light-border-secondary dark:border-dark-border-secondary last:border-0 px-3 -mx-3">
+								<span class="text-xl">{activity.icon}</span>
+								<div class="flex-1 min-w-0">
+									<p class="font-medium text-light-text-primary dark:text-dark-text-primary truncate">{activity.title}</p>
+									<p class="text-sm text-light-text-secondary dark:text-dark-text-secondary truncate">{activity.description}</p>
+								</div>
+								<span class="text-xs text-light-text-tertiary dark:text-dark-text-tertiary whitespace-nowrap">{activity.time}</span>
 							</div>
-							<span class="text-xs text-light-text-tertiary dark:text-dark-text-tertiary whitespace-nowrap">{activity.time}</span>
-						</div>
+						{/if}
 					{/each}
 				</div>
 			{:else}
-				<!-- Empty state - NO card wrapper, just centered content -->
+				<!-- Empty state by default or loading... -->
+				<!-- Reuse previous empty state -->
 				<div class="text-center py-12">
 					<svg
 						class="w-16 h-16 mx-auto mb-4 text-light-text-tertiary dark:text-dark-text-tertiary opacity-50"

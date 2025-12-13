@@ -59,15 +59,28 @@ export interface Subject {
 export interface Document {
 	id: string;
 	subject_id: string;
-	user_id: string;
-	name: string;
-	description: string;
-	file_path: string;
+	uploaded_by: string;
+	filename: string;
+	original_name: string;
 	file_size: number;
 	mime_type: string;
+	minio_path: string;
+	content_text?: string;
 	created_at: string;
-	updated_at: string;
 	subject?: Subject;
+	uploader?: User;
+}
+
+export interface Activity {
+	id: string;
+	user_id: string;
+	activity_type: 'document_uploaded' | 'document_deleted';
+	subject_id?: string;
+	document_id?: string;
+	metadata?: Record<string, any>;
+	created_at: string;
+	subject?: Subject;
+	document?: Document;
 	user?: User;
 }
 

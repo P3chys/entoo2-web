@@ -243,7 +243,7 @@
 
 					<div class="grid gap-4">
 						{#each group.subjects as subject (subject.id)}
-							<div class="bg-surface-50 dark:bg-surface-800 rounded-lg p-5 border border-surface-200 dark:border-surface-700 shadow-sm hover:shadow-md transition-shadow">
+							<a href="/subjects/{subject.id}" class="block bg-surface-50 dark:bg-surface-800 rounded-lg p-5 border border-surface-200 dark:border-surface-700 shadow-sm hover:shadow-md transition-shadow">
 								<div class="flex items-start justify-between">
 									<div class="flex-1">
 										<div class="flex items-center gap-3 mb-2">
@@ -270,7 +270,7 @@
 									</div>
 
 									{#if $isAdmin}
-										<div class="flex items-center gap-2 ml-4">
+										<div class="flex items-center gap-2 ml-4" onclick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
 											<Button variant="ghost" size="sm" onclick={() => openEditModal(subject)}>
 												✏️ Edit
 											</Button>
@@ -289,7 +289,7 @@
 										</div>
 									{/if}
 								</div>
-							</div>
+							</a>
 						{/each}
 					</div>
 				</section>

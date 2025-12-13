@@ -1,0 +1,101 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - link "Skip to main content" [ref=e5] [cursor=pointer]:
+    - /url: "#main-content"
+  - navigation "Main navigation" [ref=e6]:
+    - generic [ref=e8]:
+      - link "Entoo2" [ref=e10] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e12]:
+        - link "Home" [ref=e13] [cursor=pointer]:
+          - /url: /
+        - link "Semesters" [ref=e14] [cursor=pointer]:
+          - /url: /semesters
+        - link "Subjects" [ref=e15] [cursor=pointer]:
+          - /url: /subjects
+        - link "Favorites" [ref=e16] [cursor=pointer]:
+          - /url: /favorites
+        - link "Administration" [ref=e17] [cursor=pointer]:
+          - /url: /admin
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - combobox "language.select" [ref=e21]:
+            - option "Čeština"
+            - option "English"
+          - button "Toggle Theme" [ref=e22] [cursor=pointer]:
+            - img [ref=e23]
+        - button "Logout" [ref=e26] [cursor=pointer]
+  - main [ref=e27]:
+    - generic [ref=e28]:
+      - generic [ref=e30]:
+        - heading "Welcome back, admin" [level=1] [ref=e31]
+        - paragraph [ref=e32]: Your study hub is ready. Here's your overview.
+        - generic [ref=e33]:
+          - link "📅 1 Semesters" [ref=e34] [cursor=pointer]:
+            - /url: /semesters
+            - generic [ref=e35]: 📅
+            - generic [ref=e36]: "1"
+            - generic [ref=e37]: Semesters
+          - link "📚 1 Subjects" [ref=e38] [cursor=pointer]:
+            - /url: /subjects
+            - generic [ref=e39]: 📚
+            - generic [ref=e40]: "1"
+            - generic [ref=e41]: Subjects
+          - link "📄 0 Documents" [ref=e42] [cursor=pointer]:
+            - /url: /subjects
+            - generic [ref=e43]: 📄
+            - generic [ref=e44]: "0"
+            - generic [ref=e45]: Documents
+          - link "⭐ 0 Favorites" [ref=e46] [cursor=pointer]:
+            - /url: /favorites
+            - generic [ref=e47]: ⭐
+            - generic [ref=e48]: "0"
+            - generic [ref=e49]: Favorites
+      - generic [ref=e50]:
+        - generic [ref=e51]:
+          - heading "Quick Actions" [level=2] [ref=e52]:
+            - img [ref=e53]
+            - text: Quick Actions
+          - navigation [ref=e55]:
+            - link "📅 Semesters Manage your academic terms" [ref=e56] [cursor=pointer]:
+              - /url: /semesters
+              - generic [ref=e57]: 📅
+              - generic [ref=e58]:
+                - generic [ref=e59]: Semesters
+                - generic [ref=e60]: Manage your academic terms
+              - img [ref=e61]
+            - link "📚 Subjects Browse course materials" [ref=e63] [cursor=pointer]:
+              - /url: /subjects
+              - generic [ref=e64]: 📚
+              - generic [ref=e65]:
+                - generic [ref=e66]: Subjects
+                - generic [ref=e67]: Browse course materials
+              - img [ref=e68]
+            - link "⭐ Favorites Quick access to saved items" [ref=e70] [cursor=pointer]:
+              - /url: /favorites
+              - generic [ref=e71]: ⭐
+              - generic [ref=e72]:
+                - generic [ref=e73]: Favorites
+                - generic [ref=e74]: Quick access to saved items
+              - img [ref=e75]
+        - generic [ref=e77]:
+          - heading "Recent Activity" [level=2] [ref=e78]:
+            - img [ref=e79]
+            - text: Recent Activity
+          - generic [ref=e81]:
+            - img [ref=e82]
+            - heading "No Recent Activity" [level=3] [ref=e84]
+            - paragraph [ref=e85]: Start by browsing semesters and subjects to see your activity here.
+            - generic [ref=e86]:
+              - link "📅 Semesters" [ref=e87] [cursor=pointer]:
+                - /url: /semesters
+                - generic [ref=e88]: 📅
+                - text: Semesters
+              - link "📚 Subjects" [ref=e89] [cursor=pointer]:
+                - /url: /subjects
+                - generic [ref=e90]: 📚
+                - text: Subjects
+                - img [ref=e91]
+```

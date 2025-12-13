@@ -48,13 +48,25 @@ export class ApiClient {
 				headers
 			});
 
-			const data = await response.json();
+			const text = await response.text();
+			let data;
+			try {
+				data = text ? JSON.parse(text) : {};
+			} catch (e) {
+				return {
+					error: {
+						error: 'API Error',
+						message: text || `Server returned ${response.status}`,
+						status: response.status
+					}
+				};
+			}
 
 			if (!response.ok) {
 				return {
 					error: {
 						error: data.error || 'Unknown error',
-						message: data.message || 'An error occurred',
+						message: data.message || data.error || 'An error occurred',
 						status: response.status
 					}
 				};
