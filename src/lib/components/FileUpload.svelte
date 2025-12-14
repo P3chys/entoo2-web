@@ -3,6 +3,7 @@
 	import { api } from '$lib/utils/api';
 	import type { Document } from '$lib/types';
 	import Button from './Button.svelte';
+    import Icon from './Icon.svelte';
 
 	interface Props {
 		subjectId: string;
@@ -83,20 +84,9 @@
 
 	<div class="flex flex-col items-center gap-4">
 		<div class="p-4 bg-base-200 rounded-full text-primary">
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke-width="1.5"
-				stroke="currentColor"
-				class="w-8 h-8"
-			>
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-				/>
-			</svg>
+		<div class="p-4 bg-base-200 rounded-full text-primary">
+            <Icon name="upload" size={32} />
+		</div>
 		</div>
 
 		<div>

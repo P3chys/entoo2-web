@@ -3,10 +3,13 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { _ } from 'svelte-i18n';
+	import { fade } from 'svelte/transition';
 	import { api } from '$lib/utils/api';
 	import { debounce, transformMeilisearchHit } from '$lib/utils/search';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import SearchResultCard from '$lib/components/SearchResultCard.svelte';
+	import Icon from '$components/Icon.svelte';
+	import { fadeSlideIn, staggerFadeIn, bounceIn } from '$lib/utils/animation';
 	import type { SearchResult, Subject, MeilisearchHit } from '$types';
 
 	let searchQuery = $state('');
@@ -108,26 +111,31 @@
 	});
 </script>
 
-<div class="space-y-6">
+<div class="space-y-6" in:fade={{ duration: 200 }}>
 	<!-- Header -->
-	<div>
-		<h1 class="text-3xl font-bold mb-2">{$_('common.search')}</h1>
+	<div use:fadeSlideIn>
+		<h1 class="text-3xl font-bold mb-2 flex items-center gap-3">
+			<Icon name="search" size={32} className="text-accent-primary" />
+			{$_('common.search')}
+		</h1>
 		<p class="text-light-text-secondary dark:text-dark-text-secondary">
 			{$_('search.placeholder')}
 		</p>
 	</div>
 
 	<!-- Search Input -->
-	<SearchBar
-		bind:value={searchQuery}
-		{loading}
-		autofocus={true}
-		onInput={handleSearchInput}
-		onSubmit={handleSearchSubmit}
-	/>
+	<div use:fadeSlideIn={{ delay: 100 }}>
+		<SearchBar
+			bind:value={searchQuery}
+			{loading}
+			autofocus={true}
+			onInput={handleSearchInput}
+			onSubmit={handleSearchSubmit}
+		/>
+	</div>
 
 	<!-- Filters -->
-	<div class="flex flex-wrap gap-4 items-center">
+	<div class="flex flex-wrap gap-4 items-center" use:fadeSlideIn={{ delay: 200 }}>
 		<!-- Subject Filter -->
 		<div>
 			<label for="subject-filter" class="sr-only">{$_('subjects.semester')}</label>
@@ -211,17 +219,20 @@
 		</div>
 	{:else if filteredResults.length > 0}
 		<!-- Results List -->
-		<div class="space-y-4">
-			<div class="flex items-center justify-between">
-				<p class="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+		<div class="space-y-4" in:fade={{ duration: 300 }}>
+			<div class="flex items-center justify-between" use:bounceIn>
+				<p class="text-sm text-light-text-secondary dark:text-dark-text-secondary font-medium">
+					<Icon name="check" size={16} className="inline text-success" />
 					Found {filteredResults.length}
 					{filteredResults.length === 1 ? 'result' : 'results'}
 				</p>
 			</div>
 
-			{#each filteredResults as result (result.id)}
-				<SearchResultCard {result} query={searchQuery} />
-			{/each}
+			<div use:staggerFadeIn>
+				{#each filteredResults as result (result.id)}
+					<SearchResultCard {result} query={searchQuery} />
+				{/each}
+			</div>
 		</div>
 	{:else}
 		<!-- Empty State -->

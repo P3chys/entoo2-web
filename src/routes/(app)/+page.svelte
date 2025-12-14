@@ -5,18 +5,20 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { api } from '$lib/utils/api';
 	import type { Activity } from '$types';
+	import Icon from '$components/Icon.svelte';
+	import { staggerFadeIn, slideInFrom } from '$lib/utils/animation';
 
 	let stats = $state([
-		{ label: $_('navigation.semesters'), value: '0', href: '/semesters', icon: '📅' },
-		{ href: '/subjects', icon: '📚', label: $_('navigation.subjects'), value: '0' },
-		{ label: $_('documents.title'), value: '0', href: '/subjects', icon: '📄' }, // we don't really have a documents count endpoint easily accessible without iterating all subjects or adding a stats endpoint. I'll leave as 0 or ? for now, or fetch all subjects and sum documents if available.
-		{ label: $_('navigation.favorites'), value: '0', href: '/favorites', icon: '⭐' }
+		{ label: $_('navigation.semesters'), value: '0', href: '/semesters', icon: 'semesters' },
+		{ href: '/subjects', icon: 'subjects', label: $_('navigation.subjects'), value: '0' },
+		{ label: $_('documents.title'), value: '0', href: '/subjects', icon: 'document' },
+		{ label: $_('navigation.favorites'), value: '0', href: '/favorites', icon: 'favorites' }
 	]);
 
 	const quickActions = [
-		{ href: '/semesters', icon: '📅', label: $_('navigation.semesters'), desc: 'Manage your academic terms' },
-		{ href: '/subjects', icon: '📚', label: $_('navigation.subjects'), desc: 'Browse course materials' },
-		{ href: '/favorites', icon: '⭐', label: $_('navigation.favorites'), desc: 'Quick access to saved items' }
+		{ href: '/semesters', icon: 'semesters', label: $_('navigation.semesters'), desc: 'Manage your academic terms' },
+		{ href: '/subjects', icon: 'subjects', label: $_('navigation.subjects'), desc: 'Browse course materials' },
+		{ href: '/favorites', icon: 'favorites', label: $_('navigation.favorites'), desc: 'Quick access to saved items' }
 	];
 
 	interface ActivityDisplay {
@@ -63,13 +65,13 @@
 		if (activityRes.data?.success) {
 			recentActivity = (activityRes.data.data || []).map(a => {
 				const isUpload = a.activity_type === 'document_uploaded';
-				const userName = a.user?.displayName || a.user?.email || 'Unknown user';
+				const userName = a.user?.email || 'Unknown user';
 				const subjectName = a.subject?.name_en || 'Unknown subject'; // Prefer english name or use based on locale? using fixed for now
 				const docName = a.document?.original_name || 'document';
 				
 				return {
 					id: a.id,
-					icon: isUpload ? '📄' : '🗑️',
+					icon: isUpload ? 'upload' : 'delete',
 					title: isUpload ? `${userName} uploaded "${docName}"` : `${userName} deleted a document`,
 					description: `in ${subjectName}`,
 					time: formatTimeAgo(a.created_at),
@@ -92,7 +94,7 @@
 
 <div class="space-y-10" in:fade={{ duration: 200 }}>
 	<!-- Hero Section with inline stats -->
-	<div class="hero">
+	<div class="hero" use:slideInFrom={{ direction: 'top' }}>
 		<div class="relative z-10">
 			<h1 class="text-4xl md:text-5xl font-bold mb-2">
 				{$_('common.welcome')}, {$currentUser?.email?.split('@')[0] || 'Student'}
@@ -102,15 +104,15 @@
 			</p>
 
 			<!-- Stats as inline badges (NOT cards) -->
-			<div class="flex flex-wrap items-center gap-3">
+			<div class="flex flex-wrap items-center gap-3" use:staggerFadeIn>
 				{#each stats as stat}
 					<a
 						href={stat.href}
-						class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-full text-white transition-all duration-200 no-underline hover:scale-105"
+						class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 hover:bg-white/30 rounded-full text-white transition-all duration-200 no-underline hover:scale-105 backdrop-blur-sm"
 					>
-						<span class="text-lg">{stat.icon}</span>
-						<span class="font-bold">{stat.value}</span>
-						<span class="text-sm opacity-80">{stat.label}</span>
+						<Icon name={stat.icon} size={20} className="text-white" />
+						<span class="font-bold text-lg">{stat.value}</span>
+						<span class="text-sm opacity-90">{stat.label}</span>
 					</a>
 				{/each}
 			</div>
@@ -120,22 +122,20 @@
 	<!-- Two column layout: Quick Actions + Recent Activity side by side -->
 	<div class="grid grid-cols-1 lg:grid-cols-5 gap-8 px-2">
 		<!-- Quick Actions (left column - narrower) -->
-		<section class="lg:col-span-2">
+		<section class="lg:col-span-2" use:slideInFrom={{ direction: 'left', delay: 100 }}>
 			<h2 class="text-xl font-bold mb-4 text-light-text-primary dark:text-dark-text-primary flex items-center gap-2">
-				<svg class="w-5 h-5 text-accent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-				</svg>
+				<Icon name="zap" size={20} className="text-accent-primary" />
 				{$_('dashboard.quickActions')}
 			</h2>
-			
+
 			<!-- List style, NOT card grid -->
-			<nav class="space-y-1">
+			<nav class="space-y-2" use:staggerFadeIn>
 				{#each quickActions as action}
 					<a
 						href={action.href}
-						class="group flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover transition-colors no-underline border-l-4 border-transparent hover:border-accent-primary"
+						class="group flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover transition-all no-underline border-l-4 border-transparent hover:border-accent-primary hover:shadow-md"
 					>
-						<span class="text-xl">{action.icon}</span>
+						<Icon name={action.icon} size={24} className="text-accent-primary" />
 						<div class="flex-1 min-w-0">
 							<span class="block font-medium text-light-text-primary dark:text-dark-text-primary group-hover:text-accent-primary transition-colors">
 								{action.label}
@@ -144,30 +144,28 @@
 								{action.desc}
 							</span>
 						</div>
-						<svg class="w-4 h-4 text-light-text-tertiary dark:text-dark-text-tertiary group-hover:text-accent-primary group-hover:translate-x-1 transition-all flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-						</svg>
+						<Icon name="chevron-right" size={16} className="text-light-text-tertiary dark:text-dark-text-tertiary group-hover:text-accent-primary group-hover:translate-x-1 transition-all" />
 					</a>
 				{/each}
 			</nav>
 		</section>
 
 		<!-- Recent Activity (right column - wider) -->
-		<section class="lg:col-span-3">
+		<section class="lg:col-span-3" use:slideInFrom={{ direction: 'right', delay: 100 }}>
 			<h2 class="text-xl font-bold mb-4 text-light-text-primary dark:text-dark-text-primary flex items-center gap-2">
-				<svg class="w-5 h-5 text-accent-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-				</svg>
+				<Icon name="clock" size={20} className="text-accent-primary" />
 				{$_('dashboard.recentActivity')}
 			</h2>
 
 			{#if recentActivity.length > 0}
-				<div class="space-y-2">
+				<div class="space-y-2" use:staggerFadeIn>
 					{#each recentActivity as activity (activity.id)}
 						{#if activity.href}
 							<a href={activity.href} class="block no-underline">
-								<div class="flex items-center gap-3 py-3 border-b border-light-border-secondary dark:border-dark-border-secondary last:border-0 hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover transition-colors px-3 -mx-3 rounded-lg">
-									<span class="text-xl">{activity.icon}</span>
+								<div class="flex items-center gap-3 py-3 border-b border-light-border-secondary dark:border-dark-border-secondary last:border-0 hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover transition-all px-3 -mx-3 rounded-lg hover:shadow-sm">
+									<div class="p-2 rounded-lg bg-accent-primary/10">
+										<Icon name={activity.icon} size={20} className="text-accent-primary" />
+									</div>
 									<div class="flex-1 min-w-0">
 										<p class="font-medium text-light-text-primary dark:text-dark-text-primary truncate">{activity.title}</p>
 										<p class="text-sm text-light-text-secondary dark:text-dark-text-secondary truncate">{activity.description}</p>
@@ -177,7 +175,9 @@
 							</a>
 						{:else}
 							<div class="flex items-center gap-3 py-3 border-b border-light-border-secondary dark:border-dark-border-secondary last:border-0 px-3 -mx-3">
-								<span class="text-xl">{activity.icon}</span>
+								<div class="p-2 rounded-lg bg-accent-primary/10">
+									<Icon name={activity.icon} size={20} className="text-accent-primary" />
+								</div>
 								<div class="flex-1 min-w-0">
 									<p class="font-medium text-light-text-primary dark:text-dark-text-primary truncate">{activity.title}</p>
 									<p class="text-sm text-light-text-secondary dark:text-dark-text-secondary truncate">{activity.description}</p>

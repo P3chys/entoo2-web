@@ -6,6 +6,8 @@
 	import { isAdmin } from '$stores/auth';
 	import { api } from '$lib/utils/api';
 	import { fade } from 'svelte/transition';
+    import { staggerFadeIn } from '$lib/utils/animation';
+    import Icon from '$lib/components/Icon.svelte';
 	import type { Subject, Semester } from '$types';
 
 	let subjects: Subject[] = $state([]);
@@ -189,8 +191,10 @@
 		<h1 class="text-3xl font-bold">{$_('subjects.title')}</h1>
 		{#if $isAdmin && semesters.length > 0}
 			<Button variant="primary" onclick={openCreateModal}>
-				<span class="mr-2">➕</span>
-				{$_('subjects.create')}
+				<div class="flex items-center gap-2">
+                    <Icon name="add" size={20} />
+				    {$_('subjects.create')}
+                </div>
 			</Button>
 		{/if}
 	</div>
@@ -220,8 +224,10 @@
 			{#if $isAdmin}
 				<div class="flex gap-3 justify-center mt-4">
 					<Button variant="primary" size="lg" onclick={openCreateModal}>
-						<span class="mr-2">➕</span>
-						Create First Subject
+						<div class="flex items-center gap-2">
+                            <Icon name="add" size={24} />
+						    Create First Subject
+                        </div>
 					</Button>
 				</div>
 			{:else}
@@ -241,7 +247,7 @@
 						</span>
 					</div>
 
-					<div class="grid gap-4">
+					<div class="grid gap-4" use:staggerFadeIn>
 						{#each group.subjects as subject (subject.id)}
 							<a href="/subjects/{subject.id}" class="block bg-surface-50 dark:bg-surface-800 rounded-lg p-5 border border-surface-200 dark:border-surface-700 shadow-sm hover:shadow-md transition-shadow">
 								<div class="flex items-start justify-between">
@@ -261,7 +267,7 @@
 											<div class="mt-3 flex flex-wrap gap-2">
 												{#each subject.teachers as teacher}
 													<div class="text-sm bg-surface-100 dark:bg-surface-900 px-2 py-1 rounded border border-surface-200 dark:border-surface-700 flex items-center gap-1">
-														<span class="text-surface-400">👤</span>
+														<Icon name="user" size={16} />
 														<span>{teacher.teacher_name}</span>
 													</div>
 												{/each}
@@ -271,8 +277,8 @@
 
 									{#if $isAdmin}
 										<div class="flex items-center gap-2 ml-4" onclick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
-											<Button variant="ghost" size="sm" onclick={() => openEditModal(subject)}>
-												✏️ Edit
+											<Button variant="ghost" size="sm" onclick={() => openEditModal(subject)} aria-label="Edit">
+												<Icon name="edit" size={20} />
 											</Button>
 											{#if deleteConfirm === subject.id}
 												<Button variant="danger" size="sm" onclick={() => handleDelete(subject.id)}>
@@ -282,8 +288,8 @@
 													Cancel
 												</Button>
 											{:else}
-												<Button variant="ghost" size="sm" onclick={() => deleteConfirm = subject.id}>
-													🗑️
+												<Button variant="ghost" size="sm" onclick={() => deleteConfirm = subject.id} aria-label="Delete">
+													<Icon name="delete" size={20} />
 												</Button>
 											{/if}
 										</div>

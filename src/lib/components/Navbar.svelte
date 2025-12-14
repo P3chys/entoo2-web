@@ -4,6 +4,7 @@
 	import { authStore, isAdmin } from '$stores/auth';
 	import ThemeToggle from './ThemeToggle.svelte';
 	import LanguageSelector from './LanguageSelector.svelte';
+    import Icon from './Icon.svelte';
 
 	let mobileMenuOpen = $state(false);
 
@@ -21,10 +22,10 @@
 	}
 
 	const navItems = $derived([
-		{ href: '/', label: $_('navigation.home') },
-		{ href: '/semesters', label: $_('navigation.semesters') },
-		{ href: '/subjects', label: $_('navigation.subjects') },
-		{ href: '/favorites', label: $_('navigation.favorites') }
+		{ href: '/', label: $_('navigation.home'), icon: 'home' },
+		{ href: '/semesters', label: $_('navigation.semesters'), icon: 'semesters' },
+		{ href: '/subjects', label: $_('navigation.subjects'), icon: 'subjects' },
+		{ href: '/favorites', label: $_('navigation.favorites'), icon: 'favorites' }
 	]);
 </script>
 
@@ -33,8 +34,8 @@
 	Skip to main content
 </a>
 
-<nav aria-label="Main navigation" class="bg-light-bg-secondary dark:bg-dark-bg-secondary border-b border-light-border-primary dark:border-dark-border-primary">
-	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<nav aria-label="Main navigation" class="bg-light-bg-secondary dark:bg-dark-bg-secondary border-b border-light-border-primary dark:border-dark-border-primary shadow-sm">
+	<div class="w-full px-6 sm:px-8 lg:px-12 xl:px-16">
 		<div class="flex items-center justify-between h-16">
 			<!-- Logo -->
 			<div class="flex-shrink-0">
@@ -50,10 +51,11 @@
 						<a
 							href={item.href}
 							aria-current={$page.url.pathname === item.href ? 'page' : undefined}
-							class="px-3 py-2 rounded-lg text-sm font-medium transition-colors no-underline {$page.url.pathname === item.href
+							class="px-3 py-2 rounded-lg text-sm font-medium transition-colors no-underline flex items-center gap-2 {$page.url.pathname === item.href
 								? 'bg-accent-primary text-white'
 								: 'text-light-text-primary dark:text-dark-text-primary hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover'}"
 						>
+                            <Icon name={item.icon} size={20} />
 							{item.label}
 						</a>
 					{/each}
@@ -75,9 +77,7 @@
 							? 'bg-accent-primary text-white'
 							: 'text-light-text-primary dark:text-dark-text-primary hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover'}"
 					>
-						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-						</svg>
+						<Icon name="search" size={20} />
 					</a>
 				</div>
 			</div>
@@ -108,15 +108,9 @@
 				>
 					<span class="sr-only">Open main menu</span>
 					{#if !mobileMenuOpen}
-						<!-- Hamburger icon -->
-						<svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-						</svg>
+						<Icon name="menu" size={24} />
 					{:else}
-						<!-- Close icon -->
-						<svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-						</svg>
+						<Icon name="close" size={24} />
 					{/if}
 				</button>
 			</div>

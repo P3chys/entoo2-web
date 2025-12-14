@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
+    import { clickPulse, hoverScale, rippleEffect } from '$lib/utils/animation';
 
 	interface Props {
 		variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -48,6 +49,9 @@
 	aria-busy={loading}
 	aria-label={ariaLabel}
 	onclick={onclick}
+    use:rippleEffect
+    use:clickPulse
+    use:hoverScale
 >
 	{#if loading}
 		<span role="status" aria-label={$_('common.loading')}>

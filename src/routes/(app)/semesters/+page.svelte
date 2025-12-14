@@ -5,6 +5,8 @@
 	import { isAdmin } from '$stores/auth';
 	import { api } from '$lib/utils/api';
 	import { fade } from 'svelte/transition';
+    import { staggerFadeIn } from '$lib/utils/animation';
+    import Icon from '$lib/components/Icon.svelte';
 	import type { Semester } from '$types';
 
 	let semesters: Semester[] = $state([]);
@@ -108,8 +110,10 @@
 		<h1 class="text-3xl font-bold">{$_('semesters.title')}</h1>
 		{#if $isAdmin}
 			<Button variant="primary" onclick={openCreateModal}>
-				<span class="mr-2">➕</span>
-				{$_('semesters.create')}
+				<div class="flex items-center gap-2">
+                    <Icon name="add" size={20} />
+				    {$_('semesters.create')}
+                </div>
 			</Button>
 		{/if}
 	</div>
@@ -121,20 +125,7 @@
 	{:else if semesters.length === 0}
 		<!-- Empty State -->
 		<div class="empty-state">
-			<svg
-				class="empty-icon"
-				fill="none"
-				stroke="currentColor"
-				viewBox="0 0 24 24"
-				xmlns="http://www.w3.org/2000/svg"
-			>
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-				/>
-			</svg>
+            <Icon name="semesters" size={64} className="mb-4 opacity-50 grayscale" />
 
 			<h3 class="empty-title">{$_('semesters.noSemesters')}</h3>
 			{#if $isAdmin}
@@ -143,8 +134,10 @@
 				</p>
 				<div class="flex gap-3 justify-center">
 					<Button variant="primary" size="lg" onclick={openCreateModal}>
-						<span class="mr-2">➕</span>
-						Create First Semester
+						<div class="flex items-center gap-2">
+                            <Icon name="add" size={24} />
+						    Create First Semester
+                        </div>
 					</Button>
 				</div>
 			{:else}
@@ -155,7 +148,7 @@
 		</div>
 	{:else}
 		<!-- Semesters List -->
-		<div class="grid gap-4">
+		<div class="grid gap-4" use:staggerFadeIn>
 			{#each semesters as semester (semester.id)}
 				<div class="bg-surface-50 dark:bg-surface-800 rounded-lg p-4 border border-surface-200 dark:border-surface-700">
 					<div class="flex items-center justify-between">
@@ -166,8 +159,8 @@
 						<div class="flex items-center gap-2">
 							<span class="text-xs text-surface-400 mr-4">Order: {semester.order_index}</span>
 							{#if $isAdmin}
-								<Button variant="ghost" size="sm" onclick={() => openEditModal(semester)}>
-									✏️ Edit
+								<Button variant="ghost" size="sm" onclick={() => openEditModal(semester)} aria-label="Edit">
+									<Icon name="edit" size={20} />
 								</Button>
 								{#if deleteConfirm === semester.id}
 									<Button variant="danger" size="sm" onclick={() => handleDelete(semester.id)}>
@@ -177,8 +170,8 @@
 										Cancel
 									</Button>
 								{:else}
-									<Button variant="ghost" size="sm" onclick={() => deleteConfirm = semester.id}>
-										🗑️ Delete
+									<Button variant="ghost" size="sm" onclick={() => deleteConfirm = semester.id} aria-label="Delete">
+										<Icon name="delete" size={20} />
 									</Button>
 								{/if}
 							{/if}
