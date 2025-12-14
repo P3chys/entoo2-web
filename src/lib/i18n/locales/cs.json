@@ -108,10 +108,16 @@
 		"answers": "Odpovědi"
 	},
 	"search": {
-		"placeholder": "Hledat v dokumentech...",
+		"placeholder": "Hledat v dokumentech a předmětech...",
 		"results": "Výsledky vyhledávání",
 		"noResults": "Žádné výsledky",
-		"searching": "Vyhledávání..."
+		"searching": "Vyhledávání...",
+		"allSubjects": "Všechny předměty",
+		"allResults": "Všechny výsledky",
+		"documentsOnly": "Pouze dokumenty",
+		"subjectsOnly": "Pouze předměty",
+		"foundResults": "Nalezeno {count} výsledků",
+		"clearFilters": "Vymazat filtry"
 	},
 	"theme": {
 		"light": "Světlý režim",

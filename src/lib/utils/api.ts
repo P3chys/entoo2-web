@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import type { ApiError } from '$types';
+import type { ApiError, SearchResponse, SearchFilters } from '$types';
 
 const API_URL = browser ? window.location.origin : 'http://localhost:8080';
 
@@ -154,6 +154,18 @@ export class ApiClient {
 				}
 			};
 		}
+	}
+
+	async search(
+		query: string,
+		filters?: SearchFilters
+	): Promise<{ data?: SearchResponse; error?: ApiError }> {
+		const params = new URLSearchParams();
+		if (query) params.append('q', query);
+		if (filters?.subject_id) params.append('subject_id', filters.subject_id);
+
+		const endpoint = `/api/v1/search?${params.toString()}`;
+		return this.get<SearchResponse>(endpoint);
 	}
 }
 

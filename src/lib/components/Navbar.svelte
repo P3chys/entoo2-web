@@ -68,6 +68,17 @@
 							{$_('navigation.admin')}
 						</a>
 					{/if}
+					<a
+						href="/search"
+						aria-label={$_('common.search')}
+						class="px-3 py-2 rounded-lg text-sm font-medium transition-colors no-underline {$page.url.pathname.startsWith('/search')
+							? 'bg-accent-primary text-white'
+							: 'text-light-text-primary dark:text-dark-text-primary hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover'}"
+					>
+						<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+						</svg>
+					</a>
 				</div>
 			</div>
 
@@ -140,6 +151,15 @@
 						{$_('navigation.admin')}
 					</a>
 				{/if}
+				<a
+					href="/search"
+					onclick={closeMobileMenu}
+					class="block px-3 py-2 rounded-lg text-base font-medium no-underline {$page.url.pathname.startsWith('/search')
+						? 'bg-accent-primary text-white'
+						: 'text-light-text-primary dark:text-dark-text-primary hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover'}"
+				>
+					{$_('common.search')}
+				</a>
 
 				<!-- Mobile settings -->
 				<div class="pt-4 pb-3 border-t border-light-border-primary dark:border-dark-border-primary">

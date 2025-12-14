@@ -108,10 +108,16 @@
 		"answers": "Answers"
 	},
 	"search": {
-		"placeholder": "Search documents...",
+		"placeholder": "Search documents and subjects...",
 		"results": "Search Results",
-		"noResults": "No results",
-		"searching": "Searching..."
+		"noResults": "No results found",
+		"searching": "Searching...",
+		"allSubjects": "All Subjects",
+		"allResults": "All Results",
+		"documentsOnly": "Documents Only",
+		"subjectsOnly": "Subjects Only",
+		"foundResults": "Found {count} results",
+		"clearFilters": "Clear Filters"
 	},
 	"theme": {
 		"light": "Light Mode",

@@ -123,6 +123,46 @@ export interface SearchResult {
 	description: string;
 	highlight?: string;
 	score: number;
+	subject_id?: string;
+	subject_name?: string;
+	mime_type?: string;
+	file_size?: number;
+	created_at?: string;
+	code?: string;
+	credits?: number;
+}
+
+export interface MeilisearchHit {
+	id: string;
+	subject_id?: string;
+	original_name?: string;
+	content_text?: string;
+	filename?: string;
+	mime_type?: string;
+	file_size?: number;
+	created_at?: string;
+	name_cs?: string;
+	name_en?: string;
+	code?: string;
+	description_cs?: string;
+	description_en?: string;
+	credits?: number;
+	_formatted?: Record<string, string>;
+	_matchesPosition?: any;
+}
+
+export interface SearchFilters {
+	subject_id?: string;
+	type?: 'all' | 'documents' | 'subjects';
+	mime_type?: string;
+}
+
+export interface SearchResponse {
+	success: boolean;
+	data: MeilisearchHit[];
+	total?: number;
+	query?: string;
+	processingTimeMs?: number;
 }
 
 export interface ApiError {
