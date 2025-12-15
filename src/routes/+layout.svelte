@@ -3,7 +3,6 @@
 	import { onMount } from 'svelte';
 	import { locale, waitLocale } from 'svelte-i18n';
 	import { browser } from '$app/environment';
-	import ConstellationBackground from '$lib/components/ConstellationBackground.svelte';
     import { themeStore } from '$stores/theme';
     import '$lib/i18n';
 
@@ -27,14 +26,8 @@
 	});
 </script>
 
-<div class="min-h-screen flex flex-col relative overflow-x-hidden">
-    <main class="flex-1 container mx-auto px-4 py-8 relative z-10">
-        <!-- Add a subtle entry animation for page content -->
-	    <div class="animate-fade-in">
-	        {@render children?.()}
-        </div>
-    </main>
-    <ConstellationBackground />
+<div class="min-h-screen flex flex-col relative overflow-x-hidden bg-light-bg-primary dark:bg-dark-bg-primary text-light-text-primary dark:text-dark-text-primary transition-colors duration-300">
+    {@render children?.()}
 </div>
 
 <style>

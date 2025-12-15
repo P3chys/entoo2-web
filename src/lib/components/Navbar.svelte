@@ -35,7 +35,7 @@
 </a>
 
 <nav aria-label="Main navigation" class="bg-light-bg-secondary dark:bg-dark-bg-secondary border-b border-light-border-primary dark:border-dark-border-primary shadow-sm">
-	<div class="w-full px-6 sm:px-8 lg:px-12 xl:px-16">
+	<div class="w-full px-4 sm:px-6 md:px-8">
 		<div class="flex items-center justify-between h-16">
 			<!-- Logo -->
 			<div class="flex-shrink-0">

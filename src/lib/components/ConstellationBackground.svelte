@@ -52,8 +52,8 @@
 
         const isDark = $themeStore === 'dark';
         const color = isDark ? '255, 255, 255' : '0, 0, 0'; // White in dark, Black in light
-        const particleOpacity = isDark ? 0.5 : 0.3;
-        const lineOpacity = isDark ? 0.15 : 0.1;
+        const particleOpacity = isDark ? 0.5 : 0.5;
+        const lineOpacity = isDark ? 0.3 : 0.3;
 
 		particles.forEach((p, i) => {
             // Update position
@@ -152,6 +152,7 @@
 </script>
 
 <canvas
-	bind:this={canvas}
-	class="fixed inset-0 -z-50 pointer-events-none opacity-60"
-/>
+    bind:this={canvas}
+    class="absolute inset-0 pointer-events-none opacity-60"
+    style="z-index: 0;"
+></canvas>

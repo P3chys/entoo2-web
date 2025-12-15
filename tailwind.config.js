@@ -27,20 +27,20 @@ export default {
 				// Dark mode colors
 				dark: {
 					bg: {
-						primary: '#0d1117',
-						secondary: '#161b22',
-						tertiary: '#21262d',
-						hover: '#30363d'
+						primary: '#000000',
+						secondary: '#0a0a0a',
+						tertiary: '#1a1a1a',
+						hover: '#242424'
 					},
 					text: {
-						primary: '#f0f6fc',
-						secondary: '#9198a1',
-						tertiary: '#768390',
-						inverse: '#0d1117'
+						primary: '#ffffff',
+						secondary: '#b4b4b4',
+						tertiary: '#8f8f8f',
+						inverse: '#000000'
 					},
 					border: {
-						primary: '#30363d',
-						secondary: '#21262d'
+						primary: '#333333',
+						secondary: '#1a1a1a'
 					}
 				},
 				// Accent colors (same for both modes)
