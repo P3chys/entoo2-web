@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-	import { currentUser } from '$stores/auth';
+	import { currentUser, isAdmin } from '$stores/auth';
 	import { fade } from 'svelte/transition';
 	import { onMount, onDestroy } from 'svelte';
 	import { api } from '$lib/utils/api';
@@ -8,18 +8,11 @@
 	import Icon from '$components/Icon.svelte';
 	import { staggerFadeIn, slideInFrom } from '$lib/utils/animation';
 
-	let stats = $state([
-		{ label: $_('navigation.semesters'), value: '0', href: '/semesters', icon: 'semesters' },
-		{ href: '/subjects', icon: 'subjects', label: $_('navigation.subjects'), value: '0' },
-		{ label: $_('documents.title'), value: '0', href: '/subjects', icon: 'document' },
-		{ label: $_('navigation.favorites'), value: '0', href: '/favorites', icon: 'favorites' }
-	]);
-
-	const quickActions = [
-		{ href: '/semesters', icon: 'semesters', label: $_('navigation.semesters'), desc: 'Manage your academic terms' },
+	const quickActions = $derived([
+		...($isAdmin ? [{ href: '/semesters', icon: 'semesters', label: $_('navigation.semesters'), desc: 'Manage your academic terms' }] : []),
 		{ href: '/subjects', icon: 'subjects', label: $_('navigation.subjects'), desc: 'Browse course materials' },
 		{ href: '/favorites', icon: 'favorites', label: $_('navigation.favorites'), desc: 'Quick access to saved items' }
-	];
+	]);
 
 	interface ActivityDisplay {
 		id: string;
@@ -48,18 +41,6 @@
 	}
 
 	async function loadData() {
-		// Fetch stats (subjects, semesters)
-		// For documents count, we might skip or Implement a stats endpoint later.
-		// Use placeholder for now for docs.
-		
-		const [semestersRes, subjectsRes] = await Promise.all([
-			api.get<{data: any[]}>('/api/v1/semesters'),
-			api.get<{data: any[]}>('/api/v1/subjects')
-		]);
-
-		if (semestersRes.data?.data) stats[0].value = semestersRes.data.data.length.toString();
-		if (subjectsRes.data?.data) stats[1].value = subjectsRes.data.data.length.toString();
-
 		// Fetch activities
 		const activityRes = await api.get<{success: boolean, data: Activity[]}>('/api/v1/activities/recent?limit=10');
 		if (activityRes.data?.success) {
@@ -93,28 +74,27 @@
 </script>
 
 <div class="space-y-10" in:fade={{ duration: 200 }}>
-	<!-- Hero Section with inline stats -->
+	<!-- Hero Section -->
 	<div class="hero" use:slideInFrom={{ direction: 'top' }}>
 		<div class="relative z-10">
 			<h1 class="text-4xl md:text-5xl font-bold mb-2">
 				{$_('common.welcome')}, {$currentUser?.email?.split('@')[0] || 'Student'}
 			</h1>
-			<p class="text-lg opacity-90 mb-8">
+			<p class="text-lg opacity-90 mb-6">
 				Your study hub is ready. Here's your overview.
 			</p>
 
-			<!-- Stats as inline badges (NOT cards) -->
-			<div class="flex flex-wrap items-center gap-3" use:staggerFadeIn>
-				{#each stats as stat}
-					<a
-						href={stat.href}
-						class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/20 hover:bg-white/30 rounded-full text-white transition-all duration-200 no-underline hover:scale-105 backdrop-blur-sm"
-					>
-						<Icon name={stat.icon} size={20} className="text-white" />
-						<span class="font-bold text-lg">{stat.value}</span>
-						<span class="text-sm opacity-90">{stat.label}</span>
-					</a>
-				{/each}
+			<!-- Quick Search Bar -->
+			<div class="max-w-2xl">
+				<a href="/search" class="block group no-underline">
+					<div class="flex items-center gap-3 px-5 py-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl transition-all duration-200 border border-white/30 hover:border-white/50 hover:shadow-lg">
+						<Icon name="search" size={24} className="text-white" />
+						<span class="text-white/80 group-hover:text-white text-base">Search subjects, documents, and more...</span>
+						<div class="ml-auto flex items-center gap-2 px-3 py-1 bg-white/20 rounded-lg">
+							<span class="text-white/70 text-sm">Ctrl+K</span>
+						</div>
+					</div>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -235,4 +215,23 @@
 			{/if}
 		</section>
 	</div>
+
+	<!-- Study Tips Section -->
+	<section class="px-2" use:slideInFrom={{ direction: 'bottom', delay: 200 }}>
+		<div class="bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 dark:from-accent-primary/20 dark:to-accent-secondary/20 rounded-xl p-6 border border-accent-primary/20">
+			<div class="flex items-start gap-4">
+				<div class="p-3 bg-accent-primary/10 rounded-lg flex-shrink-0">
+					<Icon name="award" size={28} className="text-accent-primary" />
+				</div>
+				<div class="flex-1">
+					<h3 class="text-lg font-bold text-light-text-primary dark:text-dark-text-primary mb-2">
+						Study Tip of the Day
+					</h3>
+					<p class="text-light-text-secondary dark:text-dark-text-secondary leading-relaxed">
+						Break your study sessions into focused 25-minute intervals followed by 5-minute breaks. This technique, known as the Pomodoro Technique, helps maintain concentration and prevents burnout.
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
 </div>

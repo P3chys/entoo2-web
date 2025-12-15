@@ -23,7 +23,7 @@
 
 	const navItems = $derived([
 		{ href: '/', label: $_('navigation.home'), icon: 'home' },
-		{ href: '/semesters', label: $_('navigation.semesters'), icon: 'semesters' },
+		...($isAdmin ? [{ href: '/semesters', label: $_('navigation.semesters'), icon: 'semesters' }] : []),
 		{ href: '/subjects', label: $_('navigation.subjects'), icon: 'subjects' },
 		{ href: '/favorites', label: $_('navigation.favorites'), icon: 'favorites' }
 	]);
@@ -59,17 +59,6 @@
 							{item.label}
 						</a>
 					{/each}
-					{#if $isAdmin}
-						<a
-							href="/admin"
-							aria-current={$page.url.pathname.startsWith('/admin') ? 'page' : undefined}
-							class="px-3 py-2 rounded-lg text-sm font-medium transition-colors no-underline {$page.url.pathname.startsWith('/admin')
-								? 'bg-accent-primary text-white'
-								: 'text-light-text-primary dark:text-dark-text-primary hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover'}"
-						>
-							{$_('navigation.admin')}
-						</a>
-					{/if}
 					<a
 						href="/search"
 						aria-label={$_('common.search')}
@@ -133,18 +122,6 @@
 						{item.label}
 					</a>
 				{/each}
-				{#if $isAdmin}
-					<a
-						href="/admin"
-						aria-current={$page.url.pathname.startsWith('/admin') ? 'page' : undefined}
-						onclick={closeMobileMenu}
-						class="block px-3 py-2 rounded-lg text-base font-medium no-underline {$page.url.pathname.startsWith('/admin')
-							? 'bg-accent-primary text-white'
-							: 'text-light-text-primary dark:text-dark-text-primary hover:bg-light-bg-hover dark:hover:bg-dark-bg-hover'}"
-					>
-						{$_('navigation.admin')}
-					</a>
-				{/if}
 				<a
 					href="/search"
 					onclick={closeMobileMenu}
