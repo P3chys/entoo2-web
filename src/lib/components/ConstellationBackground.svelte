@@ -10,9 +10,9 @@
 	let animationFrameId: number;
     
     // Configuration
-    const particleCount = 60; // Number of particles
-    const connectionDistance = 150; // Max distance for lines
-    const mouseDistance = 200; // Interaction radius
+    const particleCount = 35; // Number of particles
+    const connectionDistance = 300; // Max distance for lines
+    const mouseDistance = 100; // Interaction radius
     
     interface Particle {
         x: number;
@@ -81,7 +81,7 @@
             
             // Limit speed
             const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-            const maxSpeed = 2;
+            const maxSpeed = 1.5;
             if (speed > maxSpeed) {
                 p.vx = (p.vx / speed) * maxSpeed;
                 p.vy = (p.vy / speed) * maxSpeed;
