@@ -181,6 +181,24 @@
 		}
 	}
 
+	import { goto } from '$app/navigation';
+
+	async function toggleFavorite(subject: Subject) {
+		// Optimistic update
+		const oldState = subject.is_favorite;
+		subject.is_favorite = !oldState;
+
+		const { error, data } = await api.post<{ success: boolean; is_favorite: boolean }>(`/api/v1/subjects/${subject.id}/favorite`, {});
+		if (error) {
+			// Revert on error
+			subject.is_favorite = oldState;
+			alert(error.message || 'Failed to toggle favorite');
+		} else if (data) {
+			subject.is_favorite = data.is_favorite;
+			await loadData(); // Reload to sort
+		}
+	}
+
 	onMount(() => {
 		loadData();
 	});
@@ -249,14 +267,36 @@
 
 					<div class="grid gap-4" use:staggerFadeIn>
 						{#each group.subjects as subject (subject.id)}
-							<a href="/subjects/{subject.id}" class="block bg-surface-50 dark:bg-surface-800 rounded-lg p-5 border border-surface-200 dark:border-surface-700 shadow-sm hover:shadow-md transition-shadow">
+							<div 
+								role="button"
+								tabindex="0"
+								onclick={() => goto(`/subjects/${subject.id}`)}
+								onkeydown={(e) => e.key === 'Enter' && goto(`/subjects/${subject.id}`)}
+								class="block bg-surface-50 dark:bg-surface-800 rounded-lg p-5 border border-surface-200 dark:border-surface-700 shadow-sm hover:shadow-md transition-shadow cursor-pointer relative group"
+							>
 								<div class="flex items-start justify-between">
 									<div class="flex-1">
 										<div class="flex items-center gap-3 mb-2">
 											<span class="font-mono font-bold bg-surface-200 dark:bg-surface-700 px-2 py-1 rounded text-sm">
 												{subject.code}
 											</span>
-											<h3 class="text-xl font-semibold">{subject.name_cs}</h3>
+											<h3 class="text-xl font-semibold flex items-center gap-2">
+												{subject.name_cs}
+												<button 
+													class="hover:scale-110 transition-transform btn-icon p-1 z-20 relative" 
+													onclick={(e) => { 
+														e.stopPropagation(); 
+														toggleFavorite(subject); 
+													}}
+													title="Toggle Favorite"
+												>
+													{#if subject.is_favorite}
+														<Icon name="star" size={20} className="text-yellow-400 fill-yellow-400" />
+													{:else}
+														<Icon name="star" size={20} className="text-surface-300 hover:text-yellow-400" />
+													{/if}
+												</button>
+											</h3>
 											<span class="text-xs bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded font-medium">
 												{subject.credits} kr.
 											</span>
@@ -276,7 +316,7 @@
 									</div>
 
 									{#if $isAdmin}
-										<div class="flex items-center gap-2 ml-4" onclick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+										<div class="flex items-center gap-2 ml-4 relative z-20" onclick={(e) => e.stopPropagation()}>
 											<Button variant="ghost" size="sm" onclick={() => openEditModal(subject)} aria-label="Edit">
 												<Icon name="edit" size={20} />
 											</Button>
@@ -295,7 +335,7 @@
 										</div>
 									{/if}
 								</div>
-							</a>
+							</div>
 						{/each}
 					</div>
 				</section>

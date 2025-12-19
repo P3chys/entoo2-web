@@ -33,7 +33,7 @@ export class ApiClient {
 		endpoint: string,
 		options: RequestInit = {}
 	): Promise<{ data?: T; error?: ApiError }> {
-		const headers: HeadersInit = {
+		const headers: any = {
 			'Content-Type': 'application/json',
 			...options.headers
 		};
@@ -120,7 +120,14 @@ export class ApiClient {
 			});
 		}
 
-		const headers: HeadersInit = {};
+		return this.postFormData<T>(endpoint, formData);
+	}
+
+	async postFormData<T>(
+		endpoint: string,
+		formData: FormData
+	): Promise<{ data?: T; error?: ApiError }> {
+		const headers: Record<string, string> = {};
 		if (this.token) {
 			headers['Authorization'] = `Bearer ${this.token}`;
 		}

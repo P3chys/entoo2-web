@@ -59,6 +59,13 @@
 		}
 	};
 
+	const toggleFavorite = async (doc: Document) => {
+		const { error, data } = await api.post<{ success: boolean; is_favorite: boolean }>(`/api/v1/documents/${doc.id}/favorite`, {});
+		if (!error && data) {
+			doc.is_favorite = data.is_favorite;
+		}
+	};
+
 	const deleteDocument = async (doc: Document) => {
 		if (!confirm($t('common.delete') + '?')) return;
 
@@ -81,6 +88,17 @@
 			{#each documents as doc (doc.id)}
 				<div class="flex items-center justify-between p-4 bg-base-100 rounded-lg border border-base-200 hover:border-primary/30 transition-colors">
 					<div class="flex items-center gap-4">
+						<button 
+							class="text-2xl select-none hover:scale-110 transition-transform" 
+							onclick={() => toggleFavorite(doc)}
+							title="Toggle Favorite"
+						>
+							{#if doc.is_favorite}
+								<Icon name="star" size={24} className="text-yellow-400 fill-yellow-400" />
+							{:else}
+								<Icon name="star" size={24} className="text-base-content/20 hover:text-yellow-400" />
+							{/if}
+						</button>
 						<div class="text-2xl select-none" role="img" aria-label="File icon">
 							{getFileIcon(doc.mime_type)}
 						</div>

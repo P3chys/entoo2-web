@@ -54,12 +54,14 @@ export interface Subject {
 	updated_at: string;
 	semester?: Semester;
 	teachers?: SubjectTeacher[];
+	is_favorite?: boolean;
 }
 
 export interface Document {
 	id: string;
 	subject_id: string;
 	uploaded_by: string;
+	answer_id?: string;
 	filename: string;
 	original_name: string;
 	file_size: number;
@@ -69,6 +71,7 @@ export interface Document {
 	created_at: string;
 	subject?: Subject;
 	uploader?: User;
+	is_favorite?: boolean;
 }
 
 export interface Activity {
@@ -89,6 +92,7 @@ export interface Comment {
 	subject_id: string;
 	user_id: string;
 	content: string;
+	is_anonymous: boolean;
 	created_at: string;
 	updated_at: string;
 	user?: User;
@@ -98,8 +102,8 @@ export interface Question {
 	id: string;
 	subject_id: string;
 	user_id: string;
-	title: string;
 	content: string;
+	is_anonymous: boolean;
 	created_at: string;
 	updated_at: string;
 	user?: User;
@@ -111,9 +115,11 @@ export interface Answer {
 	question_id: string;
 	user_id: string;
 	content: string;
+	document_id?: string;
 	created_at: string;
 	updated_at: string;
 	user?: User;
+	document?: Document;
 }
 
 export interface SearchResult {

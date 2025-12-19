@@ -51,7 +51,10 @@
         Zap,
         Award,
         Target,
-        Layers
+        Layers,
+        HelpCircle,
+        File,
+        MessageCircle
     } from 'lucide-svelte';
 
     const iconMap = {
@@ -106,7 +109,11 @@
         zap: Zap,
         award: Award,
         target: Target,
-        layers: Layers
+        layers: Layers,
+        'help-circle': HelpCircle,
+        file: File,
+        'message-circle': MessageCircle,
+        questions: HelpCircle
     };
 
     export let name: keyof typeof iconMap | string;
