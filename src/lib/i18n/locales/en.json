@@ -113,7 +113,14 @@
 		"uploadedAt": "Uploaded at",
 		"noDocuments": "No documents",
 		"maxSize": "Maximum file size is 50 MB",
-		"supportedFormats": "Supported formats: PDF, DOCX, PPTX, images, TXT, XLS, XLSX"
+		"supportedFormats": "Supported formats: PDF, DOCX, PPTX, images, TXT, XLS, XLSX",
+		"category": "Category",
+		"categoryLecture": "Lecture",
+		"categorySeminar": "Seminar",
+		"categoryOther": "Other",
+		"tabLectures": "Lectures",
+		"tabSeminars": "Seminars",
+		"tabOthers": "Others"
 	},
 	"comments": {
 		"title": "Comments",

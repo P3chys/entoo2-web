@@ -62,6 +62,7 @@ export interface Document {
 	subject_id: string;
 	uploaded_by: string;
 	answer_id?: string;
+	category: 'lecture' | 'seminar' | 'other';
 	filename: string;
 	original_name: string;
 	file_size: number;

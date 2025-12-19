@@ -113,7 +113,14 @@
 		"uploadedAt": "Nahráno",
 		"noDocuments": "Žádné dokumenty",
 		"maxSize": "Maximální velikost souboru je 50 MB",
-		"supportedFormats": "Podporované formáty: PDF, DOCX, PPTX, obrázky, TXT, XLS, XLSX"
+		"supportedFormats": "Podporované formáty: PDF, DOCX, PPTX, obrázky, TXT, XLS, XLSX",
+		"category": "Kategorie",
+		"categoryLecture": "Přednáška",
+		"categorySeminar": "Seminář",
+		"categoryOther": "Ostatní",
+		"tabLectures": "Přednášky",
+		"tabSeminars": "Semináře",
+		"tabOthers": "Ostatní"
 	},
 	"comments": {
 		"title": "Komentáře",

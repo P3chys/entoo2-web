@@ -16,6 +16,12 @@
 	let { subjectId, documents = [], currentUserId = undefined, onDelete = () => {} }: Props = $props();
 
 	let previewDocument = $state<Document | null>(null);
+	let activeTab = $state<'lecture' | 'seminar' | 'other'>('lecture');
+
+	// Filter documents by category
+	const filteredDocuments = $derived(
+		documents.filter(doc => doc.category === activeTab)
+	);
 
 	const getFileIcon = (mimeType: string) => {
 		if (mimeType.includes('pdf')) return '📄';
@@ -79,13 +85,35 @@
 </script>
 
 <div class="space-y-4">
-	{#if documents.length === 0}
+	<!-- Category Tabs -->
+	<div class="flex gap-2 border-b border-base-300">
+		<button
+			class="px-4 py-2 font-medium transition-colors border-b-2 {activeTab === 'lecture' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'}"
+			onclick={() => activeTab = 'lecture'}
+		>
+			{$t('documents.tabLectures')}
+		</button>
+		<button
+			class="px-4 py-2 font-medium transition-colors border-b-2 {activeTab === 'seminar' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'}"
+			onclick={() => activeTab = 'seminar'}
+		>
+			{$t('documents.tabSeminars')}
+		</button>
+		<button
+			class="px-4 py-2 font-medium transition-colors border-b-2 {activeTab === 'other' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'}"
+			onclick={() => activeTab = 'other'}
+		>
+			{$t('documents.tabOthers')}
+		</button>
+	</div>
+
+	{#if filteredDocuments.length === 0}
 		<div class="text-center py-8 text-base-content/60">
 			{$t('documents.noDocuments')}
 		</div>
 	{:else}
 		<div class="grid gap-3">
-			{#each documents as doc (doc.id)}
+			{#each filteredDocuments as doc (doc.id)}
 				<div class="flex items-center justify-between p-4 bg-base-100 rounded-lg border border-base-200 hover:border-primary/30 transition-colors">
 					<div class="flex items-center gap-4">
 						<button 

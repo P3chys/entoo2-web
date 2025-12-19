@@ -15,6 +15,7 @@
 
 	let dragging = $state(false);
 	let uploading = $state(false);
+	let category = $state<'lecture' | 'seminar' | 'other'>('lecture');
 	let fileInput: HTMLInputElement;
 
 	const handleDragEnter = (e: DragEvent) => {
@@ -50,7 +51,11 @@
 		}
 
 		uploading = true;
-		const { data, error } = await api.upload<{ success: boolean; data: Document }>(`/api/v1/subjects/${subjectId}/documents`, file);
+		const { data, error } = await api.upload<{ success: boolean; data: Document }>(
+			`/api/v1/subjects/${subjectId}/documents`,
+			file,
+			{ category }
+		);
 		uploading = false;
 
 		if (error) {
@@ -84,9 +89,7 @@
 
 	<div class="flex flex-col items-center gap-4">
 		<div class="p-4 bg-base-200 rounded-full text-primary">
-		<div class="p-4 bg-base-200 rounded-full text-primary">
             <Icon name="upload" size={32} />
-		</div>
 		</div>
 
 		<div>
@@ -96,6 +99,22 @@
 			<p class="text-base-content/60 text-sm mt-1">
 				{$t('documents.supportedFormats')}
 			</p>
+		</div>
+
+		<!-- Category selector -->
+		<div class="w-full max-w-xs">
+			<label class="block text-sm font-medium mb-2">
+				{$t('documents.category')}
+			</label>
+			<select
+				bind:value={category}
+				class="select select-bordered w-full"
+				disabled={uploading}
+			>
+				<option value="lecture">{$t('documents.categoryLecture')}</option>
+				<option value="seminar">{$t('documents.categorySeminar')}</option>
+				<option value="other">{$t('documents.categoryOther')}</option>
+			</select>
 		</div>
 
 		<!-- Pass onclick as a prop to Button, as Button.svelte uses $props() and expects onclick prop -->
