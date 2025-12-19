@@ -150,7 +150,7 @@
 						<!-- Preview button -->
 						<button
 							class="btn btn-ghost btn-sm btn-square"
-							title="Preview"
+							title={$t('common.preview')}
 							onclick={() => previewDocument = doc}
 						>
                             <Icon name="search" size={20} />

@@ -27,7 +27,7 @@
 		}>('/api/v1/favorites');
 
 		if (response.error) {
-			error = response.error.message || 'Failed to load favorites';
+			error = response.error.message || $_('common.failed_to_load_favorites');
 		} else if (response.data?.success) {
 			favoriteSubjects = response.data.data.subjects || [];
 			favoriteDocuments = response.data.data.documents || [];
@@ -46,7 +46,7 @@
 		if (error) {
 			// Revert if failed
 			favoriteSubjects = originalList;
-			alert(error.message || 'Failed to remove favorite');
+			alert(error.message || $_('common.failed_to_remove_favorite'));
 		} else {
              // Success - no action needed as item is already removed
         }
@@ -70,7 +70,7 @@
 
 <div class="space-y-8" in:fade={{ duration: 200 }}>
 	<div class="flex items-center gap-3">
-		<h1 class="text-3xl font-bold">Favorites</h1>
+		<h1 class="text-3xl font-bold">{$_('favorites.title')}</h1>
 		<Icon name="star" size={32} className="text-yellow-400 fill-yellow-400" />
 	</div>
 
@@ -88,13 +88,13 @@
 			<div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-surface-100 dark:bg-surface-700 mb-4">
 				<Icon name="star" size={32} className="text-surface-400" />
 			</div>
-			<h3 class="text-xl font-semibold mb-2">No Favorites Yet</h3>
+			<h3 class="text-xl font-semibold mb-2">{$_('favorites.noFavoritesTitle')}</h3>
 			<p class="text-surface-600 dark:text-surface-400 max-w-md mx-auto mb-6">
-				Mark subjects and documents as favorites to access them quickly from this page.
+				{$_('favorites.noFavoritesDesc')}
 			</p>
 			<div class="flex justify-center gap-4">
 				<a href="/subjects">
-					<Button variant="primary">Browse Subjects</Button>
+					<Button variant="primary">{$_('favorites.browseSubjects')}</Button>
 				</a>
 			</div>
 		</div>
@@ -104,7 +104,7 @@
 			<section>
 				<h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
 					<Icon name="book" size={24} />
-					Favorite Subjects
+					{$_('favorites.favoriteSubjects')}
 				</h2>
 				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 					{#each favoriteSubjects as subject (subject.id)}
@@ -153,7 +153,7 @@
 			<section>
 				<h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
 					<Icon name="file-text" size={24} />
-					Favorite Documents
+					{$_('favorites.favoriteDocuments')}
 				</h2>
 				<div class="bg-surface-50 dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-4">
 					<DocumentList 

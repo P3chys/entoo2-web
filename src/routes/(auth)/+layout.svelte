@@ -1,6 +1,5 @@
 <script lang="ts">
 	import ThemeToggle from '$components/ThemeToggle.svelte';
-	import LanguageSelector from '$components/LanguageSelector.svelte';
 	import { goto } from '$app/navigation';
 	import { isAuthenticated } from '$stores/auth';
 	import { onMount } from 'svelte';
@@ -14,7 +13,6 @@
 
 <div class="min-h-screen bg-light-bg-primary dark:bg-dark-bg-primary">
 	<div class="fixed top-4 right-4 z-50 flex items-center gap-2">
-		<LanguageSelector />
 		<ThemeToggle />
 	</div>
 

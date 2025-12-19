@@ -207,14 +207,14 @@
 			</svg>
 			<h3 class="text-lg font-semibold mb-2">{$_('search.noResults')}</h3>
 			<p class="text-light-text-secondary dark:text-dark-text-secondary mb-4">
-				No results found for "{searchQuery}"
+				{$_('search.noResultsFor', { values: { query: searchQuery } })}
 			</p>
 			<ul
 				class="text-sm text-light-text-tertiary dark:text-dark-text-tertiary text-left max-w-md mx-auto"
 			>
-				<li>Try checking your spelling</li>
-				<li>Use different keywords</li>
-				<li>Remove filters to see more results</li>
+				<li>{$_('search.tipSpelling')}</li>
+				<li>{$_('search.tipKeywords')}</li>
+				<li>{$_('search.tipFilters')}</li>
 			</ul>
 		</div>
 	{:else if filteredResults.length > 0}
@@ -223,8 +223,7 @@
 			<div class="flex items-center justify-between" use:bounceIn>
 				<p class="text-sm text-light-text-secondary dark:text-dark-text-secondary font-medium">
 					<Icon name="check" size={16} className="inline text-success" />
-					Found {filteredResults.length}
-					{filteredResults.length === 1 ? 'result' : 'results'}
+					{$_('search.found')}{filteredResults.length}{filteredResults.length === 1 ? $_('search.result') : $_('search.results_plural')}
 				</p>
 			</div>
 
@@ -250,9 +249,9 @@
 					d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
 				/>
 			</svg>
-			<h3 class="text-lg font-semibold mb-2">Search across documents and subjects</h3>
+			<h3 class="text-lg font-semibold mb-2">{$_('search.emptyTitle')}</h3>
 			<p class="text-light-text-secondary dark:text-dark-text-secondary">
-				Start typing to find files, content, and courses
+				{$_('search.emptyDescription')}
 			</p>
 		</div>
 	{/if}

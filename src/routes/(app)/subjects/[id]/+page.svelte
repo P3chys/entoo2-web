@@ -30,7 +30,7 @@
 		]);
 
 		if (subjectRes.error) {
-			error = subjectRes.error.message || 'Failed to load subject';
+			error = subjectRes.error.message || $_('common.failed_to_load_subject');
 		} else if (subjectRes.data?.success) {
 			subject = subjectRes.data.data;
 		}
@@ -161,7 +161,7 @@
 									<p class="text-light-text-tertiary dark:text-dark-text-tertiary italic">{subject.description_en}</p>
 								</div>
 							{:else}
-								<p class="text-light-text-tertiary dark:text-dark-text-tertiary text-sm">No description available.</p>
+								<p class="text-light-text-tertiary dark:text-dark-text-tertiary text-sm">{$_('subjects.noDescription')}</p>
 							{/if}
 						</div>
 
@@ -238,9 +238,9 @@
 						<div class="bg-accent-primary/5 border border-accent-primary/20 rounded-lg p-4 text-sm text-light-text-secondary dark:text-dark-text-secondary">
 							<div class="flex items-center gap-2 font-bold mb-2">
 								<Icon name="info" size={16} />
-								Info
+								{$_('common.info')}
 							</div>
-							<p>Discussion area for {subject.code}. Keep conversations respectful and relevant.</p>
+							<p>{$_('subjects.discussionInfo', { values: { code: subject.code } })}</p>
 						</div>
 					</div>
 				</div>

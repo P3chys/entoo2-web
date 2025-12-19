@@ -120,19 +120,19 @@
 
 	async function handleSubmit() {
 		if (!formNameCS.trim() || !formNameEN.trim()) {
-			error = 'Name is required in both languages';
+			error = $_('subjects.errorNameRequired');
 			return;
 		}
 		if (!formCode.trim()) {
-			error = 'Subject code is required';
+			error = $_('subjects.errorCodeRequired');
 			return;
 		}
 		if (formCode.length < 3 || formCode.length > 6) {
-			error = 'Subject code must be between 3 and 6 characters';
+			error = $_('subjects.errorCodeLength');
 			return;
 		}
 		if (!formSemesterID) {
-			error = 'Please select a semester';
+			error = $_('subjects.errorSemesterRequired');
 			return;
 		}
 
@@ -153,14 +153,14 @@
 		if (editingSubject) {
 			const response = await api.put(`/api/v1/admin/subjects/${editingSubject.id}`, payload);
 			if (response.error) {
-				error = response.error.message || 'Failed to update subject';
+				error = response.error.message || $_('common.failed_to_update_subject');
 				submitting = false;
 				return;
 			}
 		} else {
 			const response = await api.post('/api/v1/admin/subjects', payload);
 			if (response.error) {
-				error = response.error.message || 'Failed to create subject';
+				error = response.error.message || $_('common.failed_to_create_subject');
 				submitting = false;
 				return;
 			}
@@ -174,7 +174,7 @@
 	async function handleDelete(id: string) {
 		const response = await api.delete(`/api/v1/admin/subjects/${id}`);
 		if (response.error) {
-			alert(response.error.message || 'Failed to delete subject');
+			alert(response.error.message || $_('common.failed_to_delete_subject'));
 		} else {
 			deleteConfirm = null;
 			await loadData();
@@ -192,7 +192,7 @@
 		if (error) {
 			// Revert on error
 			subject.is_favorite = oldState;
-			alert(error.message || 'Failed to toggle favorite');
+			alert(error.message || $_('common.failed_to_toggle_favorite'));
 		} else if (data) {
 			subject.is_favorite = data.is_favorite;
 			await loadData(); // Reload to sort
@@ -228,11 +228,11 @@
 	{:else if semesters.length === 0}
 		<!-- No semesters state -->
 		<div class="empty-state">
-			<h3 class="empty-title">No semesters available</h3>
-			<p class="empty-description">Create semesters first before adding subjects.</p>
+			<h3 class="empty-title">{$_('subjects.noSemestersAvailable')}</h3>
+			<p class="empty-description">{$_('subjects.createSemestersFirst')}</p>
 			<div class="flex gap-3 justify-center">
 				<a href="/semesters">
-					<Button variant="primary">Go to Semesters</Button>
+					<Button variant="primary">{$_('subjects.goToSemesters')}</Button>
 				</a>
 			</div>
 		</div>
@@ -244,12 +244,12 @@
 					<Button variant="primary" size="lg" onclick={openCreateModal}>
 						<div class="flex items-center gap-2">
                             <Icon name="add" size={24} />
-						    Create First Subject
+						    {$_('subjects.createFirst')}
                         </div>
 					</Button>
 				</div>
 			{:else}
-				<p class="empty-description">No subjects have been created yet.</p>
+				<p class="empty-description">{$_('subjects.noSubjects')}</p>
 			{/if}
 		</div>
 	{:else}
@@ -317,18 +317,18 @@
 
 									{#if $isAdmin}
 										<div class="flex items-center gap-2 ml-4 relative z-20" onclick={(e) => e.stopPropagation()}>
-											<Button variant="ghost" size="sm" onclick={() => openEditModal(subject)} aria-label="Edit">
+											<Button variant="ghost" size="sm" onclick={() => openEditModal(subject)} aria-label={$_('common.edit')}>
 												<Icon name="edit" size={20} />
 											</Button>
 											{#if deleteConfirm === subject.id}
 												<Button variant="danger" size="sm" onclick={() => handleDelete(subject.id)}>
-													Confirm
+													{$_('common.confirm')}
 												</Button>
 												<Button variant="ghost" size="sm" onclick={() => deleteConfirm = null}>
-													Cancel
+													{$_('common.cancel')}
 												</Button>
 											{:else}
-												<Button variant="ghost" size="sm" onclick={() => deleteConfirm = subject.id} aria-label="Delete">
+												<Button variant="ghost" size="sm" onclick={() => deleteConfirm = subject.id} aria-label={$_('common.delete')}>
 													<Icon name="delete" size={20} />
 												</Button>
 											{/if}
@@ -349,7 +349,7 @@
 	<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onclick={closeModal}>
 		<div class="bg-surface-50 dark:bg-surface-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" onclick={(e) => e.stopPropagation()}>
 			<h2 class="text-xl font-bold mb-4">
-				{editingSubject ? 'Edit Subject' : 'Create Subject'}
+				{editingSubject ? $_('subjects.edit') : $_('subjects.create')}
 			</h2>
 			
 			{#if error}
@@ -361,7 +361,7 @@
 			<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 					<div class="md:col-span-2">
-						<label for="semester" class="block text-sm font-medium mb-1">Semester</label>
+						<label for="semester" class="block text-sm font-medium mb-1">{$_('subjects.semester')}</label>
 						<select
 							id="semester"
 							bind:value={formSemesterID}
@@ -374,7 +374,7 @@
 					</div>
 
 					<div>
-						<label for="code" class="block text-sm font-medium mb-1">Subject Code (3-6 chars)</label>
+						<label for="code" class="block text-sm font-medium mb-1">{$_('subjects.codeShort')}</label>
 						<input
 							id="code"
 							type="text"
@@ -386,7 +386,7 @@
 					</div>
 
 					<div>
-						<label for="credits" class="block text-sm font-medium mb-1">Credits</label>
+						<label for="credits" class="block text-sm font-medium mb-1">{$_('subjects.credits')}</label>
 						<input
 							id="credits"
 							type="number"
@@ -395,9 +395,9 @@
 							class="w-full px-3 py-2 border rounded-lg bg-surface-100 dark:bg-surface-700 border-surface-300 dark:border-surface-600"
 						/>
 					</div>
-					
+
 					<div>
-						<label for="name_cs" class="block text-sm font-medium mb-1">Name (Czech)</label>
+						<label for="name_cs" class="block text-sm font-medium mb-1">{$_('common.name_czech')}</label>
 						<input
 							id="name_cs"
 							type="text"
@@ -406,7 +406,7 @@
 						/>
 					</div>
 					<div>
-						<label for="name_en" class="block text-sm font-medium mb-1">Name (English)</label>
+						<label for="name_en" class="block text-sm font-medium mb-1">{$_('common.name_english')}</label>
 						<input
 							id="name_en"
 							type="text"
@@ -416,7 +416,7 @@
 					</div>
 
 					<div class="md:col-span-2">
-						<label class="block text-sm font-medium mb-2">Teachers</label>
+						<label class="block text-sm font-medium mb-2">{$_('subjects.teachers')}</label>
 						{#each formTeachers as teacher, i}
 							<div class="flex gap-2 mb-2 items-start">
 								<div class="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -445,12 +445,12 @@
 							</div>
 						{/each}
 						<button type="button" class="text-sm text-primary-600 hover:text-primary-800 font-medium mt-1" onclick={addTeacher}>
-							+ Add Teacher
+							+ {$_('common.add_teacher')}
 						</button>
 					</div>
 
 					<div class="md:col-span-2">
-						<label for="desc_cs" class="block text-sm font-medium mb-1">Description (Czech)</label>
+						<label for="desc_cs" class="block text-sm font-medium mb-1">{$_('common.description_czech')}</label>
 						<textarea
 							id="desc_cs"
 							bind:value={formDescCS}
@@ -459,7 +459,7 @@
 						></textarea>
 					</div>
 					<div class="md:col-span-2">
-						<label for="desc_en" class="block text-sm font-medium mb-1">Description (English)</label>
+						<label for="desc_en" class="block text-sm font-medium mb-1">{$_('common.description_english')}</label>
 						<textarea
 							id="desc_en"
 							bind:value={formDescEN}
@@ -470,9 +470,9 @@
 				</div>
 
 				<div class="flex justify-end gap-3 mt-6 border-t pt-4 dark:border-surface-700">
-					<Button variant="ghost" onclick={closeModal}>Cancel</Button>
+					<Button variant="ghost" onclick={closeModal}>{$_('common.cancel')}</Button>
 					<Button variant="primary" type="submit" loading={submitting}>
-						{editingSubject ? 'Update Subject' : 'Create Subject'}
+						{editingSubject ? $_('common.update') : $_('subjects.create')}
 					</Button>
 				</div>
 			</form>

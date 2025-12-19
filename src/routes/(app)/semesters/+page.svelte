@@ -56,7 +56,7 @@
 
 	async function handleSubmit() {
 		if (!formNameCS.trim() || !formNameEN.trim()) {
-			error = 'Name is required in both languages';
+			error = $_('semesters.errorNameRequired');
 			return;
 		}
 
@@ -72,14 +72,14 @@
 		if (editingSemester) {
 			const response = await api.put(`/api/v1/admin/semesters/${editingSemester.id}`, payload);
 			if (response.error) {
-				error = response.error.message || 'Failed to update semester';
+				error = response.error.message || $_('semesters.errorUpdateFailed');
 				submitting = false;
 				return;
 			}
 		} else {
 			const response = await api.post('/api/v1/admin/semesters', payload);
 			if (response.error) {
-				error = response.error.message || 'Failed to create semester';
+				error = response.error.message || $_('semesters.errorCreateFailed');
 				submitting = false;
 				return;
 			}
@@ -93,7 +93,7 @@
 	async function handleDelete(id: string) {
 		const response = await api.delete(`/api/v1/admin/semesters/${id}`);
 		if (response.error) {
-			alert(response.error.message || 'Failed to delete semester');
+			alert(response.error.message || $_('common.failed_to_delete_semester'));
 		} else {
 			deleteConfirm = null;
 			await loadSemesters();
@@ -130,19 +130,19 @@
 			<h3 class="empty-title">{$_('semesters.noSemesters')}</h3>
 			{#if $isAdmin}
 				<p class="empty-description">
-					Create your first semester to start organizing your study materials and courses.
+					{$_('dashboard.noSemestersAdmin')}
 				</p>
 				<div class="flex gap-3 justify-center">
 					<Button variant="primary" size="lg" onclick={openCreateModal}>
 						<div class="flex items-center gap-2">
                             <Icon name="add" size={24} />
-						    Create First Semester
+						    {$_('semesters.createFirst')}
                         </div>
 					</Button>
 				</div>
 			{:else}
 				<p class="empty-description">
-					No semesters have been created yet. Contact an administrator to set up semesters.
+					{$_('dashboard.noSemestersStudent')}
 				</p>
 			{/if}
 		</div>
@@ -157,20 +157,20 @@
 							<p class="text-sm text-surface-500">{semester.name_en}</p>
 						</div>
 						<div class="flex items-center gap-2">
-							<span class="text-xs text-surface-400 mr-4">Order: {semester.order_index}</span>
+							<span class="text-xs text-surface-400 mr-4">{$_('common.order')}: {semester.order_index}</span>
 							{#if $isAdmin}
-								<Button variant="ghost" size="sm" onclick={() => openEditModal(semester)} aria-label="Edit">
+								<Button variant="ghost" size="sm" onclick={() => openEditModal(semester)} aria-label={$_('common.edit')}>
 									<Icon name="edit" size={20} />
 								</Button>
 								{#if deleteConfirm === semester.id}
 									<Button variant="danger" size="sm" onclick={() => handleDelete(semester.id)}>
-										Confirm Delete
+										{$_('semesters.confirmDelete')}
 									</Button>
 									<Button variant="ghost" size="sm" onclick={() => deleteConfirm = null}>
-										Cancel
+										{$_('common.cancel')}
 									</Button>
 								{:else}
-									<Button variant="ghost" size="sm" onclick={() => deleteConfirm = semester.id} aria-label="Delete">
+									<Button variant="ghost" size="sm" onclick={() => deleteConfirm = semester.id} aria-label={$_('common.delete')}>
 										<Icon name="delete" size={20} />
 									</Button>
 								{/if}
@@ -188,7 +188,7 @@
 	<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onclick={closeModal}>
 		<div class="bg-surface-50 dark:bg-surface-800 rounded-lg p-6 w-full max-w-md m-4" onclick={(e) => e.stopPropagation()}>
 			<h2 class="text-xl font-bold mb-4">
-				{editingSemester ? 'Edit Semester' : 'Create Semester'}
+				{editingSemester ? $_('semesters.edit') : $_('semesters.create')}
 			</h2>
 			
 			{#if error}
@@ -200,7 +200,7 @@
 			<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
 				<div class="space-y-4">
 					<div>
-						<label for="name_cs" class="block text-sm font-medium mb-1">Name (Czech)</label>
+						<label for="name_cs" class="block text-sm font-medium mb-1">{$_('common.name_czech')}</label>
 						<input
 							id="name_cs"
 							type="text"
@@ -210,7 +210,7 @@
 						/>
 					</div>
 					<div>
-						<label for="name_en" class="block text-sm font-medium mb-1">Name (English)</label>
+						<label for="name_en" class="block text-sm font-medium mb-1">{$_('common.name_english')}</label>
 						<input
 							id="name_en"
 							type="text"
@@ -220,7 +220,7 @@
 						/>
 					</div>
 					<div>
-						<label for="order_index" class="block text-sm font-medium mb-1">Order Index</label>
+						<label for="order_index" class="block text-sm font-medium mb-1">{$_('common.order_index')}</label>
 						<input
 							id="order_index"
 							type="number"
@@ -231,9 +231,9 @@
 				</div>
 
 				<div class="flex justify-end gap-3 mt-6">
-					<Button variant="ghost" onclick={closeModal}>Cancel</Button>
+					<Button variant="ghost" onclick={closeModal}>{$_('common.cancel')}</Button>
 					<Button variant="primary" type="submit" loading={submitting}>
-						{editingSemester ? 'Update' : 'Create'}
+						{editingSemester ? $_('common.update') : $_('common.create')}
 					</Button>
 				</div>
 			</form>

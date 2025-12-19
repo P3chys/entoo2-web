@@ -30,7 +30,7 @@
 		const res = await api.get<{ success: boolean; data: Subject }>(`/api/v1/subjects/${subjectId}`);
 
 		if (res.error) {
-			error = res.error.message || 'Failed to load subject';
+			error = res.error.message || $_('common.failed_to_load_subject');
 		} else if (res.data?.success) {
 			const s = res.data.data;
 			formData = {
@@ -58,7 +58,7 @@
 		const res = await api.put<{ success: boolean; data: Subject }>(`/api/v1/admin/subjects/${subjectId}`, formData);
 
 		if (res.error) {
-			error = res.error.message || 'Failed to update subject';
+			error = res.error.message || $_('common.failed_to_update_subject');
 		} else if (res.data?.success) {
 			goto(`/subjects/${subjectId}`);
 		}
@@ -108,7 +108,7 @@
 				<!-- Basic Info Section -->
 				<section class="space-y-6">
 					<h3 class="text-lg font-semibold border-b border-light-border-primary dark:border-dark-border-primary pb-2">
-						Basic Information
+						{$_('common.basic_info')}
 					</h3>
 					
 					<!-- Code & Credits -->
@@ -213,7 +213,7 @@
 
 					{#if formData.teachers.length === 0}
 						<div class="text-center py-6 text-light-text-secondary dark:text-dark-text-secondary italic bg-light-bg-tertiary dark:bg-dark-bg-tertiary rounded-lg">
-							No teachers assigned
+							{$_('subjects.noTeachers')}
 						</div>
 					{/if}
 					

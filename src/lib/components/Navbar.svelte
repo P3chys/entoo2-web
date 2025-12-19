@@ -3,7 +3,6 @@
 	import { page } from '$app/stores';
 	import { authStore, isAdmin } from '$stores/auth';
 	import ThemeToggle from './ThemeToggle.svelte';
-	import LanguageSelector from './LanguageSelector.svelte';
     import Icon from './Icon.svelte';
 
 	let mobileMenuOpen = $state(false);
@@ -31,7 +30,7 @@
 
 <!-- Skip Links for Accessibility -->
 <a href="#main-content" class="skip-link">
-	Skip to main content
+	{$_('common.skip_to_content')}
 </a>
 
 <nav aria-label="Main navigation" class="bg-light-bg-secondary dark:bg-dark-bg-secondary border-b border-light-border-primary dark:border-dark-border-primary shadow-sm">
@@ -74,7 +73,6 @@
 			<!-- Right Side Actions -->
 			<div class="flex items-center gap-2">
 				<div class="hidden md:flex items-center gap-2">
-					<LanguageSelector />
 					<ThemeToggle />
 				</div>
 				<div class="hidden md:block ml-3">
@@ -95,7 +93,7 @@
 					aria-label="Toggle navigation menu"
 					onclick={toggleMobileMenu}
 				>
-					<span class="sr-only">Open main menu</span>
+					<span class="sr-only">{$_('common.open_menu')}</span>
 					{#if !mobileMenuOpen}
 						<Icon name="menu" size={24} />
 					{:else}
@@ -135,7 +133,6 @@
 				<!-- Mobile settings -->
 				<div class="pt-4 pb-3 border-t border-light-border-primary dark:border-dark-border-primary">
 					<div class="flex items-center justify-around px-5">
-						<LanguageSelector />
 						<ThemeToggle />
 					</div>
 					<div class="mt-3 px-2">

@@ -9,9 +9,9 @@
 	import { staggerFadeIn, slideInFrom } from '$lib/utils/animation';
 
 	const quickActions = $derived([
-		...($isAdmin ? [{ href: '/semesters', icon: 'semesters', label: $_('navigation.semesters'), desc: 'Manage your academic terms' }] : []),
-		{ href: '/subjects', icon: 'subjects', label: $_('navigation.subjects'), desc: 'Browse course materials' },
-		{ href: '/favorites', icon: 'favorites', label: $_('navigation.favorites'), desc: 'Quick access to saved items' }
+		...($isAdmin ? [{ href: '/semesters', icon: 'semesters', label: $_('navigation.semesters'), desc: $_('dashboard.quickActionSemesters') }] : []),
+		{ href: '/subjects', icon: 'subjects', label: $_('navigation.subjects'), desc: $_('dashboard.quickActionSubjects') },
+		{ href: '/favorites', icon: 'favorites', label: $_('navigation.favorites'), desc: $_('dashboard.quickActionFavorites') }
 	]);
 
 	interface ActivityDisplay {
@@ -46,8 +46,8 @@
 		if (activityRes.data?.success) {
 			recentActivity = (activityRes.data.data || []).map(a => {
 				const isUpload = a.activity_type === 'document_uploaded';
-				const userName = a.user?.email || 'Unknown user';
-				const subjectName = a.subject?.name_en || 'Unknown subject'; // Prefer english name or use based on locale? using fixed for now
+				const userName = a.user?.email || $_('common.unknown_user');
+				const subjectName = a.subject?.name_cs || $_('common.unknown_subject');
 				const docName = a.document?.original_name || 'document';
 				
 				return {
@@ -78,10 +78,10 @@
 	<div class="hero" use:slideInFrom={{ direction: 'top' }}>
 		<div class="relative z-10">
 			<h1 class="text-4xl md:text-5xl font-bold mb-2">
-				{$_('common.welcome')}, {$currentUser?.email?.split('@')[0] || 'Student'}
+				{$_('common.welcome')}, {$currentUser?.email?.split('@')[0] || $_('common.student')}
 			</h1>
 			<p class="text-lg opacity-90 mb-6">
-				Your study hub is ready. Here's your overview.
+				{$_('dashboard.subtitle')}
 			</p>
 
 			<!-- Quick Search Bar -->
@@ -89,9 +89,9 @@
 				<a href="/search" class="block group no-underline">
 					<div class="flex items-center gap-3 px-5 py-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl transition-all duration-200 border border-white/30 hover:border-white/50 hover:shadow-lg">
 						<Icon name="search" size={24} className="text-white" />
-						<span class="text-white/80 group-hover:text-white text-base">Search subjects, documents, and more...</span>
+						<span class="text-white/80 group-hover:text-white text-base">{$_('dashboard.searchPlaceholder')}</span>
 						<div class="ml-auto flex items-center gap-2 px-3 py-1 bg-white/20 rounded-lg">
-							<span class="text-white/70 text-sm">Ctrl+K</span>
+							<span class="text-white/70 text-sm">{$_('dashboard.keyboardShortcut')}</span>
 						</div>
 					</div>
 				</a>
@@ -225,10 +225,10 @@
 				</div>
 				<div class="flex-1">
 					<h3 class="text-lg font-bold text-light-text-primary dark:text-dark-text-primary mb-2">
-						Study Tip of the Day
+						{$_('dashboard.studyTipTitle')}
 					</h3>
 					<p class="text-light-text-secondary dark:text-dark-text-secondary leading-relaxed">
-						Break your study sessions into focused 25-minute intervals followed by 5-minute breaks. This technique, known as the Pomodoro Technique, helps maintain concentration and prevents burnout.
+						{$_('dashboard.studyTipText')}
 					</p>
 				</div>
 			</div>
