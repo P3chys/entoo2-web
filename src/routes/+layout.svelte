@@ -5,6 +5,7 @@
 	import { browser } from '$app/environment';
     import { themeStore } from '$stores/theme';
     import '$lib/i18n';
+	import ToastContainer from '$lib/components/ToastContainer.svelte';
 
     let { children } = $props();
 
@@ -28,6 +29,7 @@
 
 <div class="min-h-screen flex flex-col relative overflow-x-hidden bg-light-bg-primary dark:bg-dark-bg-primary text-light-text-primary dark:text-dark-text-primary transition-colors duration-300">
     {@render children?.()}
+	<ToastContainer />
 </div>
 
 <style>

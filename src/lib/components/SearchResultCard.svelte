@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import type { SearchResult } from '$types';
-	import { formatFileSize } from '$lib/utils/search';
+	import { formatFileSize, getFileTypeIcon, getFileTypeName } from '$lib/utils/search';
 
 	interface Props {
 		result: SearchResult;
@@ -10,19 +10,9 @@
 
 	let { result, query = '' }: Props = $props();
 
-	const isDocument = result.type === 'document';
-
-	function getFileIcon(mimeType?: string) {
-		if (!mimeType) return '📄';
-		if (mimeType.includes('pdf')) return '📄';
-		if (mimeType.includes('word')) return '📝';
-		if (mimeType.includes('sheet')) return '📊';
-		if (mimeType.includes('presentation')) return '📽️';
-		if (mimeType.includes('image')) return '🖼️';
-		return '📎';
-	}
-
-	const href = isDocument ? `/subjects/${result.subject_id}` : `/subjects/${result.id}`;
+	const isDocument = $derived(result.type === 'document');
+	const href = $derived(isDocument ? `/subjects/${result.subject_id}` : `/subjects/${result.id}`);
+	const displayTitle = $derived(result.title || 'Untitled');
 </script>
 
 <a
@@ -33,7 +23,7 @@
 		<!-- Icon -->
 		<div class="text-2xl flex-shrink-0">
 			{#if isDocument}
-				{getFileIcon(result.mime_type)}
+				{getFileTypeIcon(result.mime_type)}
 			{:else}
 				📚
 			{/if}
@@ -43,7 +33,7 @@
 		<div class="flex-1 min-w-0">
 			<!-- Title -->
 			<h3 class="font-medium text-light-text-primary dark:text-dark-text-primary truncate">
-				{result.title}
+				{@html displayTitle}
 			</h3>
 
 			<!-- Metadata -->

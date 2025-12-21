@@ -5,7 +5,7 @@
 	import { _ } from 'svelte-i18n';
 	import { fade } from 'svelte/transition';
 	import { api } from '$lib/utils/api';
-	import { debounce, transformMeilisearchHit } from '$lib/utils/search';
+	import { debounce, transformMeilisearchHit, FILE_TYPE_FILTERS } from '$lib/utils/search';
 	import SearchBar from '$lib/components/SearchBar.svelte';
 	import SearchResultCard from '$lib/components/SearchResultCard.svelte';
 	import Icon from '$components/Icon.svelte';
@@ -15,11 +15,19 @@
 	let searchQuery = $state('');
 	let subjectFilter = $state('');
 	let typeFilter = $state<'all' | 'documents' | 'subjects'>('all');
-	let results = $state<SearchResult[]>([]);
-	let filteredResults = $derived(filterResults(results));
+	let mimeTypeFilter = $state('');
+	let exactMatch = $state(false);
+	let documentResults = $state<SearchResult[]>([]);
+	let subjectResults = $state<SearchResult[]>([]);
+	let documentCount = $state(0);
+	let subjectCount = $state(0);
 	let loading = $state(false);
 	let error = $state('');
 	let subjects = $state<Subject[]>([]);
+	let showAdvancedFilters = $state(false);
+
+	const allResults = $derived([...documentResults, ...subjectResults]);
+	const filteredResults = $derived(filterResults());
 
 	async function loadSubjects() {
 		const { data } = await api.get<{ success: boolean; data: Subject[] }>('/api/v1/subjects');
@@ -30,7 +38,10 @@
 
 	async function performSearch(query: string) {
 		if (!query.trim()) {
-			results = [];
+			documentResults = [];
+			subjectResults = [];
+			documentCount = 0;
+			subjectCount = 0;
 			return;
 		}
 
@@ -38,14 +49,27 @@
 		error = '';
 
 		const { data, error: apiError } = await api.search(query, {
-			subject_id: subjectFilter || undefined
+			subject_id: subjectFilter || undefined,
+			type: typeFilter,
+			mime_type: mimeTypeFilter || undefined,
+			exact: exactMatch
 		});
 
 		if (apiError) {
 			error = apiError.message;
-			results = [];
-		} else if (data?.success) {
-			results = (data.data as unknown as MeilisearchHit[]).map(transformMeilisearchHit);
+			documentResults = [];
+			subjectResults = [];
+			documentCount = 0;
+			subjectCount = 0;
+		} else if (data?.success && data.data) {
+			// Handle new response format with separate documents and subjects
+			const docs = data.data.documents as unknown as MeilisearchHit[] || [];
+			const subs = data.data.subjects as unknown as MeilisearchHit[] || [];
+
+			documentResults = docs.map(transformMeilisearchHit);
+			subjectResults = subs.map(transformMeilisearchHit);
+			documentCount = data.data.documents_count || docs.length;
+			subjectCount = data.data.subjects_count || subs.length;
 		}
 
 		loading = false;
@@ -70,14 +94,21 @@
 		if (searchQuery) params.set('q', searchQuery);
 		if (subjectFilter) params.set('subject_id', subjectFilter);
 		if (typeFilter !== 'all') params.set('type', typeFilter);
+		if (mimeTypeFilter) params.set('mime_type', mimeTypeFilter);
+		if (exactMatch) params.set('exact', 'true');
 
 		const url = params.toString() ? `/search?${params.toString()}` : '/search';
 		goto(url, { replaceState: true, noScroll: true });
 	}
 
-	function filterResults(allResults: SearchResult[]): SearchResult[] {
-		if (typeFilter === 'all') return allResults;
-		return allResults.filter((r) => r.type === typeFilter.replace('s', '') as any);
+	function filterResults(): SearchResult[] {
+		if (typeFilter === 'all') {
+			return allResults;
+		} else if (typeFilter === 'documents') {
+			return documentResults;
+		} else {
+			return subjectResults;
+		}
 	}
 
 	function handleSubjectFilterChange(e: Event) {
@@ -94,16 +125,41 @@
 		updateURL();
 	}
 
+	function handleMimeTypeFilterChange(e: Event) {
+		const target = e.target as HTMLSelectElement;
+		mimeTypeFilter = target.value;
+		updateURL();
+		if (searchQuery) {
+			performSearch(searchQuery);
+		}
+	}
+
+	function handleExactMatchToggle() {
+		exactMatch = !exactMatch;
+		updateURL();
+		if (searchQuery) {
+			performSearch(searchQuery);
+		}
+	}
+
+	function toggleAdvancedFilters() {
+		showAdvancedFilters = !showAdvancedFilters;
+	}
+
 	onMount(() => {
 		loadSubjects();
 
 		const q = $page.url.searchParams.get('q');
 		const sid = $page.url.searchParams.get('subject_id');
 		const type = $page.url.searchParams.get('type') as typeof typeFilter;
+		const mime = $page.url.searchParams.get('mime_type');
+		const exact = $page.url.searchParams.get('exact') === 'true';
 
 		if (q) searchQuery = q;
 		if (sid) subjectFilter = sid;
 		if (type) typeFilter = type;
+		if (mime) mimeTypeFilter = mime;
+		if (exact) exactMatch = exact;
 
 		if (searchQuery) {
 			performSearch(searchQuery);
@@ -135,48 +191,113 @@
 	</div>
 
 	<!-- Filters -->
-	<div class="flex flex-wrap gap-4 items-center" use:fadeSlideIn={{ delay: 200 }}>
-		<!-- Subject Filter -->
-		<div>
-			<label for="subject-filter" class="sr-only">{$_('subjects.semester')}</label>
-			<select
-				id="subject-filter"
-				bind:value={subjectFilter}
-				onchange={handleSubjectFilterChange}
-				class="input"
+	<div class="space-y-4" use:fadeSlideIn={{ delay: 200 }}>
+		<!-- Main Filters -->
+		<div class="flex flex-wrap gap-4 items-center">
+			<!-- Type Filter -->
+			<div class="flex gap-2">
+				<button
+					onclick={() => handleTypeFilterChange('all')}
+					class="btn btn-sm {typeFilter === 'all' ? 'btn-primary' : 'btn-ghost'}"
+				>
+					{$_('search.allResults')}
+					{#if typeFilter === 'all' && (documentCount > 0 || subjectCount > 0)}
+						<span class="ml-1 opacity-75">({documentCount + subjectCount})</span>
+					{/if}
+				</button>
+				<button
+					onclick={() => handleTypeFilterChange('documents')}
+					class="btn btn-sm {typeFilter === 'documents' ? 'btn-primary' : 'btn-ghost'}"
+				>
+					{$_('search.documentsOnly')}
+					{#if documentCount > 0}
+						<span class="ml-1 opacity-75">({documentCount})</span>
+					{/if}
+				</button>
+				<button
+					onclick={() => handleTypeFilterChange('subjects')}
+					class="btn btn-sm {typeFilter === 'subjects' ? 'btn-primary' : 'btn-ghost'}"
+				>
+					{$_('search.subjectsOnly')}
+					{#if subjectCount > 0}
+						<span class="ml-1 opacity-75">({subjectCount})</span>
+					{/if}
+				</button>
+			</div>
+
+			<!-- Advanced Filters Toggle -->
+			<button
+				onclick={toggleAdvancedFilters}
+				class="btn btn-sm btn-ghost"
+				aria-expanded={showAdvancedFilters}
 			>
-				<option value="">{$_('search.allSubjects')}</option>
-				{#each subjects as subject}
-					<option value={subject.id}>{subject.code} - {subject.name_en}</option>
-				{/each}
-			</select>
+				<Icon name={showAdvancedFilters ? 'chevron-up' : 'chevron-down'} size={16} />
+				Advanced Filters
+			</button>
 		</div>
 
-		<!-- Type Filter -->
-		<div class="flex gap-2">
-			<button
-				onclick={() => handleTypeFilterChange('all')}
-				class="btn btn-sm {typeFilter === 'all' ? 'btn-primary' : 'btn-ghost'}"
-			>
-				{$_('search.allResults')}
-			</button>
-			<button
-				onclick={() => handleTypeFilterChange('documents')}
-				class="btn btn-sm {typeFilter === 'documents' ? 'btn-primary' : 'btn-ghost'}"
-			>
-				{$_('search.documentsOnly')}
-			</button>
-			<button
-				onclick={() => handleTypeFilterChange('subjects')}
-				class="btn btn-sm {typeFilter === 'subjects' ? 'btn-primary' : 'btn-ghost'}"
-			>
-				{$_('search.subjectsOnly')}
-			</button>
-		</div>
+		<!-- Advanced Filters -->
+		{#if showAdvancedFilters}
+			<div class="flex flex-wrap gap-4 items-center p-4 rounded-lg bg-light-bg-secondary dark:bg-dark-bg-secondary border border-light-border-primary dark:border-dark-border-primary" in:fade={{ duration: 200 }}>
+				<!-- Subject Filter -->
+				<div class="flex flex-col gap-1">
+					<label for="subject-filter" class="text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary">
+						Subject
+					</label>
+					<select
+						id="subject-filter"
+						bind:value={subjectFilter}
+						onchange={handleSubjectFilterChange}
+						class="input input-sm"
+					>
+						<option value="">{$_('search.allSubjects')}</option>
+						{#each subjects as subject}
+							<option value={subject.id}>{subject.code} - {subject.name_en}</option>
+						{/each}
+					</select>
+				</div>
+
+				<!-- File Type Filter -->
+				{#if typeFilter === 'all' || typeFilter === 'documents'}
+					<div class="flex flex-col gap-1">
+						<label for="mime-filter" class="text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary">
+							File Type
+						</label>
+						<select
+							id="mime-filter"
+							bind:value={mimeTypeFilter}
+							onchange={handleMimeTypeFilterChange}
+							class="input input-sm"
+						>
+							{#each FILE_TYPE_FILTERS as filter}
+								<option value={filter.mimeType}>
+									{filter.icon} {filter.label}
+								</option>
+							{/each}
+						</select>
+					</div>
+				{/if}
+
+				<!-- Exact Match Toggle -->
+				<div class="flex flex-col gap-1">
+					<label for="exact-match" class="text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary">
+						Search Mode
+					</label>
+					<button
+						id="exact-match"
+						onclick={handleExactMatchToggle}
+						class="btn btn-sm {exactMatch ? 'btn-primary' : 'btn-ghost'}"
+					>
+						<Icon name={exactMatch ? 'check-square' : 'square'} size={16} />
+						Exact Match
+					</button>
+				</div>
+			</div>
+		{/if}
 	</div>
 
 	<!-- Results -->
-	{#if loading && results.length === 0}
+	{#if loading && filteredResults.length === 0}
 		<div class="text-center py-12">
 			<div
 				class="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-primary mx-auto"

@@ -7,6 +7,7 @@
 	import { fade } from 'svelte/transition';
     import { staggerFadeIn } from '$lib/utils/animation';
     import Icon from '$lib/components/Icon.svelte';
+	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import type { Semester } from '$types';
 
 	let semesters: Semester[] = $state([]);
@@ -120,7 +121,7 @@
 
 	{#if loading}
 		<div class="flex justify-center py-12">
-			<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+			<LoadingSpinner />
 		</div>
 	{:else if semesters.length === 0}
 		<!-- Empty State -->
@@ -157,7 +158,7 @@
 							<p class="text-sm text-surface-500">{semester.name_en}</p>
 						</div>
 						<div class="flex items-center gap-2">
-							<span class="text-xs text-surface-400 mr-4">{$_('common.order')}: {semester.order_index}</span>
+							<span class="text-sm text-light-text-tertiary dark:text-dark-text-tertiary mr-4">{$_('common.order')}: {semester.order_index}</span>
 							{#if $isAdmin}
 								<Button variant="ghost" size="sm" onclick={() => openEditModal(semester)} aria-label={$_('common.edit')}>
 									<Icon name="edit" size={20} />
@@ -185,7 +186,7 @@
 
 <!-- Modal -->
 {#if showModal}
-	<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onclick={closeModal}>
+	<div class="dialog-backdrop fixed inset-0 flex items-center justify-center z-50" onclick={closeModal}>
 		<div class="bg-surface-50 dark:bg-surface-800 rounded-lg p-6 w-full max-w-md m-4" onclick={(e) => e.stopPropagation()}>
 			<h2 class="text-xl font-bold mb-4">
 				{editingSemester ? $_('semesters.edit') : $_('semesters.create')}
@@ -231,7 +232,7 @@
 				</div>
 
 				<div class="flex justify-end gap-3 mt-6">
-					<Button variant="ghost" onclick={closeModal}>{$_('common.cancel')}</Button>
+					<Button variant="secondary" onclick={closeModal}>{$_('common.cancel')}</Button>
 					<Button variant="primary" type="submit" loading={submitting}>
 						{editingSemester ? $_('common.update') : $_('common.create')}
 					</Button>

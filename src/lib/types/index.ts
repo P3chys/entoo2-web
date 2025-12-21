@@ -162,14 +162,28 @@ export interface SearchFilters {
 	subject_id?: string;
 	type?: 'all' | 'documents' | 'subjects';
 	mime_type?: string;
+	exact?: boolean;
+	sort_by?: 'relevance' | 'date' | 'name' | 'size';
+	category?: 'lecture' | 'seminar' | 'other';
 }
 
 export interface SearchResponse {
 	success: boolean;
-	data: MeilisearchHit[];
+	data: {
+		documents?: MeilisearchHit[];
+		subjects?: MeilisearchHit[];
+		documents_count?: number;
+		subjects_count?: number;
+	};
 	total?: number;
 	query?: string;
 	processingTimeMs?: number;
+}
+
+export interface FileTypeFilter {
+	label: string;
+	mimeType: string;
+	icon: string;
 }
 
 export interface ApiError {

@@ -15,8 +15,8 @@ export default {
 					},
 					text: {
 						primary: '#1f2328',
-						secondary: '#59636e',
-						tertiary: '#818b98',
+						secondary: '#4d5761',
+						tertiary: '#6e7781',
 						inverse: '#ffffff'
 					},
 					border: {
@@ -34,8 +34,8 @@ export default {
 					},
 					text: {
 						primary: '#ffffff',
-						secondary: '#b4b4b4',
-						tertiary: '#8f8f8f',
+						secondary: '#d1d1d1',
+						tertiary: '#a8a8a8',
 						inverse: '#000000'
 					},
 					border: {

@@ -170,6 +170,10 @@ export class ApiClient {
 		const params = new URLSearchParams();
 		if (query) params.append('q', query);
 		if (filters?.subject_id) params.append('subject_id', filters.subject_id);
+		if (filters?.type && filters.type !== 'all') params.append('type', filters.type);
+		if (filters?.mime_type) params.append('mime_type', filters.mime_type);
+		if (filters?.exact) params.append('exact', 'true');
+		if (filters?.category) params.append('category', filters.category);
 
 		const endpoint = `/api/v1/search?${params.toString()}`;
 		return this.get<SearchResponse>(endpoint);

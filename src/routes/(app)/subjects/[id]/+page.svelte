@@ -10,6 +10,7 @@
 	import QuestionList from '$components/QuestionList.svelte';
 	import CommentSection from '$components/CommentSection.svelte';
 	import Icon from '$components/Icon.svelte';
+	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import { fadeSlideIn, slideInFrom, staggerFadeIn, bounceIn } from '$lib/utils/animation';
 	import type { Subject, Document } from '$types';
 
@@ -84,7 +85,7 @@
 
 	{#if loading}
 		<div class="flex justify-center py-12">
-			<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+			<LoadingSpinner />
 		</div>
 	{:else if error}
 		<div class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-4 rounded-lg">
@@ -133,13 +134,13 @@
 		<div class="flex border-b border-light-border-primary dark:border-dark-border-primary mb-6 overflow-x-auto" use:fadeSlideIn={{ delay: 200 }}>
 			{#each tabs as tab}
 				<button
-					class="px-6 py-3 font-medium text-sm transition-colors relative whitespace-nowrap flex items-center gap-2 {activeTab === tab.id ? 'text-accent-primary' : 'text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text-primary dark:hover:text-dark-text-primary'}"
+					class="px-6 py-3 font-medium text-sm transition-all duration-200 relative whitespace-nowrap flex items-center gap-2 {activeTab === tab.id ? 'text-accent-primary' : 'text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text-primary dark:hover:text-dark-text-primary'}"
 					onclick={() => activeTab = tab.id}
 				>
 					<Icon name={tab.icon} size={16} />
 					{$_(tab.label)}
 					{#if activeTab === tab.id}
-						<div class="absolute bottom-0 left-0 w-full h-0.5 bg-accent-primary" transition:fade={{ duration: 150 }}></div>
+						<div class="absolute bottom-0 left-0 w-full h-[3px] bg-accent-primary" transition:fade={{ duration: 150 }}></div>
 					{/if}
 				</button>
 			{/each}
