@@ -54,25 +54,93 @@
     questions = questions.filter(q => q.id !== id);
   }
 
+  async function handleBulkDownload() {
+    // Collect all documents from all answers
+    const allDocuments: Array<{ id: string; name: string }> = [];
+
+    questions.forEach(question => {
+      if (question.answers) {
+        question.answers.forEach(answer => {
+          if (answer.document) {
+            allDocuments.push({
+              id: answer.document.id,
+              name: answer.document.original_name
+            });
+          }
+        });
+      }
+    });
+
+    if (allDocuments.length === 0) {
+      alert($_('questions.no_files_to_download') || 'No files to download');
+      return;
+    }
+
+    const token = localStorage.getItem('access_token');
+
+    // Download each file
+    for (const doc of allDocuments) {
+      try {
+        const res = await fetch(`/api/v1/documents/${doc.id}/download`, {
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+        });
+
+        if (res.ok) {
+          const blob = await res.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = doc.name;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+
+          // Small delay to avoid overwhelming the browser
+          await new Promise(resolve => setTimeout(resolve, 300));
+        }
+      } catch (e) {
+        console.error('Failed to download:', doc.name, e);
+      }
+    }
+  }
+
+  $: fileCount = questions.reduce((count, q) => {
+    return count + (q.answers?.filter(a => a.document).length || 0);
+  }, 0);
+
   onMount(loadQuestions);
 </script>
 
 <div class="space-y-6">
-  <div class="flex items-center justify-between">
+  <div class="flex items-center justify-between flex-wrap gap-3">
     <h2 class="text-2xl font-bold flex items-center gap-2">
       <Icon name="chat" size={28} className="text-accent-primary" />
       {$_('questions.title') || 'Q&A'}
     </h2>
-    
-    {#if currentUser && !isAsking}
-      <button 
-        class="bg-accent-primary hover:bg-accent-secondary text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-        on:click={() => isAsking = true}
-      >
-        <Icon name="plus" size={16} />
-        {$_('questions.ask_button') || 'Ask Question'}
-      </button>
-    {/if}
+
+    <div class="flex items-center gap-2">
+      {#if fileCount > 0}
+        <button
+          class="bg-light-bg-secondary dark:bg-dark-bg-secondary hover:bg-light-bg-tertiary dark:hover:bg-dark-bg-tertiary border border-light-border-primary dark:border-dark-border-primary text-light-text-primary dark:text-dark-text-primary px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+          on:click={handleBulkDownload}
+          title={$_('questions.download_all_files') || 'Download all files from answers'}
+        >
+          <Icon name="download" size={16} />
+          {$_('questions.download_all') || 'Download All'} ({fileCount})
+        </button>
+      {/if}
+
+      {#if currentUser && !isAsking}
+        <button
+          class="bg-accent-primary hover:bg-accent-secondary text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+          on:click={() => isAsking = true}
+        >
+          <Icon name="plus" size={16} />
+          {$_('questions.ask_button') || 'Ask Question'}
+        </button>
+      {/if}
+    </div>
   </div>
 
   {#if isAsking}
