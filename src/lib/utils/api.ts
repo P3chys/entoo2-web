@@ -1,9 +1,9 @@
 import { browser } from '$app/environment';
-import { PUBLIC_API_URL } from '$env/static/public';
+import * as env from '$env/static/public';
 import type { ApiError, SearchResponse, SearchFilters } from '$types';
 
 // Use PUBLIC_API_URL if set, otherwise use current origin (for relative URLs)
-const API_URL = PUBLIC_API_URL || (browser ? window.location.origin : '');
+const API_URL = ('PUBLIC_API_URL' in env && env.PUBLIC_API_URL) || (browser ? window.location.origin : '');
 
 export class ApiClient {
 	private baseUrl: string;
