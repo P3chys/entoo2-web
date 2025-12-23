@@ -136,7 +136,7 @@
           class="bg-accent-primary hover:bg-accent-secondary text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
           on:click={() => isAsking = true}
         >
-          <Icon name="plus" size={16} />
+          <Icon name="help-circle" size={16} />
           {$_('questions.ask_button') || 'Ask Question'}
         </button>
       {/if}

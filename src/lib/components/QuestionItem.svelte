@@ -26,6 +26,18 @@
 
   $: locale = $_('language') === 'cs' ? cs : enUS;
 
+  // Helper function to safely format dates
+  function safeFormatDate(dateString: string | null | undefined): string {
+    if (!dateString) return 'Unknown date';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return 'Invalid date';
+      return formatDistanceToNow(date, { addSuffix: true, locale });
+    } catch (e) {
+      return 'Invalid date';
+    }
+  }
+
   async function handleSubmitReply() {
     if (!replyContent.trim()) return;
 
@@ -145,31 +157,43 @@
     class="w-full text-left flex items-start justify-between mb-3 hover:opacity-80 transition-opacity"
     on:click={() => isExpanded = !isExpanded}
   >
-    <div class="flex items-center gap-2 mb-1 flex-1">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-            {question.user?.email ? question.user.email[0].toUpperCase() : 'A'}
-        </div>
-        <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 mb-1">
-                <div class="font-medium text-sm text-light-text-primary dark:text-dark-text-primary">
-                    {question.user?.email ? (question.user.display_name || question.user.email.split('@')[0]) : 'Anonymous'}
+    <div class="flex-1 min-w-0 mr-2">
+        {#if !isExpanded}
+            <!-- Collapsed: Show question first -->
+            <div class="text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-1 line-clamp-2">
+                {question.content}
+            </div>
+            <div class="flex items-center gap-3 text-xs text-light-text-tertiary dark:text-dark-text-tertiary">
+                <div class="flex items-center gap-1">
+                    <div class="w-5 h-5 rounded-full bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white font-bold text-xs">
+                        {question.user?.email ? question.user.email[0].toUpperCase() : 'A'}
+                    </div>
+                    <span>{question.user?.email ? (question.user.display_name || question.user.email.split('@')[0]) : 'Anonymous'}</span>
                 </div>
-                <div class="text-xs text-light-text-tertiary dark:text-dark-text-tertiary">
-                    {formatDistanceToNow(new Date(question.created_at), { addSuffix: true, locale })}
-                </div>
-                <div class="text-xs text-light-text-tertiary dark:text-dark-text-tertiary flex items-center gap-1">
-                    <Icon name="message-square" size={12} />
-                    {answers.length}
+                <span>{safeFormatDate(question.created_at)}</span>
+                <div class="flex items-center gap-1">
+                    <Icon name="message-circle" size={12} />
+                    <span>{answers.length}</span>
                 </div>
             </div>
-            {#if !isExpanded}
-                <div class="text-sm text-light-text-secondary dark:text-dark-text-secondary truncate">
-                    {question.content.length > 100 ? question.content.slice(0, 100) + '...' : question.content}
+        {:else}
+            <!-- Expanded: Show author info -->
+            <div class="flex items-center gap-2 mb-1">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white font-bold text-sm">
+                    {question.user?.email ? question.user.email[0].toUpperCase() : 'A'}
                 </div>
-            {/if}
-        </div>
-        <Icon name={isExpanded ? "chevron-up" : "chevron-down"} size={20} className="text-light-text-tertiary dark:text-dark-text-tertiary flex-shrink-0" />
+                <div>
+                    <div class="font-medium text-sm text-light-text-primary dark:text-dark-text-primary">
+                        {question.user?.email ? (question.user.display_name || question.user.email.split('@')[0]) : 'Anonymous'}
+                    </div>
+                    <div class="text-xs text-light-text-tertiary dark:text-dark-text-tertiary">
+                        {safeFormatDate(question.created_at)} · {answers.length} {answers.length === 1 ? ($_('common.answer') || 'answer') : ($_('common.answers') || 'answers')}
+                    </div>
+                </div>
+            </div>
+        {/if}
     </div>
+    <Icon name={isExpanded ? "chevron-up" : "chevron-down"} size={20} className="text-light-text-tertiary dark:text-dark-text-tertiary flex-shrink-0 mt-1" />
   </button>
 
   {#if currentUser && (currentUser.id === question.user_id || currentUser.role === 'admin')}
@@ -192,7 +216,7 @@
     <div class="flex items-center justify-between border-t border-light-border-primary dark:border-dark-border-primary pt-3 mt-2">
       <div class="flex gap-4 text-sm text-light-text-tertiary dark:text-dark-text-tertiary">
           <span class="flex items-center gap-1">
-              <Icon name="message-square" size={14} />
+              <Icon name="message-circle" size={14} />
               {answers.length} {answers.length === 1 ? ($_('common.answer') || 'answer') : ($_('common.answers') || 'answers')}
           </span>
       </div>
@@ -202,7 +226,7 @@
           class="text-accent-primary hover:text-accent-secondary font-medium text-sm flex items-center gap-1 transition-colors"
           on:click={() => isReplying = !isReplying}
         >
-          <Icon name="reply" size={14} />
+          <Icon name="corner-down-right" size={14} />
           {$_('questions.reply') || 'Reply'}
         </button>
       {/if}
@@ -282,7 +306,7 @@
                           {answer.user?.email ? (answer.user.display_name || answer.user.email.split('@')[0]) : 'User'}
                       </div>
                       <div class="text-xs text-light-text-tertiary dark:text-dark-text-tertiary">
-                          {formatDistanceToNow(new Date(answer.created_at), { addSuffix: true, locale })}
+                          {safeFormatDate(answer.created_at)}
                       </div>
                   </div>
 

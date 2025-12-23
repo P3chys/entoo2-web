@@ -201,7 +201,10 @@
 		"reply": "Odpovědět",
 		"reply_placeholder": "Napište svou odpověď...",
 		"attach_file": "Připojit soubor",
-		"empty": "Zatím žádné otázky. Buďte první!"
+		"empty": "Zatím žádné otázky. Buďte první!",
+		"download_all": "Stáhnout vše",
+		"download_all_files": "Stáhnout všechny soubory z odpovědí",
+		"no_files_to_download": "Žádné soubory ke stažení"
 	},
 	"search": {
 		"placeholder": "Hledat v dokumentech a předmětech...",
