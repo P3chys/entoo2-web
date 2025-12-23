@@ -4,6 +4,7 @@ import type { ApiError, SearchResponse, SearchFilters } from '$types';
 
 // Use PUBLIC_API_URL if set, otherwise use current origin (for relative URLs)
 const API_URL = env.PUBLIC_API_URL || (browser ? window.location.origin : '');
+if (browser) console.log('ApiClient: [VER-2] Initialized with API_URL:', API_URL, 'from env.PUBLIC_API_URL:', env.PUBLIC_API_URL);
 
 export class ApiClient {
 	private baseUrl: string;
