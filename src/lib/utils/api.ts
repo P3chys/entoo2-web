@@ -3,8 +3,15 @@ import { env } from '$env/dynamic/public';
 import type { ApiError, SearchResponse, SearchFilters } from '$types';
 
 // Use PUBLIC_API_URL if set, otherwise use current origin (for relative URLs)
-const API_URL = env.PUBLIC_API_URL || (browser ? window.location.origin : '');
-if (browser) console.log('ApiClient: [VER-2] Initialized with API_URL:', API_URL, 'from env.PUBLIC_API_URL:', env.PUBLIC_API_URL);
+// Safeguard: Strip /api/v1 from the end if it's there to prevent double pathing
+const rawApiUrl = env.PUBLIC_API_URL || (browser ? window.location.origin : '');
+const API_URL = rawApiUrl.replace(/\/api\/v1\/?$/, '');
+
+if (browser) {
+	console.log('ApiClient: [VER-3] Initialized');
+	console.log(' - Raw URL from env:', rawApiUrl);
+	console.log(' - Cleaned API_URL:', API_URL);
+}
 
 export class ApiClient {
 	private baseUrl: string;
