@@ -57,12 +57,25 @@ export interface Subject {
 	is_favorite?: boolean;
 }
 
+export interface DocumentCategory {
+	id: string;
+	subject_id: string;
+	type: 'lecture' | 'seminar' | 'other';
+	name_cs: string;
+	name_en: string;
+	order_index: number;
+	created_by: string;
+	created_at: string;
+	updated_at: string;
+}
+
 export interface Document {
 	id: string;
 	subject_id: string;
 	uploaded_by: string;
 	answer_id?: string;
-	category: 'lecture' | 'seminar' | 'other';
+	type: 'lecture' | 'seminar' | 'other';
+	category_id?: string;
 	filename: string;
 	original_name: string;
 	file_size: number;
@@ -72,7 +85,13 @@ export interface Document {
 	created_at: string;
 	subject?: Subject;
 	uploader?: User;
+	category?: DocumentCategory;
 	is_favorite?: boolean;
+}
+
+export interface CategoryWithDocuments {
+	category: DocumentCategory;
+	documents: Document[];
 }
 
 export interface Activity {
@@ -164,7 +183,7 @@ export interface SearchFilters {
 	mime_type?: string;
 	exact?: boolean;
 	sort_by?: 'relevance' | 'date' | 'name' | 'size';
-	category?: 'lecture' | 'seminar' | 'other';
+	doc_type?: 'lecture' | 'seminar' | 'other';
 }
 
 export interface SearchResponse {

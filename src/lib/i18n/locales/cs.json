@@ -179,7 +179,21 @@
 		"categoryOther": "Ostatní",
 		"tabLectures": "Přednášky",
 		"tabSeminars": "Semináře",
-		"tabOthers": "Ostatní"
+		"tabOthers": "Ostatní",
+		"selectCategory": "Vybrat kategorii",
+		"unassigned": "Nepřiřazeno",
+		"manageCategories": "Spravovat kategorie",
+		"loadingCategories": "Načítání kategorií...",
+		"createCategory": "Vytvořit kategorii",
+		"editCategory": "Upravit kategorii",
+		"deleteCategory": "Smazat kategorii",
+		"categoryNameCS": "Název kategorie (česky)",
+		"categoryNameEN": "Název kategorie (anglicky)",
+		"categoryType": "Typ kategorie",
+		"confirmDeleteCategory": "Opravdu chcete smazat tuto kategorii? Všechny dokumenty budou přesunuty do kategorie Nepřiřazeno.",
+		"categoryCreated": "Kategorie byla vytvořena",
+		"categoryUpdated": "Kategorie byla aktualizována",
+		"categoryDeleted": "Kategorie byla smazána"
 	},
 	"comments": {
 		"title": "Komentáře",

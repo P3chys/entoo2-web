@@ -7,10 +7,12 @@
 	import { currentUser as user } from '$stores/auth';
 	import FileUpload from '$components/FileUpload.svelte';
 	import DocumentList from '$components/DocumentList.svelte';
+	import CategoryManager from '$components/CategoryManager.svelte';
 	import QuestionList from '$components/QuestionList.svelte';
 	import CommentSection from '$components/CommentSection.svelte';
 	import Icon from '$components/Icon.svelte';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
+	import Button from '$lib/components/Button.svelte';
 	import { fadeSlideIn, slideInFrom, staggerFadeIn, bounceIn } from '$lib/utils/animation';
 	import type { Subject, Document } from '$types';
 
@@ -18,8 +20,11 @@
 	let documents: Document[] = $state([]);
 	let loading = $state(true);
 	let error = $state('');
-	
+	let showCategoryManager = $state(false);
+
 	let activeTab = $state('profile');
+
+	const isAdmin = $derived($user?.role === 'admin');
 
 	const subjectId = $page.params.id;
 
@@ -198,9 +203,21 @@
 							<Icon name="document" size={24} className="text-accent-primary" />
 							{$_('documents.title')}
 						</h2>
-						<span class="text-sm bg-light-bg-secondary dark:bg-dark-bg-secondary px-3 py-1 rounded-full border border-light-border-primary dark:border-dark-border-primary font-medium">
-							{documents.length} {documents.length === 1 ? 'document' : 'documents'}
-						</span>
+						<div class="flex items-center gap-3">
+							{#if isAdmin}
+								<Button
+									variant="ghost"
+									size="sm"
+									onclick={() => showCategoryManager = true}
+								>
+									<Icon name="settings" size={16} />
+									{$_('documents.manageCategories')}
+								</Button>
+							{/if}
+							<span class="text-sm bg-light-bg-secondary dark:bg-dark-bg-secondary px-3 py-1 rounded-full border border-light-border-primary dark:border-dark-border-primary font-medium">
+								{documents.length} {documents.length === 1 ? 'document' : 'documents'}
+							</span>
+						</div>
 					</div>
 
 					<div class="card p-6">
@@ -216,10 +233,20 @@
 							subjectId={subject.id}
 							documents={documents}
 							currentUserId={$user?.id}
+							{isAdmin}
 							onDelete={handleDelete}
+							onRefresh={loadData}
 						/>
 					</div>
 				</div>
+
+				<!-- Category Manager Modal -->
+				<CategoryManager
+					subjectId={subject.id}
+					isOpen={showCategoryManager}
+					onClose={() => showCategoryManager = false}
+					onUpdate={loadData}
+				/>
 			{:else if activeTab === 'questions'}
 				<div in:fadeSlideIn={{ delay: 100 }}>
 					<div class="card p-6">

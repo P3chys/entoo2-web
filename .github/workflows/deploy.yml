@@ -80,16 +80,16 @@ jobs:
             cd /opt/entoo2
 
             # Pull latest images
-            docker compose -f docker-compose.prod.yml --env-file .env.production pull frontend
+            docker compose pull frontend
 
             # Restart frontend service
-            docker compose -f docker-compose.prod.yml --env-file .env.production up -d frontend
+            docker compose up -d frontend
 
             # Wait for service to be healthy
             sleep 5
 
             # Check status
-            docker compose -f docker-compose.prod.yml ps frontend
+            docker compose ps frontend
 
             echo "Web deployment completed successfully"
           EOF

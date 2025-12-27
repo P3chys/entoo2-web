@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { t } from 'svelte-i18n';
+	import { t, locale } from 'svelte-i18n';
+	import { onMount } from 'svelte';
 	import { api } from '$lib/utils/api';
-	import type { Document } from '$lib/types';
+	import type { Document, DocumentCategory } from '$lib/types';
 	import Button from './Button.svelte';
     import Icon from './Icon.svelte';
 
@@ -15,8 +16,38 @@
 
 	let dragging = $state(false);
 	let uploading = $state(false);
-	let category = $state<'lecture' | 'seminar' | 'other'>('lecture');
+	let docType = $state<'lecture' | 'seminar' | 'other'>('lecture');
+	let categories = $state<DocumentCategory[]>([]);
+	let selectedCategoryId = $state<string | undefined>(undefined);
 	let fileInput: HTMLInputElement;
+
+	// Fetch categories for current subject
+	async function fetchCategories() {
+		const { data, error } = await api.get<{ success: boolean; data: DocumentCategory[] }>(`/api/v1/subjects/${subjectId}/categories`);
+		if (!error && data?.data) {
+			categories = data.data;
+			// Auto-select first category for current type (should be Unassigned)
+			updateSelectedCategory();
+		}
+	}
+
+	function updateSelectedCategory() {
+		const typeCategories = categories.filter(cat => cat.type === docType);
+		if (typeCategories.length > 0) {
+			selectedCategoryId = typeCategories[0].id;
+		}
+	}
+
+	// Watch for type changes to update selected category
+	$effect(() => {
+		if (docType) {
+			updateSelectedCategory();
+		}
+	});
+
+	onMount(() => {
+		fetchCategories();
+	});
 
 	const handleDragEnter = (e: DragEvent) => {
 		e.preventDefault();
@@ -54,18 +85,23 @@
 		const { data, error } = await api.upload<{ success: boolean; data: Document }>(
 			`/api/v1/subjects/${subjectId}/documents`,
 			file,
-			{ category }
+			{ type: docType, category_id: selectedCategoryId }
 		);
 		uploading = false;
 
 		if (error) {
-			onError(error.message);
+			onError(error);
 		} else if (data?.success && data.data) {
 			onSuccess(data.data);
 			// Reset input
 			if (fileInput) fileInput.value = '';
 		}
 	};
+
+	// Filter categories by current type
+	const filteredCategories = $derived(
+		categories.filter(cat => cat.type === docType)
+	);
 </script>
 
 <div
@@ -101,13 +137,13 @@
 			</p>
 		</div>
 
-		<!-- Category selector -->
+		<!-- Type selector -->
 		<div class="w-full max-w-xs">
 			<label class="block text-sm font-medium mb-2">
-				{$t('documents.category')}
+				{$t('documents.categoryType')}
 			</label>
 			<select
-				bind:value={category}
+				bind:value={docType}
 				class="select select-bordered w-full"
 				disabled={uploading}
 			>
@@ -116,6 +152,26 @@
 				<option value="other">{$t('documents.categoryOther')}</option>
 			</select>
 		</div>
+
+		<!-- Category selector -->
+		{#if filteredCategories.length > 0}
+			<div class="w-full max-w-xs">
+				<label class="block text-sm font-medium mb-2">
+					{$t('documents.selectCategory')}
+				</label>
+				<select
+					bind:value={selectedCategoryId}
+					class="select select-bordered w-full"
+					disabled={uploading}
+				>
+					{#each filteredCategories as cat}
+						<option value={cat.id}>
+							{$locale === 'cs' ? cat.name_cs : cat.name_en}
+						</option>
+					{/each}
+				</select>
+			</div>
+		{/if}
 
 		<!-- Pass onclick as a prop to Button, as Button.svelte uses $props() and expects onclick prop -->
 		<Button

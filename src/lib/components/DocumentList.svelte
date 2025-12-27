@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { t } from 'svelte-i18n';
+	import { onMount } from 'svelte';
 	import { api } from '$lib/utils/api';
-	import type { Document } from '$lib/types';
-	import Button from './Button.svelte';
+	import type { Document, DocumentCategory } from '$lib/types';
+	import CategoryAccordion from './CategoryAccordion.svelte';
 	import DocumentPreview from './DocumentPreview.svelte';
     import Icon from './Icon.svelte';
 
@@ -10,37 +11,49 @@
 		subjectId: string;
 		documents?: Document[];
 		currentUserId?: string;
+		isAdmin?: boolean;
 		onDelete?: (docId: string) => void;
+		onRefresh?: () => void;
 	}
 
-	let { subjectId, documents = [], currentUserId = undefined, onDelete = () => {} }: Props = $props();
+	let { subjectId, documents = [], currentUserId = undefined, isAdmin = false, onDelete = () => {}, onRefresh = () => {} }: Props = $props();
 
 	let previewDocument = $state<Document | null>(null);
 	let activeTab = $state<'lecture' | 'seminar' | 'other'>('lecture');
+	let categories = $state<DocumentCategory[]>([]);
+	let loadingCategories = $state(false);
 
-	// Filter documents by category
-	const filteredDocuments = $derived(
-		documents.filter(doc => doc.category === activeTab)
+	// Fetch categories for current subject
+	async function fetchCategories() {
+		loadingCategories = true;
+		const { data, error } = await api.get<{ success: boolean; data: DocumentCategory[] }>(`/api/v1/subjects/${subjectId}/categories`);
+		if (!error && data?.data) {
+			categories = data.data;
+		}
+		loadingCategories = false;
+	}
+
+	// Filter categories by active type
+	const filteredCategories = $derived(
+		categories.filter(cat => cat.type === activeTab).sort((a, b) => a.order_index - b.order_index)
 	);
 
-	const getFileIcon = (mimeType: string) => {
-		if (mimeType.includes('pdf')) return '📄';
-		if (mimeType.includes('word')) return '📝';
-		if (mimeType.includes('sheet') || mimeType.includes('csv')) return '📊';
-		if (mimeType.includes('presentation')) return '📽️';
-		if (mimeType.includes('image')) return '🖼️';
-		return '📎';
-	};
+	// Group documents by category for active type
+	const categorizedDocuments = $derived(() => {
+		return filteredCategories.map(category => ({
+			category,
+			documents: documents.filter(doc => doc.type === activeTab && doc.category_id === category.id)
+		}));
+	});
 
-	const formatSize = (bytes: number) => {
-		if (bytes === 0) return '0 B';
-		const k = 1024;
-		const sizes = ['B', 'KB', 'MB', 'GB'];
-		const i = Math.floor(Math.log(bytes) / Math.log(k));
-		return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-	};
+	onMount(() => {
+		fetchCategories();
+	});
 
-	const downloadDocument = async (doc: Document) => {
+	const downloadDocument = async (docId: string) => {
+		const doc = documents.find(d => d.id === docId);
+		if (!doc) return;
+
 		try {
 			const response = await fetch(`${api['baseUrl']}/api/v1/documents/${doc.id}/download`, {
 				headers: {
@@ -65,118 +78,83 @@
 		}
 	};
 
-	const toggleFavorite = async (doc: Document) => {
-		const { error, data } = await api.post<{ success: boolean; is_favorite: boolean }>(`/api/v1/documents/${doc.id}/favorite`, {});
+	const toggleFavorite = async (docId: string) => {
+		const { error, data } = await api.post<{ success: boolean; is_favorite: boolean }>(`/api/v1/documents/${docId}/favorite`, {});
 		if (!error && data) {
-			doc.is_favorite = data.is_favorite;
+			const doc = documents.find(d => d.id === docId);
+			if (doc) {
+				doc.is_favorite = data.is_favorite;
+			}
 		}
 	};
 
-	const deleteDocument = async (doc: Document) => {
+	const deleteDocument = async (docId: string) => {
 		if (!confirm($t('common.delete') + '?')) return;
 
-		const { error } = await api.delete(`/api/v1/documents/${doc.id}`);
+		const { error } = await api.delete(`/api/v1/documents/${docId}`);
 		if (!error) {
-			onDelete(doc.id);
+			onDelete(docId);
+			onRefresh();
 		} else {
-			alert(error.message);
+			alert(error);
+		}
+	};
+
+	const handlePreview = (docId: string) => {
+		const doc = documents.find(d => d.id === docId);
+		if (doc) {
+			previewDocument = doc;
 		}
 	};
 </script>
 
 <div class="space-y-4">
-	<!-- Category Tabs -->
+	<!-- Type Tabs -->
 	<div class="flex gap-2 border-b border-base-300">
 		<button
 			class="px-4 py-2 font-medium transition-colors border-b-2 {activeTab === 'lecture' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'}"
 			onclick={() => activeTab = 'lecture'}
+			type="button"
 		>
 			{$t('documents.tabLectures')}
 		</button>
 		<button
 			class="px-4 py-2 font-medium transition-colors border-b-2 {activeTab === 'seminar' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'}"
 			onclick={() => activeTab = 'seminar'}
+			type="button"
 		>
 			{$t('documents.tabSeminars')}
 		</button>
 		<button
 			class="px-4 py-2 font-medium transition-colors border-b-2 {activeTab === 'other' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'}"
 			onclick={() => activeTab = 'other'}
+			type="button"
 		>
 			{$t('documents.tabOthers')}
 		</button>
 	</div>
 
-	{#if filteredDocuments.length === 0}
+	{#if loadingCategories}
+		<div class="text-center py-8 text-base-content/60">
+			Loading categories...
+		</div>
+	{:else if categorizedDocuments().length === 0}
 		<div class="text-center py-8 text-base-content/60">
 			{$t('documents.noDocuments')}
 		</div>
 	{:else}
-		<div class="grid gap-3">
-			{#each filteredDocuments as doc (doc.id)}
-				<div class="flex items-center justify-between p-4 bg-base-100 rounded-lg border border-base-200 hover:border-primary/30 transition-colors">
-					<div class="flex items-center gap-4">
-						<button 
-							class="text-2xl select-none hover:scale-110 transition-transform" 
-							onclick={() => toggleFavorite(doc)}
-							title="Toggle Favorite"
-						>
-							{#if doc.is_favorite}
-								<Icon name="star" size={24} className="text-yellow-400 fill-yellow-400" />
-							{:else}
-								<Icon name="star" size={24} className="text-base-content/20 hover:text-yellow-400" />
-							{/if}
-						</button>
-						<div class="text-2xl select-none" role="img" aria-label="File icon">
-							{getFileIcon(doc.mime_type)}
-						</div>
-						<div>
-							<h4 class="font-medium text-base-content" title={doc.original_name}>
-								{doc.original_name}
-							</h4>
-							<div class="text-xs text-base-content/60 flex items-center gap-2">
-								<span>{formatSize(doc.file_size)}</span>
-								<span>•</span>
-								<span>{new Date(doc.created_at).toLocaleDateString()}</span>
-								{#if doc.uploader}
-									<span>•</span>
-									<span>{doc.uploader.role === 'admin' ? 'Admin' : doc.uploader.displayName || doc.uploader.email}</span>
-								{/if}
-							</div>
-						</div>
-					</div>
-
-					<div class="flex items-center gap-2">
-						<!-- Preview button -->
-						<button
-							class="btn btn-ghost btn-sm btn-square"
-							title={$t('common.preview')}
-							onclick={() => previewDocument = doc}
-						>
-                            <Icon name="search" size={20} />
-						</button>
-
-						<!-- Download button -->
-						<button
-							class="btn btn-ghost btn-sm btn-square"
-							title={$t('common.download')}
-							onclick={() => downloadDocument(doc)}
-						>
-                            <Icon name="download" size={20} />
-						</button>
-
-						<!-- Delete button -->
-						{#if currentUserId && (doc.uploaded_by === currentUserId || /* Admin check handled by backend, UI assumes admin if can delete, or we pass isAdmin prop */ false)}
-							<button
-								class="btn btn-ghost btn-sm btn-square text-error"
-								title={$t('common.delete')}
-								onclick={() => deleteDocument(doc)}
-							>
-                                <Icon name="delete" size={20} />
-							</button>
-						{/if}
-					</div>
-				</div>
+		<div class="space-y-3">
+			{#each categorizedDocuments() as { category, documents: categoryDocs } (category.id)}
+				<CategoryAccordion
+					{category}
+					documents={categoryDocs}
+					{currentUserId}
+					{isAdmin}
+					onDocumentDelete={deleteDocument}
+					onDocumentFavorite={toggleFavorite}
+					onDocumentPreview={handlePreview}
+					onDocumentDownload={downloadDocument}
+				/>
 			{/each}
 		</div>
 	{/if}
