@@ -83,8 +83,8 @@
 
   async function handleDelete() {
     if (!confirm($_('common.confirm_delete') || 'Are you sure?')) return;
-    
-    const res = await api.del<{ success: boolean }>(`/api/v1/questions/${question.id}`);
+
+    const res = await api.delete<{ success: boolean }>(`/api/v1/questions/${question.id}`);
     if (res.data?.success) {
       onDelete(question.id);
     } else {
@@ -151,7 +151,7 @@
   }
 </script>
 
-<div class="card p-5 border-l-4 border-l-accent-primary">
+<div class="card p-5 border-l-4 border-l-accent-primary relative">
   <!-- Question Header - Clickable -->
   <button
     class="w-full text-left flex items-start justify-between mb-3 hover:opacity-80 transition-opacity"
@@ -198,7 +198,7 @@
 
   {#if currentUser && (currentUser.id === question.user_id || currentUser.role === 'admin')}
     <button
-      class="text-red-500 hover:text-red-600 p-1 rounded transition-colors opacity-50 hover:opacity-100 absolute top-5 right-5"
+      class="text-red-500 hover:text-red-600 p-1 rounded transition-colors opacity-50 hover:opacity-100 absolute top-5 right-15"
       on:click={handleDelete}
       title={$_('common.delete') || 'Delete'}
     >
