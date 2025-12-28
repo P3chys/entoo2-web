@@ -53,7 +53,8 @@
 		}
 
 		if (data) {
-			goto('/');
+			// Redirect to email verification page instead of auto-login
+			goto('/verify-email?registered=true');
 		}
 	}
 </script>

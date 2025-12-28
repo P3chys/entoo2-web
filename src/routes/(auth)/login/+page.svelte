@@ -14,6 +14,8 @@
 	let passwordError = $state('');
 	let generalError = $state('');
 	let loading = $state(false);
+	let emailNotVerified = $state(false);
+	let resendingVerification = $state(false);
 
 	function validateForm(): boolean {
 		let isValid = true;
@@ -43,17 +45,55 @@
 		}
 
 		loading = true;
+		emailNotVerified = false;
 		const { data, error } = await authStore.login({ email, password });
 		loading = false;
 
 		if (error) {
-			generalError = error.message || $_('auth.loginError');
+			// Check if the error is due to email not being verified
+			if (error.code === 'EMAIL_NOT_VERIFIED') {
+				emailNotVerified = true;
+				generalError = $_('auth.emailNotVerified');
+			} else {
+				generalError = error.message || $_('auth.loginError');
+			}
 			if (formElement) shake(formElement);
 			return;
 		}
 
 		if (data) {
 			goto('/');
+		}
+	}
+
+	async function resendVerificationEmail() {
+		if (!email) {
+			emailError = $_('auth.emailRequired');
+			return;
+		}
+
+		resendingVerification = true;
+		generalError = '';
+
+		try {
+			const response = await fetch('/api/v1/auth/verify-email/request', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ email })
+			});
+
+			const data = await response.json();
+			resendingVerification = false;
+
+			if (data.success) {
+				// Redirect to verify-email page with success message
+				goto('/verify-email?registered=true');
+			} else {
+				generalError = data.error?.message || $_('auth.loginError');
+			}
+		} catch (err) {
+			resendingVerification = false;
+			generalError = $_('auth.loginError');
 		}
 	}
 </script>
@@ -137,7 +177,19 @@
 					>
 						<div class="flex items-start gap-3">
 							<Icon name="alert" size={20} className="text-error flex-shrink-0 mt-0.5" />
-							<p>{generalError}</p>
+							<div class="flex-1">
+								<p>{generalError}</p>
+								{#if emailNotVerified}
+									<button
+										type="button"
+										onclick={resendVerificationEmail}
+										disabled={resendingVerification}
+										class="mt-2 text-sm underline hover:no-underline disabled:opacity-50 disabled:cursor-not-allowed"
+									>
+										{resendingVerification ? $_('common.sending') : $_('auth.resendEmail')}
+									</button>
+								{/if}
+							</div>
 						</div>
 					</div>
 				{/if}
@@ -152,15 +204,25 @@
 					required
 				/>
 
-				<Input
-					type="password"
-					label={$_('auth.password')}
-					bind:value={password}
-					error={passwordError}
-					placeholder="••••••••"
-					autocomplete="current-password"
-					required
-				/>
+				<div>
+					<Input
+						type="password"
+						label={$_('auth.password')}
+						bind:value={password}
+						error={passwordError}
+						placeholder="••••••••"
+						autocomplete="current-password"
+						required
+					/>
+					<div class="mt-2 text-right">
+						<a
+							href="/forgot-password"
+							class="text-sm text-accent-primary hover:text-accent-secondary transition-colors font-medium"
+						>
+							{$_('auth.forgotPassword')}?
+						</a>
+					</div>
+				</div>
 
 				<Button type="submit" variant="primary" fullWidth {loading}>
 					{$_('auth.login')}
