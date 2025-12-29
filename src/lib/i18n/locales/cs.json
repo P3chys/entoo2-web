@@ -134,7 +134,13 @@
 		"tokenExpired": "Token vypršel. Požádejte o nový.",
 		"verificationEmailSent": "Ověřovací e-mail odeslán",
 		"pleaseVerifyEmail": "Prosím ověřte svůj e-mail před přihlášením",
-		"resendVerificationSuccess": "Ověřovací e-mail byl znovu odeslán"
+		"resendVerificationSuccess": "Ověřovací e-mail byl znovu odeslán",
+		"pleaseWait": "Prosím čekejte...",
+		"didntReceiveEmail": "Pokud jste e-mail neobdrželi:",
+		"checkSpam": "Zkontrolujte spam/nevyžádanou poštu",
+		"checkEmailCorrect": "Ujistěte se, že jste zadali správný e-mail",
+		"waitFewMinutes": "Počkejte několik minut a zkuste to znovu",
+		"didntReceiveEmailShort": "Neobdrželi jste e-mail?"
 	},
 	"navigation": {
 		"home": "Domů",
