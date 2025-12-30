@@ -73,11 +73,17 @@ export class ApiClient {
 			}
 
 			if (!response.ok) {
+				// Handle nested error object from backend (e.g., { error: { code: "...", message: "..." } })
+				const errorObj = typeof data.error === 'object' && data.error !== null ? data.error : {};
+				const errorCode = errorObj.code || data.error || 'Unknown error';
+				const errorMessage = errorObj.message || data.message || data.error || 'An error occurred';
+
 				return {
 					error: {
-						error: data.error || 'Unknown error',
-						message: data.message || data.error || 'An error occurred',
-						status: response.status
+						error: errorCode,
+						message: typeof errorMessage === 'string' ? errorMessage : 'An error occurred',
+						status: response.status,
+						code: errorObj.code
 					}
 				};
 			}
@@ -152,11 +158,17 @@ export class ApiClient {
 			const data = await response.json();
 
 			if (!response.ok) {
+				// Handle nested error object from backend (e.g., { error: { code: "...", message: "..." } })
+				const errorObj = typeof data.error === 'object' && data.error !== null ? data.error : {};
+				const errorCode = errorObj.code || data.error || 'Unknown error';
+				const errorMessage = errorObj.message || data.message || 'An error occurred';
+
 				return {
 					error: {
-						error: data.error || 'Unknown error',
-						message: data.message || 'An error occurred',
-						status: response.status
+						error: errorCode,
+						message: typeof errorMessage === 'string' ? errorMessage : 'An error occurred',
+						status: response.status,
+						code: errorObj.code
 					}
 				};
 			}
