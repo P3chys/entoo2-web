@@ -198,7 +198,7 @@
 
   {#if currentUser && (currentUser.id === question.user_id || currentUser.role === 'admin')}
     <button
-      class="text-red-500 hover:text-red-600 p-1 rounded transition-colors opacity-50 hover:opacity-100 absolute top-5 right-15"
+      class="text-red-500 hover:text-red-600 p-2 rounded transition-colors opacity-50 hover:opacity-100 absolute top-4 right-12"
       on:click={handleDelete}
       title={$_('common.delete') || 'Delete'}
     >

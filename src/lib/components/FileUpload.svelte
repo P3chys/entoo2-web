@@ -139,12 +139,12 @@
 
 		<!-- Type selector -->
 		<div class="w-full max-w-xs">
-			<label class="block text-sm font-medium mb-2">
+			<label class="block text-sm font-medium mb-2 text-adaptive-primary">
 				{$t('documents.categoryType')}
 			</label>
 			<select
 				bind:value={docType}
-				class="select select-bordered w-full"
+				class="w-full px-4 py-2 rounded-lg border border-adaptive bg-adaptive-primary text-adaptive-primary text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-all duration-200"
 				disabled={uploading}
 			>
 				<option value="lecture">{$t('documents.categoryLecture')}</option>
@@ -156,12 +156,12 @@
 		<!-- Category selector -->
 		{#if filteredCategories.length > 0}
 			<div class="w-full max-w-xs">
-				<label class="block text-sm font-medium mb-2">
+				<label class="block text-sm font-medium mb-2 text-adaptive-primary">
 					{$t('documents.selectCategory')}
 				</label>
 				<select
 					bind:value={selectedCategoryId}
-					class="select select-bordered w-full"
+					class="w-full px-4 py-2 rounded-lg border border-adaptive bg-adaptive-primary text-adaptive-primary text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-all duration-200"
 					disabled={uploading}
 				>
 					{#each filteredCategories as cat}

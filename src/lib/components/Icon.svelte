@@ -66,6 +66,7 @@
         add: Plus,
         edit: Edit,
         delete: Trash2,
+        trash: Trash2,
         user: User,
         document: FileText,
         upload: Upload,

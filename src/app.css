@@ -79,6 +79,10 @@
 }
 
 @layer components {
+	/*
+	 * NOTE: Adaptive utilities, flex utilities, badges, icons, and nav components
+	 * are now defined in tailwind.plugin.js for better IDE support
+	 */
 	/* Skip link for accessibility */
 	.skip-link {
 		@apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4;
@@ -86,6 +90,7 @@
 		@apply font-medium shadow-lg;
 	}
 
+	/* ===== BUTTON COMPONENTS ===== */
 	.btn {
 		@apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
 		@apply focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2;

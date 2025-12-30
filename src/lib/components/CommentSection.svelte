@@ -5,6 +5,8 @@
 	import { api } from '$lib/utils/api';
 	import Icon from './Icon.svelte';
 	import Button from './Button.svelte';
+	import Badge from './ui/Badge.svelte';
+	import UserInfo from './composite/UserInfo.svelte';
 	import type { Comment, User } from '$types';
 
 	export let subjectId: string;
@@ -68,16 +70,16 @@
 	});
 </script>
 
-<div class="h-full flex flex-col bg-light-bg-secondary dark:bg-dark-bg-secondary rounded-xl overflow-hidden border border-light-border-primary dark:border-dark-border-primary">
+<div class="h-full flex flex-col bg-adaptive-secondary rounded-xl overflow-hidden border border-adaptive">
 	<!-- Header -->
-	<div class="p-4 border-b border-light-border-primary dark:border-dark-border-primary flex items-center justify-between bg-light-bg-tertiary dark:bg-dark-bg-tertiary">
-		<h3 class="font-bold flex items-center gap-2">
+	<div class="p-4 border-b border-adaptive flex-between bg-adaptive-tertiary">
+		<h3 class="font-bold flex-gap-2">
 			<Icon name="message-square" size={20} className="text-accent-primary" />
 			{$_('comments.title', { default: 'Comments' })}
 		</h3>
-		<span class="text-xs bg-light-bg-primary dark:bg-dark-bg-primary px-2 py-1 rounded-full text-light-text-secondary dark:text-dark-text-secondary">
+		<Badge variant="primary" size="sm">
 			{comments.length}
-		</span>
+		</Badge>
 	</div>
 
 	<!-- Comments List -->
@@ -87,36 +89,29 @@
 				<div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-500"></div>
 			</div>
 		{:else if comments.length === 0}
-			<div class="text-center py-8 text-light-text-tertiary dark:text-dark-text-tertiary italic">
+			<div class="text-center py-8 text-adaptive-tertiary italic">
 				{$_('comments.empty', { default: 'No comments yet. Be the first!' })}
 			</div>
 		{:else}
 			{#each comments as comment (comment.id)}
-				<div class="group relative bg-light-bg-primary dark:bg-dark-bg-primary p-3 rounded-lg border border-light-border-primary dark:border-dark-border-primary" transition:slide>
-					<div class="flex items-start justify-between gap-2 mb-1">
-						<div class="flex items-center gap-2">
-							<div class="w-6 h-6 rounded-full bg-accent-primary/20 flex items-center justify-center text-xs font-bold text-accent-primary">
-								{#if comment.is_anonymous}
-									?
-								{:else}
-									{comment.user?.display_name?.charAt(0) || '?'}
-								{/if}
-							</div>
-							<span class="text-sm font-medium {comment.is_anonymous ? 'text-light-text-tertiary dark:text-dark-text-tertiary italic' : ''}">
-								{comment.is_anonymous ? $_('comments.anonymous', { default: 'Anonymous Student' }) : comment.user?.display_name}
-							</span>
-						</div>
-						<span class="text-xs text-light-text-tertiary dark:text-dark-text-tertiary">
-							{formatDate(comment.created_at)}
-						</span>
+				<div class="group relative bg-adaptive-primary p-3 rounded-lg border border-adaptive" transition:slide>
+					<div class="flex items-start justify-between gap-2 mb-2">
+						<UserInfo
+							user={comment.user}
+							anonymous={comment.is_anonymous}
+							timestamp={comment.created_at}
+							formatTimestamp={formatDate}
+							anonymousLabel={$_('comments.anonymous', { default: 'Anonymous Student' })}
+							avatarSize="xs"
+						/>
 					</div>
 
-					<p class="text-sm text-light-text-secondary dark:text-dark-text-secondary ml-8 whitespace-pre-wrap">{comment.content}</p>
+					<p class="text-sm text-adaptive-secondary ml-8 whitespace-pre-wrap">{comment.content}</p>
 
 					{#if currentUser && (currentUser.id === comment.user_id || currentUser.role === 'admin')}
-						<button 
+						<button
 							onclick={() => handleDelete(comment.id)}
-							class="absolute top-2 right-2 p-1 text-light-text-tertiary dark:text-dark-text-tertiary hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+							class="absolute top-2 right-2 p-1 text-adaptive-tertiary hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
 							title={$_('common.delete')}
 						>
 							<Icon name="trash" size={14} />
@@ -128,22 +123,22 @@
 	</div>
 
 	<!-- Input Area -->
-	<div class="p-4 bg-light-bg-tertiary dark:bg-dark-bg-tertiary border-t border-light-border-primary dark:border-dark-border-primary">
+	<div class="p-4 bg-adaptive-tertiary border-t border-adaptive">
 		{#if error}
 			<div class="text-red-500 text-xs mb-2" transition:slide>{error}</div>
 		{/if}
-		
+
 		<div class="relative">
 			<textarea
 				bind:value={content}
 				placeholder={$_('comments.placeholder', { default: 'Write a comment...' })}
-				class="w-full bg-light-bg-primary dark:bg-dark-bg-primary border border-light-border-primary dark:border-dark-border-primary rounded-lg p-3 text-sm focus:ring-2 focus:ring-accent-primary focus:border-transparent outline-none resize-none min-h-[80px]"
+				class="w-full bg-adaptive-primary border border-adaptive rounded-lg p-3 text-sm focus:ring-2 focus:ring-accent-primary focus:border-transparent outline-none resize-none min-h-[80px]"
 				disabled={submitting}
 			></textarea>
 		</div>
 
-		<div class="flex items-center justify-between mt-2">
-			<label class="flex items-center gap-2 text-sm text-light-text-secondary dark:text-dark-text-secondary cursor-pointer select-none">
+		<div class="flex-between mt-2">
+			<label class="flex-gap-2 text-sm text-adaptive-secondary cursor-pointer select-none">
 				<input type="checkbox" bind:checked={isAnonymous} class="rounded text-accent-primary focus:ring-accent-primary" />
 				{$_('comments.postAnonymously', { default: 'Post Anonymously' })}
 			</label>

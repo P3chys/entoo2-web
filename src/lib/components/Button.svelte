@@ -1,14 +1,12 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
-    import { clickPulse, hoverScale, rippleEffect } from '$lib/utils/animation';
+	import { clickPulse, hoverScale, rippleEffect } from '$lib/utils/animation';
+	import { buttonVariants, type ButtonVariants } from '$lib/utils/variants';
 
-	interface Props {
-		variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+	interface Props extends ButtonVariants {
 		type?: 'button' | 'submit' | 'reset';
-		size?: 'sm' | 'md' | 'lg';
 		disabled?: boolean;
 		loading?: boolean;
-		fullWidth?: boolean;
 		ariaLabel?: string;
 		class?: string;
 		onclick?: () => void;
@@ -27,31 +25,18 @@
 		onclick,
 		children
 	}: Props = $props();
-
-	const variantClasses = {
-		primary: 'btn-primary',
-		secondary: 'btn-secondary',
-		ghost: 'btn-ghost',
-		danger: 'btn-danger'
-	};
-
-	const sizeClasses = {
-		sm: 'text-xs px-3 py-1.5',
-		md: 'text-sm px-4 py-2',
-		lg: 'text-base px-6 py-3'
-	};
 </script>
 
 <button
 	{type}
-	class="btn {variantClasses[variant]} {sizeClasses[size]} {fullWidth ? 'w-full' : ''} {className}"
+	class={buttonVariants({ variant, size, fullWidth, class: className })}
 	disabled={disabled || loading}
 	aria-busy={loading}
 	aria-label={ariaLabel}
 	onclick={onclick}
-    use:rippleEffect
-    use:clickPulse
-    use:hoverScale
+	use:rippleEffect
+	use:clickPulse
+	use:hoverScale
 >
 	{#if loading}
 		<span role="status" aria-label={$_('common.loading')}>

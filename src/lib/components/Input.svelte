@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { generateId } from '$lib/utils/id';
+	import { inputVariants, type InputVariants } from '$lib/utils/variants';
 
-	interface Props {
+	interface Props extends InputVariants {
 		type?: 'text' | 'email' | 'password' | 'number' | 'search' | 'tel' | 'url';
 		value?: string;
 		placeholder?: string;
@@ -25,6 +26,7 @@
 		helpText = '',
 		disabled = false,
 		required = false,
+		size = 'md',
 		class: className = '',
 		ariaLabel = '',
 		autocomplete = '',
@@ -35,11 +37,14 @@
 	const id = generateId('input');
 	const errorId = `${id}-error`;
 	const helpId = `${id}-help`;
+
+	// Determine variant based on error state
+	const variant = $derived(error ? 'error' : 'default');
 </script>
 
 <div class="w-full {className}">
 	{#if label}
-		<label for={id} class="block text-sm font-medium mb-2 text-light-text-secondary dark:text-dark-text-secondary">
+		<label for={id} class="block text-sm font-medium mb-2 text-adaptive-secondary">
 			{label}
 			{#if required}
 				<span class="text-error" aria-label="required">*</span>
@@ -58,10 +63,10 @@
 		aria-label={ariaLabel || label}
 		aria-invalid={!!error}
 		aria-describedby={error ? errorId : helpText ? helpId : undefined}
-		class="input {error ? 'border-error focus:ring-error' : ''}"
+		class={inputVariants({ variant, size, class: className })}
 	/>
 	{#if helpText && !error}
-		<p id={helpId} class="mt-1 text-sm text-light-text-secondary dark:text-dark-text-secondary">
+		<p id={helpId} class="mt-1 text-sm text-adaptive-secondary">
 			{helpText}
 		</p>
 	{/if}
