@@ -145,17 +145,17 @@
 
   {#if isAsking}
     <div class="card p-4 border border-accent-primary/20" transition:slide>
-      <h3 class="font-bold mb-2">{$_('questions.new_question_title') || 'New Question'}</h3>
+      <h3 class="font-bold mb-2">{$_('questions.new_question_title') || 'Nová otázka'}</h3>
       <textarea
         bind:value={newQuestionContent}
         class="w-full bg-light-bg-secondary dark:bg-dark-bg-secondary border border-light-border-primary dark:border-dark-border-primary rounded-lg p-3 min-h-[100px] mb-3 focus:ring-2 focus:ring-accent-primary outline-none"
-        placeholder={$_('questions.placeholder') || 'What is your question?'}
+        placeholder={$_('questions.placeholder') || 'Jaká je tvá otázka...?'}
       ></textarea>
       
       <div class="flex items-center justify-between">
         <label class="flex items-center gap-2 text-sm cursor-pointer select-none">
           <input type="checkbox" bind:checked={isAnonymous} class="rounded text-accent-primary focus:ring-accent-primary bg-light-bg-tertiary dark:bg-dark-bg-tertiary border-light-border-primary dark:border-dark-border-primary" />
-          <span>{$_('comments.anonymous') || 'Post anonymously'}</span>
+          <span>{$_('comments.anonymous') || 'Nahraje anonymně'}</span>
         </label>
         
         <div class="flex gap-2">

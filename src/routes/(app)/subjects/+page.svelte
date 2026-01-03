@@ -21,16 +21,13 @@
 	// Form state
 	let formSemesterID = $state('');
 	let formNameCS = $state('');
-	let formNameEN = $state('');
 	let formCode = $state('');
 	let formDescCS = $state('');
-	let formDescEN = $state('');
 	let formCredits = $state(0);
-	
+
 	interface TeacherInput {
 		name: string;
 		topic_cs: string;
-		topic_en: string;
 	}
 	let formTeachers: TeacherInput[] = $state([]);
 
@@ -40,16 +37,15 @@
 	// Group subjects by semester
 	let groupedSubjects = $derived.by(() => {
 		const result = semesters.map(semester => {
-			const semesterSubjects = subjects.filter(s => 
+			const semesterSubjects = subjects.filter(s =>
 				s.semester_id === semester.id &&
-				(searchQuery === '' || 
+				(searchQuery === '' ||
 				 s.name_cs.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				 s.name_en.toLowerCase().includes(searchQuery.toLowerCase()) ||
 				 s.code.toLowerCase().includes(searchQuery.toLowerCase()))
 			);
 			return { semester, subjects: semesterSubjects };
 		});
-		
+
 		// If searching, only show semesters with matching subjects
 		if (searchQuery) {
 			return result.filter(g => g.subjects.length > 0);
@@ -74,7 +70,7 @@
 	}
 
 	function addTeacher() {
-		formTeachers = [...formTeachers, { name: '', topic_cs: '', topic_en: '' }];
+		formTeachers = [...formTeachers, { name: '', topic_cs: '' }];
 	}
 
 	function removeTeacher(index: number) {
@@ -85,10 +81,8 @@
 		editingSubject = null;
 		formSemesterID = semesters[0]?.id || '';
 		formNameCS = '';
-		formNameEN = '';
 		formCode = '';
 		formDescCS = '';
-		formDescEN = '';
 		formCredits = 0;
 		formTeachers = [];
 		error = '';
@@ -99,15 +93,12 @@
 		editingSubject = subject;
 		formSemesterID = subject.semester_id;
 		formNameCS = subject.name_cs;
-		formNameEN = subject.name_en;
 		formCode = subject.code || '';
 		formDescCS = subject.description_cs || '';
-		formDescEN = subject.description_en || '';
 		formCredits = subject.credits;
 		formTeachers = subject.teachers?.map(t => ({
 			name: t.teacher_name,
-			topic_cs: t.topic_cs,
-			topic_en: t.topic_en
+			topic_cs: t.topic_cs
 		})) || [];
 		error = '';
 		showModal = true;
@@ -119,7 +110,7 @@
 	}
 
 	async function handleSubmit() {
-		if (!formNameCS.trim() || !formNameEN.trim()) {
+		if (!formNameCS.trim()) {
 			error = $_('subjects.errorNameRequired');
 			return;
 		}
@@ -142,10 +133,8 @@
 		const payload = {
 			semester_id: formSemesterID,
 			name_cs: formNameCS.trim(),
-			name_en: formNameEN.trim(),
 			code: formCode.trim().toUpperCase(),
 			description_cs: formDescCS.trim(),
-			description_en: formDescEN.trim(),
 			credits: formCredits,
 			teachers: formTeachers.filter(t => t.name.trim() !== '')
 		};
@@ -346,8 +335,8 @@
 
 <!-- Modal -->
 {#if showModal}
-	<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onclick={closeModal}>
-		<div class="bg-surface-50 dark:bg-surface-800 rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" onclick={(e) => e.stopPropagation()}>
+	<div class="dialog-backdrop fixed inset-0 flex items-center justify-center z-50 p-4" onclick={closeModal}>
+		<div class="modal-content bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" onclick={(e) => e.stopPropagation()}>
 			<h2 class="text-xl font-bold mb-4">
 				{editingSubject ? $_('subjects.edit') : $_('subjects.create')}
 			</h2>
@@ -361,82 +350,67 @@
 			<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 					<div class="md:col-span-2">
-						<label for="semester" class="block text-sm font-medium mb-1">{$_('subjects.semester')}</label>
+						<label for="semester" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('subjects.semester')}</label>
 						<select
 							id="semester"
 							bind:value={formSemesterID}
-							class="w-full px-3 py-2 border rounded-lg bg-surface-100 dark:bg-surface-700 border-surface-300 dark:border-surface-600"
+							class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
 						>
 							{#each semesters as semester}
-								<option value={semester.id}>{semester.name_en} ({semester.name_cs})</option>
+								<option value={semester.id}>{semester.name_cs}</option>
 							{/each}
 						</select>
 					</div>
 
 					<div>
-						<label for="code" class="block text-sm font-medium mb-1">{$_('subjects.codeShort')}</label>
+						<label for="code" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('subjects.codeShort')}</label>
 						<input
 							id="code"
 							type="text"
 							bind:value={formCode}
 							maxlength="6"
-							class="w-full px-3 py-2 border rounded-lg bg-surface-100 dark:bg-surface-700 border-surface-300 dark:border-surface-600 font-mono uppercase"
+							class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive font-mono uppercase focus:outline-none focus:ring-2 focus:ring-accent-primary"
 							placeholder="CS101"
 						/>
 					</div>
 
 					<div>
-						<label for="credits" class="block text-sm font-medium mb-1">{$_('subjects.credits')}</label>
+						<label for="credits" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('subjects.credits')}</label>
 						<input
 							id="credits"
 							type="number"
 							bind:value={formCredits}
 							min="0"
-							class="w-full px-3 py-2 border rounded-lg bg-surface-100 dark:bg-surface-700 border-surface-300 dark:border-surface-600"
-						/>
-					</div>
-
-					<div>
-						<label for="name_cs" class="block text-sm font-medium mb-1">{$_('common.name_czech')}</label>
-						<input
-							id="name_cs"
-							type="text"
-							bind:value={formNameCS}
-							class="w-full px-3 py-2 border rounded-lg bg-surface-100 dark:bg-surface-700 border-surface-300 dark:border-surface-600"
-						/>
-					</div>
-					<div>
-						<label for="name_en" class="block text-sm font-medium mb-1">{$_('common.name_english')}</label>
-						<input
-							id="name_en"
-							type="text"
-							bind:value={formNameEN}
-							class="w-full px-3 py-2 border rounded-lg bg-surface-100 dark:bg-surface-700 border-surface-300 dark:border-surface-600"
+							class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
 						/>
 					</div>
 
 					<div class="md:col-span-2">
-						<label class="block text-sm font-medium mb-2">{$_('subjects.teachers')}</label>
+						<label for="name_cs" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.name_czech')}</label>
+						<input
+							id="name_cs"
+							type="text"
+							bind:value={formNameCS}
+							class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
+						/>
+					</div>
+
+					<div class="md:col-span-2">
+						<label class="block text-sm font-medium mb-2 text-adaptive-primary">{$_('subjects.teachers')}</label>
 						{#each formTeachers as teacher, i}
 							<div class="flex gap-2 mb-2 items-start">
-								<div class="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-2">
+								<div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
 									<input
 										type="text"
 										bind:value={teacher.name}
-										placeholder="Name"
-										class="w-full px-2 py-1 text-sm border rounded bg-surface-100 dark:bg-surface-700 border-surface-300 dark:border-surface-600"
+										placeholder="Jméno"
+										class="w-full px-2 py-1 text-sm border rounded bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
 									/>
 									<input
 										type="text"
 										bind:value={teacher.topic_cs}
-										placeholder="Topic (CS)"
-										class="w-full px-2 py-1 text-sm border rounded bg-surface-100 dark:bg-surface-700 border-surface-300 dark:border-surface-600"
-									/>
-									<input
-										type="text"
-										bind:value={teacher.topic_en}
-										placeholder="Topic (EN)"
-										class="w-full px-2 py-1 text-sm border rounded bg-surface-100 dark:bg-surface-700 border-surface-300 dark:border-surface-600"
+										placeholder="Téma"
+										class="w-full px-2 py-1 text-sm border rounded bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
 									/>
 								</div>
 								<button type="button" class="text-red-500 hover:text-red-700 px-2" onclick={() => removeTeacher(i)}>
@@ -450,21 +424,12 @@
 					</div>
 
 					<div class="md:col-span-2">
-						<label for="desc_cs" class="block text-sm font-medium mb-1">{$_('common.description_czech')}</label>
+						<label for="desc_cs" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.description_czech')}</label>
 						<textarea
 							id="desc_cs"
 							bind:value={formDescCS}
-							rows="2"
-							class="w-full px-3 py-2 border rounded-lg bg-surface-100 dark:bg-surface-700 border-surface-300 dark:border-surface-600"
-						></textarea>
-					</div>
-					<div class="md:col-span-2">
-						<label for="desc_en" class="block text-sm font-medium mb-1">{$_('common.description_english')}</label>
-						<textarea
-							id="desc_en"
-							bind:value={formDescEN}
-							rows="2"
-							class="w-full px-3 py-2 border rounded-lg bg-surface-100 dark:bg-surface-700 border-surface-300 dark:border-surface-600"
+							rows="3"
+							class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
 						></textarea>
 					</div>
 				</div>

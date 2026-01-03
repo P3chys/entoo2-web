@@ -25,7 +25,6 @@ export interface RegisterRequest {
 export interface Semester {
 	id: string;
 	name_cs: string;
-	name_en: string;
 	order_index: number;
 	created_at: string;
 	updated_at: string;
@@ -37,7 +36,6 @@ export interface SubjectTeacher {
 	subject_id: string;
 	teacher_name: string;
 	topic_cs: string;
-	topic_en: string;
 	created_at: string;
 }
 
@@ -45,10 +43,8 @@ export interface Subject {
 	id: string;
 	semester_id: string;
 	name_cs: string;
-	name_en: string;
 	code: string;
 	description_cs: string;
-	description_en: string;
 	credits: number;
 	created_at: string;
 	updated_at: string;
@@ -168,10 +164,8 @@ export interface MeilisearchHit {
 	file_size?: number;
 	created_at?: string;
 	name_cs?: string;
-	name_en?: string;
 	code?: string;
 	description_cs?: string;
-	description_en?: string;
 	credits?: number;
 	_formatted?: Record<string, string>;
 	_matchesPosition?: any;

@@ -22,7 +22,6 @@
 	// Form fields
 	let formType = $state<'lecture' | 'seminar' | 'other'>('lecture');
 	let formNameCS = $state('');
-	let formNameEN = $state('');
 
 	async function fetchCategories() {
 		loading = true;
@@ -36,25 +35,23 @@
 	}
 
 	async function createCategory() {
-		if (!formNameCS || !formNameEN) {
-			alert('Please fill in both names');
+		if (!formNameCS) {
+			alert('Jmeno musi byt vyplneno');
 			return;
 		}
 
 		const { error } = await api.post(`/api/v1/admin/subjects/${subjectId}/categories`, {
 			type: formType,
-			name_cs: formNameCS,
-			name_en: formNameEN
+			name_cs: formNameCS
 		});
 
 		if (!error) {
 			formNameCS = '';
-			formNameEN = '';
 			showCreateForm = false;
 			await fetchCategories();
 			onUpdate();
 		} else {
-			alert(error);
+			alert(error.message || $_('common.failed_to_create_category'));
 		}
 	}
 
@@ -62,18 +59,16 @@
 		if (!editingCategory) return;
 
 		const { error } = await api.put(`/api/v1/admin/categories/${editingCategory.id}`, {
-			name_cs: formNameCS,
-			name_en: formNameEN
+			name_cs: formNameCS
 		});
 
 		if (!error) {
 			editingCategory = null;
 			formNameCS = '';
-			formNameEN = '';
 			await fetchCategories();
 			onUpdate();
 		} else {
-			alert(error);
+			alert(error.message || $_('common.failed_to_update_category'));
 		}
 	}
 
@@ -86,14 +81,13 @@
 			await fetchCategories();
 			onUpdate();
 		} else {
-			alert(error);
+			alert(error.message || $_('common.failed_to_delete_category'));
 		}
 	}
 
 	function startEdit(category: DocumentCategory) {
 		editingCategory = category;
 		formNameCS = category.name_cs;
-		formNameEN = category.name_en;
 		formType = category.type;
 		showCreateForm = false;
 	}
@@ -101,7 +95,6 @@
 	function cancelEdit() {
 		editingCategory = null;
 		formNameCS = '';
-		formNameEN = '';
 		showCreateForm = false;
 	}
 
@@ -117,17 +110,17 @@
 	});
 
 	const isUnassigned = (category: DocumentCategory) =>
-		category.name_cs === 'Nepřiřazeno' || category.name_en === 'Unassigned';
+		category.name_cs === 'Nepřiřazeno';
 </script>
 
 {#if isOpen}
-	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onclick={onClose}>
+	<div class="dialog-backdrop fixed inset-0 z-50 flex items-center justify-center p-4" onclick={onClose}>
 		<div
-			class="bg-base-100 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4"
+			class="modal-content bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto"
 			onclick={(e) => e.stopPropagation()}
 		>
 			<!-- Header -->
-			<div class="flex items-center justify-between p-6 border-b border-base-200">
+			<div class="flex items-center justify-between pb-4 mb-4 border-b border-surface-200 dark:border-surface-700">
 				<h2 class="text-2xl font-bold">{$_('documents.manageCategories')}</h2>
 				<button class="btn btn-ghost btn-sm btn-circle" onclick={onClose} type="button">
 					<Icon name="x" size={20} />
@@ -141,7 +134,7 @@
 				{:else}
 					<!-- Create/Edit Form -->
 					{#if showCreateForm || editingCategory}
-						<div class="border border-base-200 rounded-lg p-4 space-y-4">
+						<div class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 space-y-4 bg-surface-100 dark:bg-surface-900">
 							<h3 class="font-semibold">
 								{editingCategory
 									? $_('documents.editCategory')
@@ -164,25 +157,13 @@
 
 								<div class={editingCategory ? 'md:col-span-2' : ''}>
 									<label class="block text-sm font-medium mb-1">
-										{$_('documents.categoryNameCS')}
+										{$_('documents.categoryName')}
 									</label>
 									<input
 										type="text"
 										bind:value={formNameCS}
 										class="input input-bordered w-full"
 										placeholder="Např. Přednášky 2024, Prof. Novák"
-									/>
-								</div>
-
-								<div class={editingCategory ? 'md:col-span-2' : ''}>
-									<label class="block text-sm font-medium mb-1">
-										{$_('documents.categoryNameEN')}
-									</label>
-									<input
-										type="text"
-										bind:value={formNameEN}
-										class="input input-bordered w-full"
-										placeholder="E.g., Lectures 2024, Prof. Novák"
 									/>
 								</div>
 							</div>
@@ -219,11 +200,10 @@
 							<div class="space-y-2">
 								{#each lectureCategories as category}
 									<div
-										class="flex items-center justify-between p-3 bg-base-50 rounded-lg border border-base-200"
+										class="flex items-center justify-between p-3 bg-surface-100 dark:bg-surface-900 rounded-lg border border-surface-200 dark:border-surface-700"
 									>
 										<div>
 											<div class="font-medium">{category.name_cs}</div>
-											<div class="text-sm text-base-content/60">{category.name_en}</div>
 										</div>
 										{#if !isUnassigned(category)}
 											<div class="flex gap-2">
@@ -254,11 +234,10 @@
 							<div class="space-y-2">
 								{#each seminarCategories as category}
 									<div
-										class="flex items-center justify-between p-3 bg-base-50 rounded-lg border border-base-200"
+										class="flex items-center justify-between p-3 bg-surface-100 dark:bg-surface-900 rounded-lg border border-surface-200 dark:border-surface-700"
 									>
 										<div>
 											<div class="font-medium">{category.name_cs}</div>
-											<div class="text-sm text-base-content/60">{category.name_en}</div>
 										</div>
 										{#if !isUnassigned(category)}
 											<div class="flex gap-2">
@@ -289,11 +268,10 @@
 							<div class="space-y-2">
 								{#each otherCategories as category}
 									<div
-										class="flex items-center justify-between p-3 bg-base-50 rounded-lg border border-base-200"
+										class="flex items-center justify-between p-3 bg-surface-100 dark:bg-surface-900 rounded-lg border border-surface-200 dark:border-surface-700"
 									>
 										<div>
 											<div class="font-medium">{category.name_cs}</div>
-											<div class="text-sm text-base-content/60">{category.name_en}</div>
 										</div>
 										{#if !isUnassigned(category)}
 											<div class="flex gap-2">

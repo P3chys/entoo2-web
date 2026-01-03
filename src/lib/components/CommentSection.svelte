@@ -131,7 +131,7 @@
 		<div class="relative">
 			<textarea
 				bind:value={content}
-				placeholder={$_('comments.placeholder', { default: 'Write a comment...' })}
+				placeholder={$_('comments.placeholder', { default: 'Napiš komentář...' })}
 				class="w-full bg-adaptive-primary border border-adaptive rounded-lg p-3 text-sm focus:ring-2 focus:ring-accent-primary focus:border-transparent outline-none resize-none min-h-[80px]"
 				disabled={submitting}
 			></textarea>

@@ -238,7 +238,7 @@
         <textarea
           bind:value={replyContent}
           class="w-full bg-light-bg-tertiary dark:bg-dark-bg-tertiary border border-light-border-primary dark:border-dark-border-primary rounded-lg p-3 min-h-[80px] mb-2 focus:ring-2 focus:ring-accent-primary outline-none text-sm"
-          placeholder={$_('questions.reply_placeholder') || 'Write your answer...'}
+          placeholder={$_('questions.reply_placeholder') || 'Napiš svoji odpověď...'}
         ></textarea>
 
         <!-- File Attachment -->

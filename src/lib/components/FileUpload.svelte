@@ -105,7 +105,7 @@
 </script>
 
 <div
-	class="border-2 border-dashed rounded-lg p-8 text-center transition-colors duration-200 {dragging
+	class="border-2 border-dashed rounded-lg p-4 text-center transition-colors duration-200 {dragging
 		? 'border-primary bg-primary/5'
 		: 'border-base-300 hover:border-primary/50'}"
 	ondragenter={handleDragEnter}
@@ -123,16 +123,16 @@
 		accept=".pdf,.docx,.pptx,.jpg,.jpeg,.png,.txt,.xlsx,.xls,.csv"
 	/>
 
-	<div class="flex flex-col items-center gap-4">
-		<div class="p-4 bg-base-200 rounded-full text-primary">
-            <Icon name="upload" size={32} />
+	<div class="flex flex-col items-center gap-3">
+		<div class="p-3 bg-base-200 rounded-full text-primary">
+            <Icon name="upload" size={24} />
 		</div>
 
 		<div>
-			<h3 class="text-lg font-semibold">
+			<h3 class="text-base font-semibold">
 				{uploading ? $t('common.loading') : $t('documents.upload')}
 			</h3>
-			<p class="text-base-content/60 text-sm mt-1">
+			<p class="text-base-content/60 text-xs mt-1">
 				{$t('documents.supportedFormats')}
 			</p>
 		</div>

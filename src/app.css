@@ -130,6 +130,24 @@
 		@apply transition-all duration-200;
 	}
 
+	/* Override browser validation styles to maintain theme consistency */
+	input:invalid,
+	textarea:invalid,
+	select:invalid {
+		@apply bg-light-bg-primary dark:bg-dark-bg-secondary;
+		@apply text-light-text-primary dark:text-dark-text-primary;
+		@apply border-error;
+		box-shadow: none; /* Remove browser default red glow */
+	}
+
+	input:valid,
+	textarea:valid,
+	select:valid {
+		@apply bg-light-bg-primary dark:bg-dark-bg-secondary;
+		@apply text-light-text-primary dark:text-dark-text-primary;
+		box-shadow: none;
+	}
+
 	.card {
 		@apply bg-light-bg-secondary dark:bg-dark-bg-secondary;
 		@apply border border-light-border-primary dark:border-dark-border-primary;
@@ -290,7 +308,29 @@
 
 /* Dialog/Modal backdrop */
 .dialog-backdrop {
-	@apply bg-black/75;
+	@apply bg-black/85 backdrop-blur-md;
+	animation: backdrop-fade-in 0.25s ease-out;
+	/* Prevent interaction with elements behind */
+	pointer-events: auto;
+}
+
+/* Modal content container - elevated above backdrop */
+.modal-content {
+	@apply rounded-lg shadow-2xl;
+	/* Ensure modal is clearly above backdrop */
+	position: relative;
+	z-index: 10;
+}
+
+@keyframes backdrop-fade-in {
+	from {
+		opacity: 0;
+		backdrop-filter: blur(0px);
+	}
+	to {
+		opacity: 1;
+		backdrop-filter: blur(8px);
+	}
 }
 
 /* Tab navigation */

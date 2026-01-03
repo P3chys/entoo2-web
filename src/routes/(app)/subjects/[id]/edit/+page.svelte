@@ -18,11 +18,9 @@
 	let formData = $state({
 		code: '',
 		name_cs: '',
-		name_en: '',
 		description_cs: '',
-		description_en: '',
 		credits: 0,
-		teachers: [] as { name: string; topic_cs: string; topic_en: string }[]
+		teachers: [] as { name: string; topic_cs: string }[]
 	});
 
 	async function loadData() {
@@ -36,14 +34,11 @@
 			formData = {
 				code: s.code,
 				name_cs: s.name_cs,
-				name_en: s.name_en,
 				description_cs: s.description_cs || '',
-				description_en: s.description_en || '',
 				credits: s.credits,
 				teachers: s.teachers?.map(t => ({
 					name: t.teacher_name,
-					topic_cs: t.topic_cs || '',
-					topic_en: t.topic_en || ''
+					topic_cs: t.topic_cs || ''
 				})) || []
 			};
 		}
@@ -66,7 +61,7 @@
 	}
 
 	function addTeacher() {
-		formData.teachers = [...formData.teachers, { name: '', topic_cs: '', topic_en: '' }];
+		formData.teachers = [...formData.teachers, { name: '', topic_cs: '' }];
 	}
 
 	function removeTeacher(index: number) {
@@ -140,58 +135,31 @@
 						</div>
 					</div>
 
-					<!-- Names -->
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-						<div>
-							<label for="name_cs" class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
-								{$_('common.name_cs')}
-							</label>
-							<input
-								type="text"
-								id="name_cs"
-								bind:value={formData.name_cs}
-								class="w-full px-4 py-2 rounded-lg bg-light-bg-tertiary dark:bg-dark-bg-tertiary border border-light-border-primary dark:border-dark-border-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/50"
-								required
-							/>
-						</div>
-						<div>
-							<label for="name_en" class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
-								{$_('common.name_en')}
-							</label>
-							<input
-								type="text"
-								id="name_en"
-								bind:value={formData.name_en}
-								class="w-full px-4 py-2 rounded-lg bg-light-bg-tertiary dark:bg-dark-bg-tertiary border border-light-border-primary dark:border-dark-border-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/50"
-								required
-							/>
-						</div>
+					<!-- Name -->
+					<div>
+						<label for="name_cs" class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
+							{$_('common.name_cs')}
+						</label>
+						<input
+							type="text"
+							id="name_cs"
+							bind:value={formData.name_cs}
+							class="w-full px-4 py-2 rounded-lg bg-light-bg-tertiary dark:bg-dark-bg-tertiary border border-light-border-primary dark:border-dark-border-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/50"
+							required
+						/>
 					</div>
 
-					<!-- Descriptions -->
-					<div class="space-y-6">
-						<div>
-							<label for="description_cs" class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
-								{$_('common.description_cs')}
-							</label>
-							<textarea
-								id="description_cs"
-								bind:value={formData.description_cs}
-								rows="3"
-								class="w-full px-4 py-2 rounded-lg bg-light-bg-tertiary dark:bg-dark-bg-tertiary border border-light-border-primary dark:border-dark-border-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/50"
-							></textarea>
-						</div>
-						<div>
-							<label for="description_en" class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
-								{$_('common.description_en')}
-							</label>
-							<textarea
-								id="description_en"
-								bind:value={formData.description_en}
-								rows="3"
-								class="w-full px-4 py-2 rounded-lg bg-light-bg-tertiary dark:bg-dark-bg-tertiary border border-light-border-primary dark:border-dark-border-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/50"
-							></textarea>
-						</div>
+					<!-- Description -->
+					<div>
+						<label for="description_cs" class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
+							{$_('common.description_cs')}
+						</label>
+						<textarea
+							id="description_cs"
+							bind:value={formData.description_cs}
+							rows="4"
+							class="w-full px-4 py-2 rounded-lg bg-light-bg-tertiary dark:bg-dark-bg-tertiary border border-light-border-primary dark:border-dark-border-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/50"
+						></textarea>
 					</div>
 				</section>
 
@@ -229,7 +197,7 @@
 									<Icon name="delete" size={16} />
 								</button>
 
-								<div class="grid grid-cols-1 md:grid-cols-3 gap-4 pr-8">
+								<div class="grid grid-cols-1 md:grid-cols-2 gap-4 pr-8">
 									<div>
 										<label class="block text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
 											{$_('common.teacher_name')}
@@ -248,16 +216,6 @@
 										<input
 											type="text"
 											bind:value={teacher.topic_cs}
-											class="w-full px-3 py-1.5 text-sm rounded border border-light-border-primary dark:border-dark-border-primary bg-light-bg-primary dark:bg-dark-bg-primary focus:outline-none focus:ring-1 focus:ring-accent-primary"
-										/>
-									</div>
-									<div>
-										<label class="block text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
-											{$_('common.teacher_topic_en')}
-										</label>
-										<input
-											type="text"
-											bind:value={teacher.topic_en}
 											class="w-full px-3 py-1.5 text-sm rounded border border-light-border-primary dark:border-dark-border-primary bg-light-bg-primary dark:bg-dark-bg-primary focus:outline-none focus:ring-1 focus:ring-accent-primary"
 										/>
 									</div>
