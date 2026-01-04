@@ -21,6 +21,8 @@
 		class: className = ''
 	}: Props = $props();
 
+	let inputElement: HTMLInputElement | undefined = $state();
+
 	function handleInput(e: Event) {
 		const target = e.target as HTMLInputElement;
 		value = target.value;
@@ -36,16 +38,23 @@
 		value = '';
 		onInput?.('');
 	}
+
+	// Handle autofocus programmatically to avoid a11y warning
+	$effect(() => {
+		if (autofocus && inputElement) {
+			inputElement.focus();
+		}
+	});
 </script>
 
 <form onsubmit={handleSubmit} class="relative {className}">
 	<div class="relative">
 		<input
+			bind:this={inputElement}
 			type="search"
 			bind:value
 			oninput={handleInput}
 			{placeholder}
-			{autofocus}
 			class="input pl-10 pr-10"
 			aria-label={$_('common.search')}
 		/>

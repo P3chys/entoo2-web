@@ -189,13 +189,7 @@
 		"errorCodeRequired": "Kód předmětu je povinný",
 		"errorCodeLength": "Kód předmětu musí mít 3 až 6 znaků",
 		"errorSemesterRequired": "Prosím vyberte semestr",
-		"discussionInfo": "Diskuzní prostor pro {code}. Udržujte konverzace s respektem a relevantní.",
-		"noRatingsYet": "Zatím bez hodnocení",
-		"rating": "hodnocení",
-		"ratings": "hodnocení",
-		"yourRating": "Vaše hodnocení:",
-		"rateTeacher": "Ohodnotit:",
-		"removeRating": "Odebrat"
+		"discussionInfo": "Diskuzní prostor pro {code}. Udržujte konverzace s respektem a relevantní."
 	},
 	"documents": {
 		"title": "Dokumenty",

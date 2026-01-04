@@ -20,7 +20,7 @@
 	let validatingToken = $state(true);
 	let tokenValid = $state(false);
 
-	let formElement: HTMLFormElement;
+	let formElement = $state<HTMLFormElement>();
 
 	onMount(async () => {
 		await validateToken();
@@ -219,7 +219,7 @@
 						Zadejte své nové heslo.
 					</p>
 
-					<form bind:this={formElement} on:submit|preventDefault={handleSubmit} class="space-y-5">
+					<form bind:this={formElement} onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-5">
 						{#if generalError}
 							<div class="p-4 bg-error/10 border border-error rounded-lg text-error text-sm flex items-start gap-2">
 								<Icon name="alert-circle" size={20} className="flex-shrink-0 mt-0.5" />

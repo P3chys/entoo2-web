@@ -20,7 +20,7 @@
 		warning: AlertTriangle
 	};
 
-	const Icon = icons[type];
+	const Icon = $derived(icons[type]);
 
 	$effect(() => {
 		if (duration > 0) {

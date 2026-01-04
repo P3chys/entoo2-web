@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import Input from '$components/Input.svelte';
 	import Button from '$components/Button.svelte';
+	import { Modal } from '$components/ui';
 	import { isAdmin } from '$stores/auth';
 	import { api } from '$lib/utils/api';
 	import { fade } from 'svelte/transition';
@@ -305,19 +306,19 @@
 									</div>
 
 									{#if $isAdmin}
-										<div class="flex items-center gap-2 ml-4 relative z-20" onclick={(e) => e.stopPropagation()}>
-											<Button variant="ghost" size="sm" onclick={() => openEditModal(subject)} aria-label={$_('common.edit')}>
+										<div class="flex items-center gap-2 ml-4 relative z-20" role="group">
+											<Button variant="ghost" size="sm" onclick={(e) => { e.stopPropagation(); openEditModal(subject); }} aria-label={$_('common.edit')}>
 												<Icon name="edit" size={20} />
 											</Button>
 											{#if deleteConfirm === subject.id}
-												<Button variant="danger" size="sm" onclick={() => handleDelete(subject.id)}>
+												<Button variant="danger" size="sm" onclick={(e) => { e.stopPropagation(); handleDelete(subject.id); }}>
 													{$_('common.confirm')}
 												</Button>
-												<Button variant="ghost" size="sm" onclick={() => deleteConfirm = null}>
+												<Button variant="ghost" size="sm" onclick={(e) => { e.stopPropagation(); deleteConfirm = null; }}>
 													{$_('common.cancel')}
 												</Button>
 											{:else}
-												<Button variant="ghost" size="sm" onclick={() => deleteConfirm = subject.id} aria-label={$_('common.delete')}>
+												<Button variant="ghost" size="sm" onclick={(e) => { e.stopPropagation(); deleteConfirm = subject.id; }} aria-label={$_('common.delete')}>
 													<Icon name="delete" size={20} />
 												</Button>
 											{/if}
@@ -334,113 +335,109 @@
 </div>
 
 <!-- Modal -->
-{#if showModal}
-	<div class="dialog-backdrop fixed inset-0 flex items-center justify-center z-50 p-4" onclick={closeModal}>
-		<div class="modal-content bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto" onclick={(e) => e.stopPropagation()}>
-			<h2 class="text-xl font-bold mb-4">
-				{editingSubject ? $_('subjects.edit') : $_('subjects.create')}
-			</h2>
-			
-			{#if error}
-				<div class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-3 rounded mb-4">
-					{error}
-				</div>
-			{/if}
+<Modal isOpen={showModal} onClose={closeModal} maxWidth="2xl">
+	<h2 class="text-xl font-bold mb-4">
+		{editingSubject ? $_('subjects.edit') : $_('subjects.create')}
+	</h2>
 
-			<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-					<div class="md:col-span-2">
-						<label for="semester" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('subjects.semester')}</label>
-						<select
-							id="semester"
-							bind:value={formSemesterID}
-							class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
-						>
-							{#each semesters as semester}
-								<option value={semester.id}>{semester.name_cs}</option>
-							{/each}
-						</select>
-					</div>
+	{#if error}
+		<div class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-3 rounded mb-4">
+			{error}
+		</div>
+	{/if}
 
-					<div>
-						<label for="code" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('subjects.codeShort')}</label>
-						<input
-							id="code"
-							type="text"
-							bind:value={formCode}
-							maxlength="6"
-							class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive font-mono uppercase focus:outline-none focus:ring-2 focus:ring-accent-primary"
-							placeholder="CS101"
-						/>
-					</div>
+	<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+			<div class="md:col-span-2">
+				<label for="semester" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('subjects.semester')}</label>
+				<select
+					id="semester"
+					bind:value={formSemesterID}
+					class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
+				>
+					{#each semesters as semester}
+						<option value={semester.id}>{semester.name_cs}</option>
+					{/each}
+				</select>
+			</div>
 
-					<div>
-						<label for="credits" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('subjects.credits')}</label>
-						<input
-							id="credits"
-							type="number"
-							bind:value={formCredits}
-							min="0"
-							class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
-						/>
-					</div>
+			<div>
+				<label for="code" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('subjects.codeShort')}</label>
+				<input
+					id="code"
+					type="text"
+					bind:value={formCode}
+					maxlength="6"
+					class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive font-mono uppercase focus:outline-none focus:ring-2 focus:ring-accent-primary"
+					placeholder="CS101"
+				/>
+			</div>
 
-					<div class="md:col-span-2">
-						<label for="name_cs" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.name_czech')}</label>
-						<input
-							id="name_cs"
-							type="text"
-							bind:value={formNameCS}
-							class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
-						/>
-					</div>
+			<div>
+				<label for="credits" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('subjects.credits')}</label>
+				<input
+					id="credits"
+					type="number"
+					bind:value={formCredits}
+					min="0"
+					class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
+				/>
+			</div>
 
-					<div class="md:col-span-2">
-						<label class="block text-sm font-medium mb-2 text-adaptive-primary">{$_('subjects.teachers')}</label>
-						{#each formTeachers as teacher, i}
-							<div class="flex gap-2 mb-2 items-start">
-								<div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
-									<input
-										type="text"
-										bind:value={teacher.name}
-										placeholder="Jméno"
-										class="w-full px-2 py-1 text-sm border rounded bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
-									/>
-									<input
-										type="text"
-										bind:value={teacher.topic_cs}
-										placeholder="Téma"
-										class="w-full px-2 py-1 text-sm border rounded bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
-									/>
-								</div>
-								<button type="button" class="text-red-500 hover:text-red-700 px-2" onclick={() => removeTeacher(i)}>
-									✕
-								</button>
-							</div>
-						{/each}
-						<button type="button" class="text-sm text-primary-600 hover:text-primary-800 font-medium mt-1" onclick={addTeacher}>
-							+ {$_('common.add_teacher')}
+			<div class="md:col-span-2">
+				<label for="name_cs" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.name_czech')}</label>
+				<input
+					id="name_cs"
+					type="text"
+					bind:value={formNameCS}
+					class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
+				/>
+			</div>
+
+			<fieldset class="md:col-span-2">
+				<legend class="block text-sm font-medium mb-2 text-adaptive-primary">{$_('subjects.teachers')}</legend>
+				{#each formTeachers as teacher, i}
+					<div class="flex gap-2 mb-2 items-start">
+						<div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
+							<input
+								type="text"
+								bind:value={teacher.name}
+								placeholder="Jméno"
+								class="w-full px-2 py-1 text-sm border rounded bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
+							/>
+							<input
+								type="text"
+								bind:value={teacher.topic_cs}
+								placeholder="Téma"
+								class="w-full px-2 py-1 text-sm border rounded bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
+							/>
+						</div>
+						<button type="button" class="text-red-500 hover:text-red-700 px-2" onclick={() => removeTeacher(i)}>
+							✕
 						</button>
 					</div>
+				{/each}
+				<button type="button" class="text-sm text-primary-600 hover:text-primary-800 font-medium mt-1" onclick={addTeacher}>
+					+ {$_('common.add_teacher')}
+				</button>
+			</fieldset>
 
-					<div class="md:col-span-2">
-						<label for="desc_cs" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.description_czech')}</label>
-						<textarea
-							id="desc_cs"
-							bind:value={formDescCS}
-							rows="3"
-							class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
-						></textarea>
-					</div>
-				</div>
-
-				<div class="flex justify-end gap-3 mt-6 border-t pt-4 dark:border-surface-700">
-					<Button variant="ghost" onclick={closeModal}>{$_('common.cancel')}</Button>
-					<Button variant="primary" type="submit" loading={submitting}>
-						{editingSubject ? $_('common.update') : $_('subjects.create')}
-					</Button>
-				</div>
-			</form>
+			<div class="md:col-span-2">
+				<label for="desc_cs" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.description_czech')}</label>
+				<textarea
+					id="desc_cs"
+					bind:value={formDescCS}
+					rows="3"
+					class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
+				></textarea>
+			</div>
 		</div>
-	</div>
-{/if}
+
+		<div class="flex justify-end gap-3 mt-6 border-t pt-4 dark:border-surface-700">
+			<Button variant="ghost" onclick={closeModal}>{$_('common.cancel')}</Button>
+			<Button variant="primary" type="submit" loading={submitting}>
+				{editingSubject ? $_('common.update') : $_('subjects.create')}
+			</Button>
+		</div>
+	</form>
+</Modal>

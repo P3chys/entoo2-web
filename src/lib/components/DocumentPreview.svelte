@@ -2,6 +2,7 @@
 	import { t } from 'svelte-i18n';
 	import type { Document } from '$lib/types';
 	import { api } from '$lib/utils/api';
+	import { Modal } from '$lib/components/ui';
 	import Button from './Button.svelte';
 
 	interface Props {
@@ -77,38 +78,30 @@
 	};
 </script>
 
-{#if document}
-	<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onclick={handleClose}>
-		<div
-			class="bg-surface-50 dark:bg-surface-900 rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] flex flex-col"
-			onclick={(e) => e.stopPropagation()}
-			role="dialog"
-			aria-labelledby="preview-title"
-			aria-modal="true"
+<Modal isOpen={!!document} onClose={handleClose} maxWidth="5xl">
+	<!-- Header -->
+	<div class="flex items-center justify-between p-4 border-b border-surface-200 dark:border-surface-700">
+		<div>
+			<h2 id="preview-title" class="text-xl font-bold text-base-content">
+				{document?.original_name}
+			</h2>
+			<p class="text-sm text-base-content/60">
+				{document?.mime_type} • {((document?.file_size || 0) / 1024).toFixed(1)} KB
+			</p>
+		</div>
+		<button
+			onclick={handleClose}
+			class="btn btn-ghost btn-sm btn-square"
+			aria-label="Close preview"
 		>
-			<!-- Header -->
-			<div class="flex items-center justify-between p-4 border-b border-surface-200 dark:border-surface-700">
-				<div>
-					<h2 id="preview-title" class="text-xl font-bold text-base-content">
-						{document.original_name}
-					</h2>
-					<p class="text-sm text-base-content/60">
-						{document.mime_type} • {(document.file_size / 1024).toFixed(1)} KB
-					</p>
-				</div>
-				<button
-					onclick={handleClose}
-					class="btn btn-ghost btn-sm btn-square"
-					aria-label="Close preview"
-				>
-					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-						<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-					</svg>
-				</button>
-			</div>
+			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+			</svg>
+		</button>
+	</div>
 
-			<!-- Preview Content -->
-			<div class="flex-1 overflow-auto p-4">
+	<!-- Preview Content -->
+	<div class="flex-1 overflow-auto p-4">
 				{#if loading}
 					<div class="flex items-center justify-center h-full">
 						<div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -147,12 +140,10 @@
 				{/if}
 			</div>
 
-			<!-- Footer -->
-			<div class="flex items-center justify-end gap-2 p-4 border-t border-surface-200 dark:border-surface-700">
-				<Button variant="ghost" onclick={handleClose}>
-					{$t('common.close')}
-				</Button>
-			</div>
-		</div>
+	<!-- Footer -->
+	<div class="flex items-center justify-end gap-2 p-4 border-t border-surface-200 dark:border-surface-700">
+		<Button variant="ghost" onclick={handleClose}>
+			{$t('common.close')}
+		</Button>
 	</div>
-{/if}
+</Modal>

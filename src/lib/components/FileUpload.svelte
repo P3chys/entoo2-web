@@ -139,10 +139,11 @@
 
 		<!-- Type selector -->
 		<div class="w-full max-w-xs">
-			<label class="block text-sm font-medium mb-2 text-adaptive-primary">
+			<label for="doc-type-selector" class="block text-sm font-medium mb-2 text-adaptive-primary">
 				{$t('documents.categoryType')}
 			</label>
 			<select
+				id="doc-type-selector"
 				bind:value={docType}
 				class="w-full px-4 py-2 rounded-lg border border-adaptive bg-adaptive-primary text-adaptive-primary text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-all duration-200"
 				disabled={uploading}
@@ -156,10 +157,11 @@
 		<!-- Category selector -->
 		{#if filteredCategories.length > 0}
 			<div class="w-full max-w-xs">
-				<label class="block text-sm font-medium mb-2 text-adaptive-primary">
+				<label for="category-selector" class="block text-sm font-medium mb-2 text-adaptive-primary">
 					{$t('documents.selectCategory')}
 				</label>
 				<select
+					id="category-selector"
 					bind:value={selectedCategoryId}
 					class="w-full px-4 py-2 rounded-lg border border-adaptive bg-adaptive-primary text-adaptive-primary text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-all duration-200"
 					disabled={uploading}

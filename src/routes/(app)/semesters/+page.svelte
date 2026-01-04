@@ -2,6 +2,7 @@
 	import { _ } from 'svelte-i18n';
 	import { onMount } from 'svelte';
 	import Button from '$components/Button.svelte';
+	import { Modal } from '$components/ui';
 	import { isAdmin } from '$stores/auth';
 	import { api } from '$lib/utils/api';
 	import { fade } from 'svelte/transition';
@@ -180,49 +181,45 @@
 </div>
 
 <!-- Modal -->
-{#if showModal}
-	<div class="dialog-backdrop fixed inset-0 flex items-center justify-center z-50 p-4" onclick={closeModal}>
-		<div class="modal-content bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 p-6 w-full max-w-md max-h-[90vh] overflow-y-auto" onclick={(e) => e.stopPropagation()}>
-			<h2 class="text-xl font-bold mb-4">
-				{editingSemester ? $_('semesters.edit') : $_('semesters.create')}
-			</h2>
-			
-			{#if error}
-				<div class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-3 rounded mb-4">
-					{error}
-				</div>
-			{/if}
+<Modal isOpen={showModal} onClose={closeModal} maxWidth="md">
+	<h2 class="text-xl font-bold mb-4">
+		{editingSemester ? $_('semesters.edit') : $_('semesters.create')}
+	</h2>
 
-			<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
-				<div class="space-y-4">
-					<div>
-						<label for="name_cs" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.name_czech')}</label>
-						<input
-							id="name_cs"
-							type="text"
-							bind:value={formNameCS}
-							class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
-							placeholder="1. semestr"
-						/>
-					</div>
-					<div>
-						<label for="order_index" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.order_index')}</label>
-						<input
-							id="order_index"
-							type="number"
-							bind:value={formOrderIndex}
-							class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
-						/>
-					</div>
-				</div>
-
-				<div class="flex justify-end gap-3 mt-6">
-					<Button variant="secondary" onclick={closeModal}>{$_('common.cancel')}</Button>
-					<Button variant="primary" type="submit" loading={submitting}>
-						{editingSemester ? $_('common.update') : $_('common.create')}
-					</Button>
-				</div>
-			</form>
+	{#if error}
+		<div class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-3 rounded mb-4">
+			{error}
 		</div>
-	</div>
-{/if}
+	{/if}
+
+	<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+		<div class="space-y-4">
+			<div>
+				<label for="name_cs" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.name_czech')}</label>
+				<input
+					id="name_cs"
+					type="text"
+					bind:value={formNameCS}
+					class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
+					placeholder="1. semestr"
+				/>
+			</div>
+			<div>
+				<label for="order_index" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.order_index')}</label>
+				<input
+					id="order_index"
+					type="number"
+					bind:value={formOrderIndex}
+					class="w-full px-3 py-2 border rounded-lg bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
+				/>
+			</div>
+		</div>
+
+		<div class="flex justify-end gap-3 mt-6">
+			<Button variant="secondary" onclick={closeModal}>{$_('common.cancel')}</Button>
+			<Button variant="primary" type="submit" loading={submitting}>
+				{editingSemester ? $_('common.update') : $_('common.create')}
+			</Button>
+		</div>
+	</form>
+</Modal>

@@ -13,6 +13,7 @@
 	import Icon from '$components/Icon.svelte';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import StarRating from '$lib/components/StarRating.svelte';
 	import { fadeSlideIn, slideInFrom, staggerFadeIn, bounceIn } from '$lib/utils/animation';
 	import type { Subject, Document } from '$types';
 
@@ -179,15 +180,26 @@
 								</h3>
 								<div class="grid grid-cols-1 md:grid-cols-2 gap-3" use:staggerFadeIn>
 									{#each subject.teachers as teacher}
-										<div class="text-sm bg-light-bg-tertiary dark:bg-dark-bg-tertiary px-4 py-3 rounded-lg border border-light-border-primary dark:border-dark-border-primary flex items-center gap-3 hover:shadow-md transition-shadow">
-											<div class="bg-accent-primary/10 p-2 rounded-full">
-												<Icon name="user" size={16} className="text-accent-primary" />
+										<div class="text-sm bg-light-bg-tertiary dark:bg-dark-bg-tertiary px-4 py-3 rounded-lg border border-light-border-primary dark:border-dark-border-primary hover:shadow-md transition-shadow">
+											<div class="flex items-start gap-3 mb-2">
+												<div class="bg-accent-primary/10 p-2 rounded-full">
+													<Icon name="user" size={16} className="text-accent-primary" />
+												</div>
+												<div class="flex flex-col flex-1">
+													<span class="font-medium">{teacher.teacher_name}</span>
+													{#if teacher.topic_cs}
+														<span class="text-light-text-tertiary dark:text-dark-text-tertiary text-xs">{teacher.topic_cs}</span>
+													{/if}
+												</div>
 											</div>
-											<div class="flex flex-col">
-												<span class="font-medium">{teacher.teacher_name}</span>
-												{#if teacher.topic_cs}
-													<span class="text-light-text-tertiary dark:text-dark-text-tertiary text-xs">{teacher.topic_cs}</span>
-												{/if}
+											<div class="ml-11">
+												<StarRating
+													teacherId={teacher.id}
+													averageRating={teacher.average_rating}
+													totalRatings={teacher.total_ratings}
+													userRating={teacher.user_rating}
+													onRatingChange={loadData}
+												/>
 											</div>
 										</div>
 									{/each}

@@ -12,7 +12,7 @@
 	let error = $state('');
 	let emailError = $state('');
 
-	let formElement: HTMLFormElement;
+	let formElement = $state<HTMLFormElement>();
 
 	function validateForm(): boolean {
 		emailError = '';
@@ -156,7 +156,7 @@
 						Zadejte svůj e-mail a zašleme vám odkaz pro obnovení hesla.
 					</p>
 
-					<form bind:this={formElement} on:submit|preventDefault={handleSubmit} class="space-y-5">
+					<form bind:this={formElement} onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-5">
 						{#if error}
 							<div class="p-4 bg-error/10 border border-error rounded-lg text-error text-sm flex items-start gap-2">
 								<Icon name="alert-circle" size={20} className="flex-shrink-0 mt-0.5" />

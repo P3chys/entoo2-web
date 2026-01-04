@@ -37,6 +37,9 @@ export interface SubjectTeacher {
 	teacher_name: string;
 	topic_cs: string;
 	created_at: string;
+	average_rating?: number;
+	total_ratings?: number;
+	user_rating?: number;
 }
 
 export interface Subject {

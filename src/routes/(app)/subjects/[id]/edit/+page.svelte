@@ -99,7 +99,7 @@
 				</div>
 			{/if}
 
-			<form on:submit|preventDefault={handleSubmit} class="space-y-8">
+			<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-8">
 				<!-- Basic Info Section -->
 				<section class="space-y-6">
 					<h3 class="text-lg font-semibold border-b border-light-border-primary dark:border-dark-border-primary pb-2">
@@ -171,7 +171,7 @@
 						</h3>
 						<button
 							type="button"
-							on:click={addTeacher}
+							onclick={addTeacher}
 							class="text-sm btn-secondary px-3 py-1 flex items-center gap-2"
 						>
 							<Icon name="add" size={14} />
@@ -190,7 +190,7 @@
 							<div class="p-4 bg-light-bg-tertiary dark:bg-dark-bg-tertiary rounded-lg relative group" transition:slide>
 								<button
 									type="button"
-									on:click={() => removeTeacher(i)}
+									onclick={() => removeTeacher(i)}
 									class="absolute top-2 right-2 text-red-500 hover:bg-red-500/10 p-1 rounded transition-colors"
 									title={$_('common.remove_teacher')}
 								>
@@ -199,10 +199,11 @@
 
 								<div class="grid grid-cols-1 md:grid-cols-2 gap-4 pr-8">
 									<div>
-										<label class="block text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
+										<label for="teacher-name-{i}" class="block text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
 											{$_('common.teacher_name')}
 										</label>
 										<input
+											id="teacher-name-{i}"
 											type="text"
 											bind:value={teacher.name}
 											class="w-full px-3 py-1.5 text-sm rounded border border-light-border-primary dark:border-dark-border-primary bg-light-bg-primary dark:bg-dark-bg-primary focus:outline-none focus:ring-1 focus:ring-accent-primary"
@@ -210,10 +211,11 @@
 										/>
 									</div>
 									<div>
-										<label class="block text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
+										<label for="teacher-topic-{i}" class="block text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
 											{$_('common.teacher_topic_cs')}
 										</label>
 										<input
+											id="teacher-topic-{i}"
 											type="text"
 											bind:value={teacher.topic_cs}
 											class="w-full px-3 py-1.5 text-sm rounded border border-light-border-primary dark:border-dark-border-primary bg-light-bg-primary dark:bg-dark-bg-primary focus:outline-none focus:ring-1 focus:ring-accent-primary"

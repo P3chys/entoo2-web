@@ -4,6 +4,8 @@
 	 * Displays status badges and tags
 	 */
 
+	import type { Snippet } from 'svelte';
+
 	type Variant = 'primary' | 'success' | 'warning' | 'error' | 'info';
 	type Size = 'sm' | 'md';
 
@@ -14,12 +16,15 @@
 		size?: Size;
 		/** Custom CSS classes */
 		class?: string;
+		/** Badge content */
+		children?: Snippet;
 	}
 
 	let {
 		variant = 'primary',
 		size = 'md',
-		class: className = ''
+		class: className = '',
+		children
 	}: Props = $props();
 
 	const variantClasses: Record<Variant, string> = {
@@ -30,9 +35,9 @@
 		info: 'badge-info'
 	};
 
-	const sizeClass = size === 'sm' ? 'badge-sm' : 'badge';
+	const sizeClass = $derived(size === 'sm' ? 'badge-sm' : 'badge');
 </script>
 
 <span class="{sizeClass} {variantClasses[variant]} {className}">
-	<slot />
+	{@render children?.()}
 </span>
