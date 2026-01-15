@@ -208,3 +208,77 @@ export interface ApiError {
 	status: number;
 	code?: string;
 }
+
+export interface FlashcardDeck {
+	id: string;
+	subject_id: string;
+	created_by: string;
+	title: string;
+	description: string;
+	is_public: boolean;
+	card_count: number;
+	is_favorite: boolean;
+	created_at: string;
+	updated_at: string;
+	creator?: User;
+	subject?: Subject;
+	flashcards?: Flashcard[];
+}
+
+export type CardType = 'standard' | 'multiple_choice';
+
+export interface Flashcard {
+	id: string;
+	deck_id: string;
+	card_type: CardType;
+	front_text: string;
+	back_text: string;
+	options?: string; // JSON array of options for multiple choice
+	correct_option?: number; // Index of correct option (0-based), -1 for standard cards
+	order_index: number;
+	created_at: string;
+	updated_at: string;
+	deck?: FlashcardDeck;
+}
+
+export interface UserFlashcardProgress {
+	id: string;
+	user_id: string;
+	flashcard_id: string;
+	deck_id: string;
+	ease_factor: number;
+	interval: number;
+	repetitions: number;
+	next_review_date: string | null;
+	last_reviewed_at: string | null;
+	total_reviews: number;
+	correct_reviews: number;
+	created_at: string;
+	updated_at: string;
+}
+
+export interface FlashcardStudySession {
+	id: string;
+	user_id: string;
+	deck_id: string;
+	cards_studied: number;
+	cards_correct: number;
+	duration_seconds: number;
+	started_at: string;
+	completed_at: string | null;
+	created_at: string;
+}
+
+export interface DeckProgress {
+	total_cards: number;
+	mastered_cards: number;
+	learning_cards: number;
+	new_cards: number;
+	cards_due_today: number;
+	average_ease_factor: number;
+	total_study_time_seconds: number;
+}
+
+export interface StudyCardWithProgress extends Flashcard {
+	progress?: UserFlashcardProgress;
+}

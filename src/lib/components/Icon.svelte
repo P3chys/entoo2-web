@@ -9,6 +9,7 @@
         Edit,
         Trash2,
         User,
+        Users,
         FileText,
         Upload,
         Download,
@@ -19,7 +20,9 @@
         ChevronDown,
         ChevronUp,
         X,
+        XCircle,
         Check,
+        CheckCircle,
         AlertCircle,
         Info,
         Menu,
@@ -54,7 +57,13 @@
         Layers,
         HelpCircle,
         File,
-        MessageCircle
+        MessageCircle,
+        List,
+        Loader,
+        Play,
+        Paperclip,
+        Copy,
+        Book
     } from 'lucide-svelte';
 
     const iconMap = {
@@ -64,11 +73,14 @@
         favorites: Heart,
         search: Search,
         add: Plus,
+        plus: Plus,
         edit: Edit,
         delete: Trash2,
         trash: Trash2,
         user: User,
+        users: Users,
         document: FileText,
+        'file-text': FileText,
         upload: Upload,
         download: Download,
         folder: Folder,
@@ -78,8 +90,12 @@
         'chevron-down': ChevronDown,
         'chevron-up': ChevronUp,
         close: X,
+        x: X,
+        'x-circle': XCircle,
         check: Check,
+        'check-circle': CheckCircle,
         alert: AlertCircle,
+        'alert-circle': AlertCircle,
         info: Info,
         menu: Menu,
         logout: LogOut,
@@ -114,7 +130,14 @@
         'help-circle': HelpCircle,
         file: File,
         'message-circle': MessageCircle,
-        questions: HelpCircle
+        questions: HelpCircle,
+        list: List,
+        loader: Loader,
+        play: Play,
+        paperclip: Paperclip,
+        copy: Copy,
+        book: Book,
+        chat: MessageCircle
     };
 
     export let name: keyof typeof iconMap | string;

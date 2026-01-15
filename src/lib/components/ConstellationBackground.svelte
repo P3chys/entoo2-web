@@ -52,8 +52,8 @@
 
         const isDark = $themeStore === 'dark';
         const color = isDark ? '255, 255, 255' : '0, 0, 0'; // White in dark, Black in light
-        const particleOpacity = isDark ? 0.15 : 0.15;
-        const lineOpacity = isDark ? 0.08 : 0.08;
+        const particleOpacity = isDark ? 0.5 : 0.5;
+        const lineOpacity = isDark ? 0.25 : 0.25;
 
 		particles.forEach((p, i) => {
             // Update position

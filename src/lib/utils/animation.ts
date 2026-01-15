@@ -122,15 +122,15 @@ export function fadeSlideIn(node: HTMLElement, params?: { delay?: number } | num
 
     // Hide initially to prevent flash
     node.style.opacity = '0';
-    node.style.transform = 'translateY(20px)';
+    node.style.transform = 'translateY(12px)';
 
     anime({
         targets: node,
-        translateY: [20, 0],
+        translateY: [12, 0],
         opacity: [0, 1],
         delay: delay,
-        duration: 800,
-        easing: 'easeOutExpo'
+        duration: 300,
+        easing: 'easeOutCubic'
     });
 }
 
@@ -141,9 +141,9 @@ export function hoverScale(node: HTMLElement) {
     const handleEnter = () => {
         anime({
             targets: node,
-            scale: 1.05,
-            duration: 400,
-            easing: 'easeOutElastic(1, .5)'
+            scale: 1.02,
+            duration: 150,
+            easing: 'easeOutCubic'
         });
     };
 
@@ -151,8 +151,8 @@ export function hoverScale(node: HTMLElement) {
         anime({
             targets: node,
             scale: 1,
-            duration: 300,
-            easing: 'easeOutQuad'
+            duration: 150,
+            easing: 'easeOutCubic'
         });
     };
 
@@ -176,22 +176,22 @@ export function staggerFadeIn(node: HTMLElement) {
     const animateChildren = () => {
         const children = node.children;
         // Reset opacity initially
-        anime.set(children, { opacity: 0, translateY: 20 });
+        anime.set(children, { opacity: 0, translateY: 10 });
 
         anime({
             targets: children,
-            translateY: [20, 0],
+            translateY: [10, 0],
             opacity: [0, 1],
-            delay: anime.stagger(100),
-            duration: 800,
-            easing: 'easeOutExpo'
+            delay: anime.stagger(40),
+            duration: 250,
+            easing: 'easeOutCubic'
         });
     };
 
     // Use MutationObserver for dynamic content, or just run once?
     // For now, run once on mount (action init)
     // Small delay to ensure children exist
-    setTimeout(animateChildren, 50);
+    setTimeout(animateChildren, 20);
 }
 
 /**

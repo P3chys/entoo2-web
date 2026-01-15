@@ -24,6 +24,7 @@
 		{ href: '/', label: $_('navigation.home'), icon: 'home' },
 		...($isAdmin ? [{ href: '/semesters', label: $_('navigation.semesters'), icon: 'semesters' }] : []),
 		{ href: '/subjects', label: $_('navigation.subjects'), icon: 'subjects' },
+		{ href: '/discover', label: $_('flashcards.discover'), icon: 'globe' },
 		{ href: '/favorites', label: $_('navigation.favorites'), icon: 'favorites' }
 	]);
 </script>

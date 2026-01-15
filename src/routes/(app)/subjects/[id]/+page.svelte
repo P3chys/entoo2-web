@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { _ } from 'svelte-i18n';
 	import { fade } from 'svelte/transition';
@@ -75,9 +76,17 @@
 	const tabs = [
 		{ id: 'profile', icon: 'user', label: 'common.tab_profile' },
 		{ id: 'documents', icon: 'document', label: 'common.tab_documents' },
+		{ id: 'flashcards', icon: 'layers', label: 'common.tab_flashcards' },
 		{ id: 'questions', icon: 'questions', label: 'common.tab_questions' },
 		{ id: 'messages', icon: 'message', label: 'common.tab_messages' }
 	];
+
+	// Navigate to flashcards page when flashcards tab is selected
+	$effect(() => {
+		if (activeTab === 'flashcards' && subject) {
+			goto(`/subjects/${subject.id}/flashcards`);
+		}
+	});
 </script>
 
 <div class="h-full flex flex-col" in:fade={{ duration: 200 }}>
