@@ -173,8 +173,10 @@
 							</h3>
 							{#if subject.description_cs || subject.description_en}
 								<div class="prose dark:prose-invert max-w-none text-light-text-secondary dark:text-dark-text-secondary text-sm space-y-4">
-									<p>{subject.description_cs}</p>
-									<p class="text-light-text-tertiary dark:text-dark-text-tertiary italic">{subject.description_en}</p>
+									<div class="rich-content">{@html subject.description_cs}</div>
+									{#if subject.description_en}
+										<div class="text-light-text-tertiary dark:text-dark-text-tertiary italic rich-content">{@html subject.description_en}</div>
+									{/if}
 								</div>
 							{:else}
 								<p class="text-light-text-tertiary dark:text-dark-text-tertiary text-sm">{$_('subjects.noDescription')}</p>
@@ -242,14 +244,6 @@
 					</div>
 
 					<div class="card p-6">
-						<div class="mb-8 p-4 bg-light-bg-tertiary dark:bg-dark-bg-tertiary rounded-xl border border-dashed border-light-border-secondary dark:border-dark-border-secondary">
-							<FileUpload
-								subjectId={subject.id}
-								onSuccess={handleUploadSuccess}
-								onError={handleUploadError}
-							/>
-						</div>
-
 						<DocumentList
 							subjectId={subject.id}
 							documents={documents}
@@ -258,6 +252,14 @@
 							onDelete={handleDelete}
 							onRefresh={loadData}
 						/>
+
+						<div class="mt-8 p-4 bg-light-bg-tertiary dark:bg-dark-bg-tertiary rounded-xl border border-dashed border-light-border-secondary dark:border-dark-border-secondary">
+							<FileUpload
+								subjectId={subject.id}
+								onSuccess={handleUploadSuccess}
+								onError={handleUploadError}
+							/>
+						</div>
 					</div>
 				</div>
 

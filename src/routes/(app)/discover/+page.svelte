@@ -98,8 +98,7 @@
 		loading = false;
 	}
 
-	async function handleCloneDeck(deckId: string, e: Event) {
-		e.stopPropagation();
+	async function handleCloneDeck(deckId: string) {
 		cloning = deckId;
 
 		const { data, error: err } = await api.post<{ success: boolean; data: FlashcardDeck }>(
@@ -219,24 +218,10 @@
 							{deck}
 							progress={deckProgress[deck.id]}
 							onFavorite={() => handleToggleFavorite(deck.id)}
+							onClone={() => handleCloneDeck(deck.id)}
+							isCloning={cloning === deck.id}
 							onclick={() => handleDeckClick(deck.id)}
 						/>
-
-						<!-- Clone button - always visible -->
-						<div class="absolute top-2 right-12">
-							<button
-								class="bg-accent-primary hover:bg-accent-primary/90 text-white p-2 rounded-lg shadow-lg transition-all hover:scale-110"
-								onclick={(e) => handleCloneDeck(deck.id, e)}
-								disabled={cloning === deck.id}
-								title={$_('flashcards.clone_deck')}
-							>
-								{#if cloning === deck.id}
-									<Icon name="loader" size={18} className="animate-spin" />
-								{:else}
-									<Icon name="copy" size={18} />
-								{/if}
-							</button>
-						</div>
 					</div>
 				{/each}
 			</div>

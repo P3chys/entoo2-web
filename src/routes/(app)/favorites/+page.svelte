@@ -4,7 +4,6 @@
 	import { api } from '$lib/utils/api';
 	import { fade } from 'svelte/transition';
 	import Icon from '$components/Icon.svelte';
-	import DocumentList from '$components/DocumentList.svelte';
 	import { goto } from '$app/navigation';
 	import type { Subject, Document } from '$types';
 	import Button from '$components/Button.svelte';
@@ -42,26 +41,27 @@
 		favoriteSubjects = favoriteSubjects.filter(s => s.id !== subject.id);
 
 		const { error } = await api.post<{ success: boolean; is_favorite: boolean }>(`/api/v1/subjects/${subject.id}/favorite`, {});
-		
+
 		if (error) {
 			// Revert if failed
 			favoriteSubjects = originalList;
 			alert(error.message || $_('common.failed_to_remove_favorite'));
-		} else {
-             // Success - no action needed as item is already removed
-        }
+		}
 	}
 
-	function handleDocumentDelete(docId: string) {
-		// Should not happen on favorites page usually, but if we allow delete
-		// Reloading list or removing item
-		favoriteDocuments = favoriteDocuments.filter(d => d.id !== docId);
-	}
+	async function removeFavoriteDocument(doc: Document) {
+		// Optimistic update - remove from list immediately
+		const originalList = [...favoriteDocuments];
+		favoriteDocuments = favoriteDocuments.filter(d => d.id !== doc.id);
 
-     // If DocumentList removes favorite, we should remove it from view
-    async function refreshData() {
-        await loadFavorites();
-    }
+		const { error } = await api.post<{ success: boolean; is_favorite: boolean }>(`/api/v1/documents/${doc.id}/favorite`, {});
+
+		if (error) {
+			// Revert if failed
+			favoriteDocuments = originalList;
+			alert(error.message || $_('common.failed_to_remove_favorite'));
+		}
+	}
 
 	onMount(() => {
 		loadFavorites();
@@ -156,11 +156,41 @@
 					{$_('favorites.favoriteDocuments')}
 				</h2>
 				<div class="bg-surface-50 dark:bg-surface-800 rounded-lg border border-surface-200 dark:border-surface-700 p-4">
-					<DocumentList 
-						documents={favoriteDocuments} 
-						subjectId="" 
-                        onDelete={handleDocumentDelete}
-					/>
+					<div class="space-y-2">
+						{#each favoriteDocuments as doc (doc.id)}
+							<div class="flex items-center justify-between p-3 bg-light-bg-tertiary dark:bg-dark-bg-tertiary rounded-lg hover:shadow-md transition-shadow">
+								<div class="flex items-center gap-3 flex-1 min-w-0">
+									<Icon name="document" size={20} className="text-accent-primary flex-shrink-0" />
+									<div class="flex-1 min-w-0">
+										<div class="font-medium truncate">{doc.original_name}</div>
+										{#if doc.subject}
+											<div class="text-xs text-light-text-secondary dark:text-dark-text-secondary truncate">
+												{doc.subject.code} - {doc.subject.name_cs}
+											</div>
+										{/if}
+									</div>
+								</div>
+								<div class="flex items-center gap-2 flex-shrink-0">
+									<a
+										href={`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/documents/${doc.id}/download`}
+										class="btn btn-ghost btn-sm"
+										title={$_('common.download')}
+									>
+										<Icon name="download" size={16} />
+									</a>
+									<button
+										class="btn btn-ghost btn-sm"
+										onclick={() => removeFavoriteDocument(doc)}
+										title={$_('favorites.removeFromFavorites')}
+									>
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-yellow-400">
+											<path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clip-rule="evenodd" />
+										</svg>
+									</button>
+								</div>
+							</div>
+						{/each}
+					</div>
 				</div>
 			</section>
 		{/if}

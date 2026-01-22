@@ -21,7 +21,7 @@
 	let editingCategory = $state<DocumentCategory | null>(null);
 
 	// Form fields
-	let formType = $state<'lecture' | 'seminar' | 'other'>('lecture');
+	let formType = $state<'lecture' | 'seminar' | 'other' | 'exam'>('lecture');
 	let formNameCS = $state('');
 
 	async function fetchCategories() {
@@ -103,6 +103,7 @@
 	const lectureCategories = $derived(categories.filter((c) => c.type === 'lecture'));
 	const seminarCategories = $derived(categories.filter((c) => c.type === 'seminar'));
 	const otherCategories = $derived(categories.filter((c) => c.type === 'other'));
+	const examCategories = $derived(categories.filter((c) => c.type === 'exam'));
 
 	$effect(() => {
 		if (isOpen) {
@@ -146,6 +147,7 @@
 										<select id="category-type" bind:value={formType} class="select select-bordered w-full">
 											<option value="lecture">{$_('documents.categoryLecture')}</option>
 											<option value="seminar">{$_('documents.categorySeminar')}</option>
+											<option value="exam">{$_('documents.categoryExam')}</option>
 											<option value="other">{$_('documents.categoryOther')}</option>
 										</select>
 									</div>
@@ -264,6 +266,40 @@
 							<h3 class="font-semibold mb-3">{$_('documents.tabOthers')}</h3>
 							<div class="space-y-2">
 								{#each otherCategories as category}
+									<div
+										class="flex items-center justify-between p-3 bg-surface-100 dark:bg-surface-900 rounded-lg border border-surface-200 dark:border-surface-700"
+									>
+										<div>
+											<div class="font-medium">{category.name_cs}</div>
+										</div>
+										{#if !isUnassigned(category)}
+											<div class="flex gap-2">
+												<button
+													class="btn btn-ghost btn-sm"
+													onclick={() => startEdit(category)}
+													type="button"
+												>
+													<Icon name="edit" size={16} />
+												</button>
+												<button
+													class="btn btn-ghost btn-sm text-error"
+													onclick={() => deleteCategory(category.id)}
+													type="button"
+												>
+													<Icon name="trash" size={16} />
+												</button>
+											</div>
+										{/if}
+									</div>
+								{/each}
+							</div>
+						</div>
+
+						<!-- Exams -->
+						<div>
+							<h3 class="font-semibold mb-3">{$_('documents.tabExams')}</h3>
+							<div class="space-y-2">
+								{#each examCategories as category}
 									<div
 										class="flex items-center justify-between p-3 bg-surface-100 dark:bg-surface-900 rounded-lg border border-surface-200 dark:border-surface-700"
 									>

@@ -6,6 +6,7 @@
 	import { api } from '$lib/utils/api';
 	import { goto } from '$app/navigation';
 	import Icon from '$components/Icon.svelte';
+	import RichTextEditor from '$components/RichTextEditor.svelte';
 	import { fadeSlideIn } from '$lib/utils/animation';
 	import type { Subject } from '$types';
 
@@ -151,15 +152,13 @@
 
 					<!-- Description -->
 					<div>
-						<label for="description_cs" class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
+						<label for="description_cs" class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">
 							{$_('common.description_cs')}
 						</label>
-						<textarea
-							id="description_cs"
-							bind:value={formData.description_cs}
-							rows="4"
-							class="w-full px-4 py-2 rounded-lg bg-light-bg-tertiary dark:bg-dark-bg-tertiary border border-light-border-primary dark:border-dark-border-primary focus:outline-none focus:ring-2 focus:ring-accent-primary/50"
-						></textarea>
+						<RichTextEditor
+							content={formData.description_cs}
+							onUpdate={(html) => formData.description_cs = html}
+						/>
 					</div>
 				</section>
 

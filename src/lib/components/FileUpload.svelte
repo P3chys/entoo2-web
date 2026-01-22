@@ -16,7 +16,8 @@
 
 	let dragging = $state(false);
 	let uploading = $state(false);
-	let docType = $state<'lecture' | 'seminar' | 'other'>('lecture');
+	let uploadProgress = $state<{ current: number; total: number } | null>(null);
+	let docType = $state<'lecture' | 'seminar' | 'other' | 'exam'>('lecture');
 	let categories = $state<DocumentCategory[]>([]);
 	let selectedCategoryId = $state<string | undefined>(undefined);
 	let fileInput: HTMLInputElement;
@@ -64,38 +65,47 @@
 		dragging = false;
 
 		if (e.dataTransfer?.files && e.dataTransfer.files.length > 0) {
-			await uploadFile(e.dataTransfer.files[0]);
+			await uploadFiles(Array.from(e.dataTransfer.files));
 		}
 	};
 
 	const handleFileSelect = async (e: Event) => {
 		const target = e.target as HTMLInputElement;
 		if (target.files && target.files.length > 0) {
-			await uploadFile(target.files[0]);
+			await uploadFiles(Array.from(target.files));
 		}
 	};
 
-	const uploadFile = async (file: File) => {
-		if (file.size > 50 * 1024 * 1024) {
-			onError($t('documents.maxSize'));
-			return;
-		}
-
+	const uploadFiles = async (files: File[]) => {
 		uploading = true;
-		const { data, error } = await api.upload<{ success: boolean; data: Document }>(
-			`/api/v1/subjects/${subjectId}/documents`,
-			file,
-			{ type: docType, category_id: selectedCategoryId }
-		);
-		uploading = false;
+		uploadProgress = { current: 0, total: files.length };
 
-		if (error) {
-			onError(error);
-		} else if (data?.success && data.data) {
-			onSuccess(data.data);
-			// Reset input
-			if (fileInput) fileInput.value = '';
+		for (let i = 0; i < files.length; i++) {
+			const file = files[i];
+			uploadProgress = { current: i + 1, total: files.length };
+
+			if (file.size > 50 * 1024 * 1024) {
+				onError(`${file.name}: ${$t('documents.maxSize')}`);
+				continue;
+			}
+
+			const { data, error } = await api.upload<{ success: boolean; data: Document }>(
+				`/api/v1/subjects/${subjectId}/documents`,
+				file,
+				{ type: docType, category_id: selectedCategoryId }
+			);
+
+			if (error) {
+				onError(`${file.name}: ${error}`);
+			} else if (data?.success && data.data) {
+				onSuccess(data.data);
+			}
 		}
+
+		uploading = false;
+		uploadProgress = null;
+		// Reset input
+		if (fileInput) fileInput.value = '';
 	};
 
 	// Filter categories by current type
@@ -120,7 +130,8 @@
 		class="hidden"
 		bind:this={fileInput}
 		onchange={handleFileSelect}
-		accept=".pdf,.docx,.pptx,.jpg,.jpeg,.png,.txt,.xlsx,.xls,.csv"
+		accept=".pdf,.docx,.pptx,.ppt,.jpg,.jpeg,.png,.txt,.xlsx,.xls,.csv"
+		multiple
 	/>
 
 	<div class="flex flex-col items-center gap-3">
@@ -130,7 +141,13 @@
 
 		<div>
 			<h3 class="text-base font-semibold">
-				{uploading ? $t('common.loading') : $t('documents.upload')}
+				{#if uploading && uploadProgress}
+					{$t('common.loading')} ({uploadProgress.current}/{uploadProgress.total})
+				{:else if uploading}
+					{$t('common.loading')}
+				{:else}
+					{$t('documents.upload')}
+				{/if}
 			</h3>
 			<p class="text-base-content/60 text-xs mt-1">
 				{$t('documents.supportedFormats')}
@@ -150,6 +167,7 @@
 			>
 				<option value="lecture">{$t('documents.categoryLecture')}</option>
 				<option value="seminar">{$t('documents.categorySeminar')}</option>
+				<option value="exam">{$t('documents.categoryExam')}</option>
 				<option value="other">{$t('documents.categoryOther')}</option>
 			</select>
 		</div>

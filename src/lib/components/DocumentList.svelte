@@ -19,7 +19,7 @@
 	let { subjectId, documents = [], currentUserId = undefined, isAdmin = false, onDelete = () => {}, onRefresh = () => {} }: Props = $props();
 
 	let previewDocument = $state<Document | null>(null);
-	let activeTab = $state<'lecture' | 'seminar' | 'other'>('lecture');
+	let activeTab = $state<'lecture' | 'seminar' | 'other' | 'exam'>('lecture');
 	let categories = $state<DocumentCategory[]>([]);
 	let loadingCategories = $state(false);
 
@@ -81,10 +81,8 @@
 	const toggleFavorite = async (docId: string) => {
 		const { error, data } = await api.post<{ success: boolean; is_favorite: boolean }>(`/api/v1/documents/${docId}/favorite`, {});
 		if (!error && data) {
-			const doc = documents.find(d => d.id === docId);
-			if (doc) {
-				doc.is_favorite = data.is_favorite;
-			}
+			// Trigger reactivity by calling onRefresh to reload data
+			onRefresh();
 		}
 	};
 
@@ -110,23 +108,30 @@
 
 <div class="space-y-4">
 	<!-- Type Tabs -->
-	<div class="flex gap-2 border-b border-base-300">
+	<div class="flex gap-2 border-b border-base-300 overflow-x-auto">
 		<button
-			class="px-4 py-2 font-medium transition-colors border-b-2 {activeTab === 'lecture' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'}"
+			class="px-4 py-2 font-medium transition-colors border-b-2 whitespace-nowrap {activeTab === 'lecture' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'}"
 			onclick={() => activeTab = 'lecture'}
 			type="button"
 		>
 			{$t('documents.tabLectures')}
 		</button>
 		<button
-			class="px-4 py-2 font-medium transition-colors border-b-2 {activeTab === 'seminar' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'}"
+			class="px-4 py-2 font-medium transition-colors border-b-2 whitespace-nowrap {activeTab === 'seminar' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'}"
 			onclick={() => activeTab = 'seminar'}
 			type="button"
 		>
 			{$t('documents.tabSeminars')}
 		</button>
 		<button
-			class="px-4 py-2 font-medium transition-colors border-b-2 {activeTab === 'other' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'}"
+			class="px-4 py-2 font-medium transition-colors border-b-2 whitespace-nowrap {activeTab === 'exam' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'}"
+			onclick={() => activeTab = 'exam'}
+			type="button"
+		>
+			{$t('documents.tabExams')}
+		</button>
+		<button
+			class="px-4 py-2 font-medium transition-colors border-b-2 whitespace-nowrap {activeTab === 'other' ? 'border-primary text-primary' : 'border-transparent text-base-content/60 hover:text-base-content'}"
 			onclick={() => activeTab = 'other'}
 			type="button"
 		>

@@ -8,10 +8,12 @@
 		deck: FlashcardDeck;
 		progress?: DeckProgress | null;
 		onFavorite?: () => void;
+		onClone?: () => void;
+		isCloning?: boolean;
 		onclick?: () => void;
 	}
 
-	let { deck, progress = null, onFavorite, onclick }: Props = $props();
+	let { deck, progress = null, onFavorite, onClone, isCloning, onclick }: Props = $props();
 
 	const masteredPercent = $derived(
 		progress ? Math.round((progress.mastered_cards / progress.total_cards) * 100) : 0
@@ -37,7 +39,7 @@
 
 	<!-- Header -->
 	<div class="flex justify-between items-start mb-3">
-		<div class="flex-1">
+		<div class="flex-1 pr-4">
 			<h3 class="font-bold text-xl text-light-text-primary dark:text-dark-text-primary group-hover:text-accent-primary transition-colors">
 				{deck.title}
 			</h3>
@@ -48,22 +50,43 @@
 			{/if}
 		</div>
 
-		{#if onFavorite}
-			<button
-				class="hover:scale-125 transition-transform p-2 -mt-2 -mr-2"
-				onclick={(e) => {
-					e.stopPropagation();
-					onFavorite?.();
-				}}
-				aria-label={deck.is_favorite ? $_('common.remove_favorite') : $_('common.add_favorite')}
-			>
-				{#if deck.is_favorite}
-					<Icon name="star" size={24} className="text-yellow-400 fill-yellow-400" />
-				{:else}
-					<Icon name="star" size={24} className="text-light-text-secondary dark:text-dark-text-secondary hover:text-yellow-400 transition-colors" />
-				{/if}
-			</button>
-		{/if}
+		<div class="flex items-center gap-1 -mt-2 -mr-2">
+			{#if onClone}
+				<button
+					class="hover:scale-110 transition-transform p-2 text-light-text-secondary dark:text-dark-text-secondary hover:text-accent-primary"
+					onclick={(e) => {
+						e.stopPropagation();
+						onClone?.();
+					}}
+					disabled={isCloning}
+					title={$_('flashcards.clone_deck')}
+					aria-label={$_('flashcards.clone_deck')}
+				>
+					{#if isCloning}
+						<Icon name="loader" size={20} className="animate-spin" />
+					{:else}
+						<Icon name="copy" size={20} />
+					{/if}
+				</button>
+			{/if}
+
+			{#if onFavorite}
+				<button
+					class="hover:scale-125 transition-transform p-2"
+					onclick={(e) => {
+						e.stopPropagation();
+						onFavorite?.();
+					}}
+					aria-label={deck.is_favorite ? $_('common.remove_favorite') : $_('common.add_favorite')}
+				>
+					{#if deck.is_favorite}
+						<Icon name="star" size={24} className="text-yellow-400 fill-yellow-400" />
+					{:else}
+						<Icon name="star" size={24} className="text-light-text-secondary dark:text-dark-text-secondary hover:text-yellow-400 transition-colors" />
+					{/if}
+				</button>
+			{/if}
+		</div>
 	</div>
 
 	<!-- Description -->
