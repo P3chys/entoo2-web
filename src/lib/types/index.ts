@@ -56,16 +56,26 @@ export interface Subject {
 	is_favorite?: boolean;
 }
 
+export interface DocumentType {
+	id: string;
+	subject_id: string;
+	name_cs: string;
+	icon: string;
+	order_index: number;
+	created_at: string;
+	updated_at: string;
+}
+
 export interface DocumentCategory {
 	id: string;
 	subject_id: string;
-	type: 'lecture' | 'seminar' | 'other';
+	type_id: string;
 	name_cs: string;
-	name_en: string;
 	order_index: number;
 	created_by: string;
 	created_at: string;
 	updated_at: string;
+	type?: DocumentType;
 }
 
 export interface Document {
@@ -73,7 +83,7 @@ export interface Document {
 	subject_id: string;
 	uploaded_by: string;
 	answer_id?: string;
-	type: 'lecture' | 'seminar' | 'other';
+	type_id: string;
 	category_id?: string;
 	filename: string;
 	original_name: string;
@@ -84,6 +94,7 @@ export interface Document {
 	created_at: string;
 	subject?: Subject;
 	uploader?: User;
+	document_type?: DocumentType;
 	category?: DocumentCategory;
 	is_favorite?: boolean;
 }
@@ -281,4 +292,50 @@ export interface DeckProgress {
 
 export interface StudyCardWithProgress extends Flashcard {
 	progress?: UserFlashcardProgress;
+}
+
+// Dashboard Stats Types
+export interface UserStats {
+	total_users: number;
+	registered_today: number;
+	active_last_24h: number;
+	active_last_15min: number;
+	verified_users: number;
+	admin_count: number;
+}
+
+export interface EndpointStats {
+	endpoint: string;
+	count: number;
+}
+
+export interface APIStats {
+	total_requests: number;
+	requests_today: number;
+	top_endpoints: EndpointStats[];
+	requests_by_hour: Record<string, number>;
+}
+
+export interface ActivityStats {
+	total_activities: number;
+	activities_today: number;
+	by_type: Record<string, number>;
+	recent_activities: Activity[];
+}
+
+export interface SystemStats {
+	total_documents: number;
+	documents_today: number;
+	total_subjects: number;
+	total_semesters: number;
+	total_flashcard_decks: number;
+	total_comments: number;
+	total_questions: number;
+}
+
+export interface DashboardOverview {
+	users: UserStats;
+	api: APIStats;
+	activity: ActivityStats;
+	system: SystemStats;
 }

@@ -8,10 +8,10 @@ export function transformMeilisearchHit(hit: MeilisearchHit): SearchResult {
 		id: hit.id,
 		title: isDocument
 			? hit._formatted?.original_name || hit.original_name || 'Unnamed Document'
-			: hit._formatted?.name_en || hit.name_en || hit._formatted?.name_cs || hit.name_cs || 'Unnamed Subject',
+			: hit._formatted?.name_cs || hit.name_cs || 'Unnamed Subject',
 		description: isDocument
 			? extractDescription(hit)
-			: hit._formatted?.description_en || hit.description_en || hit._formatted?.description_cs || hit.description_cs || '',
+			: hit._formatted?.description_cs || hit.description_cs || '',
 		score: 0,
 		subject_id: hit.subject_id,
 		mime_type: hit.mime_type,
@@ -43,11 +43,11 @@ export function extractHighlight(hit: MeilisearchHit): string | undefined {
 	if (hit._formatted?.original_name && hit._formatted.original_name.includes('<mark>')) {
 		return hit._formatted.original_name;
 	}
-	if (hit._formatted?.name_en && hit._formatted.name_en.includes('<mark>')) {
-		return hit._formatted.name_en;
+	if (hit._formatted?.name_cs && hit._formatted.name_cs.includes('<mark>')) {
+		return hit._formatted.name_cs;
 	}
-	if (hit._formatted?.description_en && hit._formatted.description_en.includes('<mark>')) {
-		return hit._formatted.description_en;
+	if (hit._formatted?.description_cs && hit._formatted.description_cs.includes('<mark>')) {
+		return hit._formatted.description_cs;
 	}
 	return undefined;
 }

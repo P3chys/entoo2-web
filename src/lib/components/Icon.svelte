@@ -14,6 +14,7 @@
         Upload,
         Download,
         Folder,
+        FolderPlus,
         Settings,
         ChevronRight,
         ChevronLeft,
@@ -63,12 +64,15 @@
         Play,
         Paperclip,
         Copy,
-        Book
+        Book,
+        Clipboard,
+        Archive
     } from 'lucide-svelte';
 
     const iconMap = {
         home: Home,
         subjects: BookOpen,
+        'book-open': BookOpen,
         semesters: Calendar,
         favorites: Heart,
         search: Search,
@@ -84,6 +88,7 @@
         upload: Upload,
         download: Download,
         folder: Folder,
+        'folder-plus': FolderPlus,
         settings: Settings,
         'chevron-right': ChevronRight,
         'chevron-left': ChevronLeft,
@@ -137,7 +142,9 @@
         paperclip: Paperclip,
         copy: Copy,
         book: Book,
-        chat: MessageCircle
+        chat: MessageCircle,
+        clipboard: Clipboard,
+        archive: Archive
     };
 
     export let name: keyof typeof iconMap | string;

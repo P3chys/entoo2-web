@@ -142,8 +142,7 @@
 					</a>
 				{/if}
 			</div>
-			<h2 class="text-xl text-light-text-secondary dark:text-dark-text-secondary">{subject.name_en}</h2>
-		</div>
+					</div>
 
 		<!-- Tabs -->
 		<div class="flex border-b border-light-border-primary dark:border-dark-border-primary mb-6 overflow-x-auto" use:fadeSlideIn={{ delay: 200 }}>
@@ -171,12 +170,9 @@
 								<Icon name="info" size={20} className="text-accent-primary" />
 								{$_('subjects.description') || 'Description'}
 							</h3>
-							{#if subject.description_cs || subject.description_en}
-								<div class="prose dark:prose-invert max-w-none text-light-text-secondary dark:text-dark-text-secondary text-sm space-y-4">
+							{#if subject.description_cs}
+								<div class="prose dark:prose-invert max-w-none text-light-text-secondary dark:text-dark-text-secondary text-sm">
 									<div class="rich-content">{@html subject.description_cs}</div>
-									{#if subject.description_en}
-										<div class="text-light-text-tertiary dark:text-dark-text-tertiary italic rich-content">{@html subject.description_en}</div>
-									{/if}
 								</div>
 							{:else}
 								<p class="text-light-text-tertiary dark:text-dark-text-tertiary text-sm">{$_('subjects.noDescription')}</p>

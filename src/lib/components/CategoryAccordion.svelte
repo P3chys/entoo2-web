@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
-	import { _, locale } from 'svelte-i18n';
+	import { _ } from 'svelte-i18n';
 	import Icon from './Icon.svelte';
 	import type { DocumentCategory, Document } from '$lib/types';
 	import { formatFileSize, formatDate, getFileIcon } from '$lib/utils/format';
+	import { expandedCategories } from '$lib/stores/ui';
 
 	interface Props {
 		category: DocumentCategory;
@@ -31,12 +32,14 @@
 		onDocumentDownload
 	}: Props = $props();
 
-	let isExpanded = $state(false);
+	// Use store for expansion state - persists across re-renders
+	const isExpanded = $derived($expandedCategories.has(category.id));
 
-	const categoryName = $derived($locale === 'cs' ? category.name_cs : category.name_en);
-	const isUnassigned = $derived(
-		category.name_cs === 'Nepřiřazeno' || category.name_en === 'Unassigned'
-	);
+	function toggleExpanded() {
+		expandedCategories.toggle(category.id);
+	}
+
+	const isUnassigned = $derived(category.name_cs === 'Nepřiřazeno');
 </script>
 
 <div class="border border-base-200 rounded-lg mb-3 overflow-hidden">
@@ -44,11 +47,11 @@
 	<div class="flex items-center justify-between p-4 hover:bg-base-100 transition-colors">
 		<button
 			class="flex items-center gap-3 flex-1"
-			onclick={() => (isExpanded = !isExpanded)}
+			onclick={toggleExpanded}
 			type="button"
 		>
 			<Icon name={isExpanded ? 'chevron-down' : 'chevron-right'} size={20} />
-			<h3 class="font-semibold text-lg">{categoryName}</h3>
+			<h3 class="font-semibold text-lg">{category.name_cs}</h3>
 			<span class="text-sm text-base-content/60">({documents.length})</span>
 		</button>
 

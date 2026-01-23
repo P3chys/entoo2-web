@@ -250,9 +250,6 @@
 						<h2 class="text-2xl font-bold text-primary-600 dark:text-primary-400">
 							{group.semester.name_cs}
 						</h2>
-						<span class="text-surface-500 dark:text-surface-400 text-lg">
-							{group.semester.name_en}
-						</span>
 					</div>
 
 					<div class="grid gap-4" use:staggerFadeIn>
@@ -291,8 +288,7 @@
 												{subject.credits} kr.
 											</span>
 										</div>
-										<p class="text-surface-600 dark:text-surface-300 font-medium mb-1">{subject.name_en}</p>
-										
+
 										{#if subject.teachers && subject.teachers.length > 0}
 											<div class="mt-3 flex flex-wrap gap-2">
 												{#each subject.teachers as teacher}

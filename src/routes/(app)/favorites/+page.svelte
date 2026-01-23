@@ -126,7 +126,7 @@
 										{subject.name_cs}
 									</h3>
 									<p class="text-sm text-surface-500 dark:text-surface-400">
-										{subject.name_en}
+										{subject.credits} kr.
 									</p>
 								</div>
 								<button 
@@ -139,7 +139,7 @@
 							</div>
                             {#if subject.semester}
                                 <div class="mt-4 text-xs text-surface-500 border-t border-surface-200 dark:border-surface-700 pt-2">
-                                    {subject.semester.name_en}
+                                    {subject.semester.name_cs}
                                 </div>
                             {/if}
 						</div>

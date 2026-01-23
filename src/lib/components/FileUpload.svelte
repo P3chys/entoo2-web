@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { t, locale } from 'svelte-i18n';
+	import { t } from 'svelte-i18n';
 	import { onMount } from 'svelte';
 	import { api } from '$lib/utils/api';
-	import type { Document, DocumentCategory } from '$lib/types';
+	import type { Document, DocumentCategory, DocumentType } from '$lib/types';
 	import Button from './Button.svelte';
-    import Icon from './Icon.svelte';
+	import Icon from './Icon.svelte';
 
 	interface Props {
 		subjectId: string;
@@ -17,36 +17,53 @@
 	let dragging = $state(false);
 	let uploading = $state(false);
 	let uploadProgress = $state<{ current: number; total: number } | null>(null);
-	let docType = $state<'lecture' | 'seminar' | 'other' | 'exam'>('lecture');
+	let documentTypes = $state<DocumentType[]>([]);
+	let selectedTypeId = $state<string | null>(null);
 	let categories = $state<DocumentCategory[]>([]);
 	let selectedCategoryId = $state<string | undefined>(undefined);
 	let fileInput: HTMLInputElement;
+
+	// Fetch document types for current subject
+	async function fetchDocumentTypes() {
+		const { data, error } = await api.get<{ success: boolean; data: DocumentType[] }>(`/api/v1/subjects/${subjectId}/types`);
+		if (!error && data?.data) {
+			documentTypes = data.data.sort((a, b) => a.order_index - b.order_index);
+			// Auto-select first type
+			if (documentTypes.length > 0 && !selectedTypeId) {
+				selectedTypeId = documentTypes[0].id;
+			}
+		}
+	}
 
 	// Fetch categories for current subject
 	async function fetchCategories() {
 		const { data, error } = await api.get<{ success: boolean; data: DocumentCategory[] }>(`/api/v1/subjects/${subjectId}/categories`);
 		if (!error && data?.data) {
 			categories = data.data;
-			// Auto-select first category for current type (should be Unassigned)
+			// Auto-select first category for current type
 			updateSelectedCategory();
 		}
 	}
 
 	function updateSelectedCategory() {
-		const typeCategories = categories.filter(cat => cat.type === docType);
+		if (!selectedTypeId) return;
+		const typeCategories = categories.filter(cat => cat.type_id === selectedTypeId);
 		if (typeCategories.length > 0) {
 			selectedCategoryId = typeCategories[0].id;
+		} else {
+			selectedCategoryId = undefined;
 		}
 	}
 
 	// Watch for type changes to update selected category
 	$effect(() => {
-		if (docType) {
+		if (selectedTypeId) {
 			updateSelectedCategory();
 		}
 	});
 
 	onMount(() => {
+		fetchDocumentTypes();
 		fetchCategories();
 	});
 
@@ -92,7 +109,7 @@
 			const { data, error } = await api.upload<{ success: boolean; data: Document }>(
 				`/api/v1/subjects/${subjectId}/documents`,
 				file,
-				{ type: docType, category_id: selectedCategoryId }
+				{ type_id: selectedTypeId, category_id: selectedCategoryId }
 			);
 
 			if (error) {
@@ -110,7 +127,7 @@
 
 	// Filter categories by current type
 	const filteredCategories = $derived(
-		categories.filter(cat => cat.type === docType)
+		categories.filter(cat => cat.type_id === selectedTypeId).sort((a, b) => a.order_index - b.order_index)
 	);
 </script>
 
@@ -161,14 +178,15 @@
 			</label>
 			<select
 				id="doc-type-selector"
-				bind:value={docType}
+				bind:value={selectedTypeId}
 				class="w-full px-4 py-2 rounded-lg border border-adaptive bg-adaptive-primary text-adaptive-primary text-base focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary transition-all duration-200"
-				disabled={uploading}
+				disabled={uploading || documentTypes.length === 0}
 			>
-				<option value="lecture">{$t('documents.categoryLecture')}</option>
-				<option value="seminar">{$t('documents.categorySeminar')}</option>
-				<option value="exam">{$t('documents.categoryExam')}</option>
-				<option value="other">{$t('documents.categoryOther')}</option>
+				{#each documentTypes as docType (docType.id)}
+					<option value={docType.id}>
+						{docType.name_cs}
+					</option>
+				{/each}
 			</select>
 		</div>
 
@@ -186,7 +204,7 @@
 				>
 					{#each filteredCategories as cat}
 						<option value={cat.id}>
-							{$locale === 'cs' ? cat.name_cs : cat.name_en}
+							{cat.name_cs}
 						</option>
 					{/each}
 				</select>

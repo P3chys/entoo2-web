@@ -22,6 +22,7 @@
 
 	const navItems = $derived([
 		{ href: '/', label: $_('navigation.home'), icon: 'home' },
+		...($isAdmin ? [{ href: '/admin/dashboard', label: $_('navigation.dashboard'), icon: 'bar-chart' }] : []),
 		...($isAdmin ? [{ href: '/semesters', label: $_('navigation.semesters'), icon: 'semesters' }] : []),
 		{ href: '/subjects', label: $_('navigation.subjects'), icon: 'subjects' },
 		{ href: '/discover', label: $_('flashcards.discover'), icon: 'globe' },

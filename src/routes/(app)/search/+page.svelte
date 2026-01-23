@@ -252,7 +252,7 @@
 					>
 						<option value="">{$_('search.allSubjects')}</option>
 						{#each subjects as subject}
-							<option value={subject.id}>{subject.code} - {subject.name_en}</option>
+							<option value={subject.id}>{subject.code} - {subject.name_cs}</option>
 						{/each}
 					</select>
 				</div>
