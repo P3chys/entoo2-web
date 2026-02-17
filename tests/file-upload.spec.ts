@@ -46,7 +46,10 @@ test.describe('File Upload Feature', () => {
 		// Step 3: Upload a file
 		console.log('Step 3: Uploading file...');
 		const testFilePath = path.join(os.tmpdir(), 'test-document.txt');
-		fs.writeFileSync(testFilePath, 'This is a test document for upload verification.\nCreated at: ' + new Date().toISOString());
+		fs.writeFileSync(
+			testFilePath,
+			'This is a test document for upload verification.\nCreated at: ' + new Date().toISOString()
+		);
 
 		const fileInput = page.locator('input[type="file"]');
 		await fileInput.setInputFiles(testFilePath);
@@ -109,7 +112,10 @@ test.describe('File Upload Feature', () => {
 		console.log('Step 6: Checking dashboard...');
 		await page.goto('/');
 		await page.waitForTimeout(2000);
-		await page.screenshot({ path: 'tests/screenshots/10-dashboard-with-activity.png', fullPage: true });
+		await page.screenshot({
+			path: 'tests/screenshots/10-dashboard-with-activity.png',
+			fullPage: true
+		});
 
 		const hasActivitySection = await page.locator('text=Recent Activity').isVisible();
 		console.log('Recent Activity section visible:', hasActivitySection);

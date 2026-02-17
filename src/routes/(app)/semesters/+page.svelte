@@ -6,8 +6,8 @@
 	import { isAdmin } from '$stores/auth';
 	import { api } from '$lib/utils/api';
 	import { fade } from 'svelte/transition';
-    import { staggerFadeIn } from '$lib/utils/animation';
-    import Icon from '$lib/components/Icon.svelte';
+	import { staggerFadeIn } from '$lib/utils/animation';
+	import Icon from '$lib/components/Icon.svelte';
 	import LoadingSpinner from '$lib/components/LoadingSpinner.svelte';
 	import type { Semester } from '$types';
 
@@ -16,7 +16,7 @@
 	let showModal = $state(false);
 	let editingSemester: Semester | null = $state(null);
 	let deleteConfirm: string | null = $state(null);
-	
+
 	// Form state
 	let formNameCS = $state('');
 	let formOrderIndex = $state(0);
@@ -109,9 +109,9 @@
 		{#if $isAdmin}
 			<Button variant="primary" onclick={openCreateModal}>
 				<div class="flex items-center gap-2">
-                    <Icon name="add" size={20} />
-				    {$_('semesters.create')}
-                </div>
+					<Icon name="add" size={20} />
+					{$_('semesters.create')}
+				</div>
 			</Button>
 		{/if}
 	</div>
@@ -123,7 +123,7 @@
 	{:else if semesters.length === 0}
 		<!-- Empty State -->
 		<div class="empty-state">
-            <Icon name="semesters" size={64} className="mb-4 opacity-50 grayscale" />
+			<Icon name="semesters" size={64} className="mb-4 opacity-50 grayscale" />
 
 			<h3 class="empty-title">{$_('semesters.noSemesters')}</h3>
 			{#if $isAdmin}
@@ -133,9 +133,9 @@
 				<div class="flex gap-3 justify-center">
 					<Button variant="primary" size="lg" onclick={openCreateModal}>
 						<div class="flex items-center gap-2">
-                            <Icon name="add" size={24} />
-						    {$_('semesters.createFirst')}
-                        </div>
+							<Icon name="add" size={24} />
+							{$_('semesters.createFirst')}
+						</div>
 					</Button>
 				</div>
 			{:else}
@@ -148,26 +148,40 @@
 		<!-- Semesters List -->
 		<div class="grid gap-4" use:staggerFadeIn>
 			{#each semesters as semester (semester.id)}
-				<div class="bg-surface-50 dark:bg-surface-800 rounded-lg p-4 border border-surface-200 dark:border-surface-700">
+				<div
+					class="bg-surface-50 dark:bg-surface-800 rounded-lg p-4 border border-surface-200 dark:border-surface-700"
+				>
 					<div class="flex items-center justify-between">
 						<div>
 							<h3 class="text-lg font-semibold">{semester.name_cs}</h3>
 						</div>
 						<div class="flex items-center gap-2">
-							<span class="text-sm text-light-text-tertiary dark:text-dark-text-tertiary mr-4">{$_('common.order')}: {semester.order_index}</span>
+							<span class="text-sm text-light-text-tertiary dark:text-dark-text-tertiary mr-4"
+								>{$_('common.order')}: {semester.order_index}</span
+							>
 							{#if $isAdmin}
-								<Button variant="ghost" size="sm" onclick={() => openEditModal(semester)} aria-label={$_('common.edit')}>
+								<Button
+									variant="ghost"
+									size="sm"
+									onclick={() => openEditModal(semester)}
+									aria-label={$_('common.edit')}
+								>
 									<Icon name="edit" size={20} />
 								</Button>
 								{#if deleteConfirm === semester.id}
 									<Button variant="danger" size="sm" onclick={() => handleDelete(semester.id)}>
 										{$_('semesters.confirmDelete')}
 									</Button>
-									<Button variant="ghost" size="sm" onclick={() => deleteConfirm = null}>
+									<Button variant="ghost" size="sm" onclick={() => (deleteConfirm = null)}>
 										{$_('common.cancel')}
 									</Button>
 								{:else}
-									<Button variant="ghost" size="sm" onclick={() => deleteConfirm = semester.id} aria-label={$_('common.delete')}>
+									<Button
+										variant="ghost"
+										size="sm"
+										onclick={() => (deleteConfirm = semester.id)}
+										aria-label={$_('common.delete')}
+									>
 										<Icon name="delete" size={20} />
 									</Button>
 								{/if}
@@ -192,10 +206,17 @@
 		</div>
 	{/if}
 
-	<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+	<form
+		onsubmit={(e) => {
+			e.preventDefault();
+			handleSubmit();
+		}}
+	>
 		<div class="space-y-4">
 			<div>
-				<label for="name_cs" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.name_czech')}</label>
+				<label for="name_cs" class="block text-sm font-medium mb-1 text-adaptive-primary"
+					>{$_('common.name_czech')}</label
+				>
 				<input
 					id="name_cs"
 					type="text"
@@ -205,7 +226,9 @@
 				/>
 			</div>
 			<div>
-				<label for="order_index" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.order_index')}</label>
+				<label for="order_index" class="block text-sm font-medium mb-1 text-adaptive-primary"
+					>{$_('common.order_index')}</label
+				>
 				<input
 					id="order_index"
 					type="number"

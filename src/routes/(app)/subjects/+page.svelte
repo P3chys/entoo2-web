@@ -7,8 +7,8 @@
 	import { isAdmin } from '$stores/auth';
 	import { api } from '$lib/utils/api';
 	import { fade } from 'svelte/transition';
-    import { staggerFadeIn } from '$lib/utils/animation';
-    import Icon from '$lib/components/Icon.svelte';
+	import { staggerFadeIn } from '$lib/utils/animation';
+	import Icon from '$lib/components/Icon.svelte';
 	import type { Subject, Semester } from '$types';
 
 	let subjects: Subject[] = $state([]);
@@ -37,19 +37,20 @@
 
 	// Group subjects by semester
 	let groupedSubjects = $derived.by(() => {
-		const result = semesters.map(semester => {
-			const semesterSubjects = subjects.filter(s =>
-				s.semester_id === semester.id &&
-				(searchQuery === '' ||
-				 s.name_cs.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				 s.code.toLowerCase().includes(searchQuery.toLowerCase()))
+		const result = semesters.map((semester) => {
+			const semesterSubjects = subjects.filter(
+				(s) =>
+					s.semester_id === semester.id &&
+					(searchQuery === '' ||
+						s.name_cs.toLowerCase().includes(searchQuery.toLowerCase()) ||
+						s.code.toLowerCase().includes(searchQuery.toLowerCase()))
 			);
 			return { semester, subjects: semesterSubjects };
 		});
 
 		// If searching, only show semesters with matching subjects
 		if (searchQuery) {
-			return result.filter(g => g.subjects.length > 0);
+			return result.filter((g) => g.subjects.length > 0);
 		}
 		return result;
 	});
@@ -60,7 +61,7 @@
 			api.get<{ success: boolean; data: Subject[] }>('/api/v1/subjects'),
 			api.get<{ success: boolean; data: Semester[] }>('/api/v1/semesters')
 		]);
-		
+
 		if (subjectsRes.data?.success) {
 			subjects = subjectsRes.data.data || [];
 		}
@@ -97,10 +98,11 @@
 		formCode = subject.code || '';
 		formDescCS = subject.description_cs || '';
 		formCredits = subject.credits;
-		formTeachers = subject.teachers?.map(t => ({
-			name: t.teacher_name,
-			topic_cs: t.topic_cs
-		})) || [];
+		formTeachers =
+			subject.teachers?.map((t) => ({
+				name: t.teacher_name,
+				topic_cs: t.topic_cs
+			})) || [];
 		error = '';
 		showModal = true;
 	}
@@ -137,7 +139,7 @@
 			code: formCode.trim().toUpperCase(),
 			description_cs: formDescCS.trim(),
 			credits: formCredits,
-			teachers: formTeachers.filter(t => t.name.trim() !== '')
+			teachers: formTeachers.filter((t) => t.name.trim() !== '')
 		};
 
 		if (editingSubject) {
@@ -178,7 +180,10 @@
 		const oldState = subject.is_favorite;
 		subject.is_favorite = !oldState;
 
-		const { error, data } = await api.post<{ success: boolean; is_favorite: boolean }>(`/api/v1/subjects/${subject.id}/favorite`, {});
+		const { error, data } = await api.post<{ success: boolean; is_favorite: boolean }>(
+			`/api/v1/subjects/${subject.id}/favorite`,
+			{}
+		);
 		if (error) {
 			// Revert on error
 			subject.is_favorite = oldState;
@@ -200,9 +205,9 @@
 		{#if $isAdmin && semesters.length > 0}
 			<Button variant="primary" onclick={openCreateModal}>
 				<div class="flex items-center gap-2">
-                    <Icon name="add" size={20} />
-				    {$_('subjects.create')}
-                </div>
+					<Icon name="add" size={20} />
+					{$_('subjects.create')}
+				</div>
 			</Button>
 		{/if}
 	</div>
@@ -233,9 +238,9 @@
 				<div class="flex gap-3 justify-center mt-4">
 					<Button variant="primary" size="lg" onclick={openCreateModal}>
 						<div class="flex items-center gap-2">
-                            <Icon name="add" size={24} />
-						    {$_('subjects.createFirst')}
-                        </div>
+							<Icon name="add" size={24} />
+							{$_('subjects.createFirst')}
+						</div>
 					</Button>
 				</div>
 			{:else}
@@ -246,7 +251,9 @@
 		<div class="space-y-8">
 			{#each groupedSubjects as group (group.semester.id)}
 				<section>
-					<div class="flex items-baseline gap-3 mb-4 border-b border-surface-200 dark:border-surface-700 pb-2">
+					<div
+						class="flex items-baseline gap-3 mb-4 border-b border-surface-200 dark:border-surface-700 pb-2"
+					>
 						<h2 class="text-2xl font-bold text-primary-600 dark:text-primary-400">
 							{group.semester.name_cs}
 						</h2>
@@ -254,7 +261,7 @@
 
 					<div class="grid gap-4" use:staggerFadeIn>
 						{#each group.subjects as subject (subject.id)}
-							<div 
+							<div
 								role="button"
 								tabindex="0"
 								onclick={() => goto(`/subjects/${subject.id}`)}
@@ -264,27 +271,39 @@
 								<div class="flex items-start justify-between">
 									<div class="flex-1">
 										<div class="flex items-center gap-3 mb-2">
-											<span class="font-mono font-bold bg-surface-200 dark:bg-surface-700 px-2 py-1 rounded text-sm">
+											<span
+												class="font-mono font-bold bg-surface-200 dark:bg-surface-700 px-2 py-1 rounded text-sm"
+											>
 												{subject.code}
 											</span>
 											<h3 class="text-xl font-semibold flex items-center gap-2">
 												{subject.name_cs}
-												<button 
-													class="hover:scale-110 transition-transform btn-icon p-1 z-20 relative" 
-													onclick={(e) => { 
-														e.stopPropagation(); 
-														toggleFavorite(subject); 
+												<button
+													class="hover:scale-110 transition-transform btn-icon p-1 z-20 relative"
+													onclick={(e) => {
+														e.stopPropagation();
+														toggleFavorite(subject);
 													}}
 													title="Toggle Favorite"
 												>
 													{#if subject.is_favorite}
-														<Icon name="star" size={20} className="text-yellow-400 fill-yellow-400" />
+														<Icon
+															name="star"
+															size={20}
+															className="text-yellow-400 fill-yellow-400"
+														/>
 													{:else}
-														<Icon name="star" size={20} className="text-surface-300 hover:text-yellow-400" />
+														<Icon
+															name="star"
+															size={20}
+															className="text-surface-300 hover:text-yellow-400"
+														/>
 													{/if}
 												</button>
 											</h3>
-											<span class="text-xs bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded font-medium">
+											<span
+												class="text-xs bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded font-medium"
+											>
 												{subject.credits} kr.
 											</span>
 										</div>
@@ -292,7 +311,9 @@
 										{#if subject.teachers && subject.teachers.length > 0}
 											<div class="mt-3 flex flex-wrap gap-2">
 												{#each subject.teachers as teacher}
-													<div class="text-sm bg-surface-100 dark:bg-surface-900 px-2 py-1 rounded border border-surface-200 dark:border-surface-700 flex items-center gap-1">
+													<div
+														class="text-sm bg-surface-100 dark:bg-surface-900 px-2 py-1 rounded border border-surface-200 dark:border-surface-700 flex items-center gap-1"
+													>
 														<Icon name="user" size={16} />
 														<span>{teacher.teacher_name}</span>
 													</div>
@@ -303,18 +324,48 @@
 
 									{#if $isAdmin}
 										<div class="flex items-center gap-2 ml-4 relative z-20" role="group">
-											<Button variant="ghost" size="sm" onclick={(e) => { e.stopPropagation(); openEditModal(subject); }} aria-label={$_('common.edit')}>
+											<Button
+												variant="ghost"
+												size="sm"
+												onclick={(e) => {
+													e.stopPropagation();
+													openEditModal(subject);
+												}}
+												aria-label={$_('common.edit')}
+											>
 												<Icon name="edit" size={20} />
 											</Button>
 											{#if deleteConfirm === subject.id}
-												<Button variant="danger" size="sm" onclick={(e) => { e.stopPropagation(); handleDelete(subject.id); }}>
+												<Button
+													variant="danger"
+													size="sm"
+													onclick={(e) => {
+														e.stopPropagation();
+														handleDelete(subject.id);
+													}}
+												>
 													{$_('common.confirm')}
 												</Button>
-												<Button variant="ghost" size="sm" onclick={(e) => { e.stopPropagation(); deleteConfirm = null; }}>
+												<Button
+													variant="ghost"
+													size="sm"
+													onclick={(e) => {
+														e.stopPropagation();
+														deleteConfirm = null;
+													}}
+												>
 													{$_('common.cancel')}
 												</Button>
 											{:else}
-												<Button variant="ghost" size="sm" onclick={(e) => { e.stopPropagation(); deleteConfirm = subject.id; }} aria-label={$_('common.delete')}>
+												<Button
+													variant="ghost"
+													size="sm"
+													onclick={(e) => {
+														e.stopPropagation();
+														deleteConfirm = subject.id;
+													}}
+													aria-label={$_('common.delete')}
+												>
 													<Icon name="delete" size={20} />
 												</Button>
 											{/if}
@@ -342,10 +393,17 @@
 		</div>
 	{/if}
 
-	<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+	<form
+		onsubmit={(e) => {
+			e.preventDefault();
+			handleSubmit();
+		}}
+	>
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 			<div class="md:col-span-2">
-				<label for="semester" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('subjects.semester')}</label>
+				<label for="semester" class="block text-sm font-medium mb-1 text-adaptive-primary"
+					>{$_('subjects.semester')}</label
+				>
 				<select
 					id="semester"
 					bind:value={formSemesterID}
@@ -358,7 +416,9 @@
 			</div>
 
 			<div>
-				<label for="code" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('subjects.codeShort')}</label>
+				<label for="code" class="block text-sm font-medium mb-1 text-adaptive-primary"
+					>{$_('subjects.codeShort')}</label
+				>
 				<input
 					id="code"
 					type="text"
@@ -370,7 +430,9 @@
 			</div>
 
 			<div>
-				<label for="credits" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('subjects.credits')}</label>
+				<label for="credits" class="block text-sm font-medium mb-1 text-adaptive-primary"
+					>{$_('subjects.credits')}</label
+				>
 				<input
 					id="credits"
 					type="number"
@@ -381,7 +443,9 @@
 			</div>
 
 			<div class="md:col-span-2">
-				<label for="name_cs" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.name_czech')}</label>
+				<label for="name_cs" class="block text-sm font-medium mb-1 text-adaptive-primary"
+					>{$_('common.name_czech')}</label
+				>
 				<input
 					id="name_cs"
 					type="text"
@@ -391,7 +455,9 @@
 			</div>
 
 			<fieldset class="md:col-span-2">
-				<legend class="block text-sm font-medium mb-2 text-adaptive-primary">{$_('subjects.teachers')}</legend>
+				<legend class="block text-sm font-medium mb-2 text-adaptive-primary"
+					>{$_('subjects.teachers')}</legend
+				>
 				{#each formTeachers as teacher, i}
 					<div class="flex gap-2 mb-2 items-start">
 						<div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -408,18 +474,28 @@
 								class="w-full px-2 py-1 text-sm border rounded bg-adaptive-tertiary text-adaptive-primary border-adaptive focus:outline-none focus:ring-2 focus:ring-accent-primary"
 							/>
 						</div>
-						<button type="button" class="text-red-500 hover:text-red-700 px-2" onclick={() => removeTeacher(i)}>
+						<button
+							type="button"
+							class="text-red-500 hover:text-red-700 px-2"
+							onclick={() => removeTeacher(i)}
+						>
 							✕
 						</button>
 					</div>
 				{/each}
-				<button type="button" class="text-sm text-primary-600 hover:text-primary-800 font-medium mt-1" onclick={addTeacher}>
+				<button
+					type="button"
+					class="text-sm text-primary-600 hover:text-primary-800 font-medium mt-1"
+					onclick={addTeacher}
+				>
 					+ {$_('common.add_teacher')}
 				</button>
 			</fieldset>
 
 			<div class="md:col-span-2">
-				<label for="desc_cs" class="block text-sm font-medium mb-1 text-adaptive-primary">{$_('common.description_czech')}</label>
+				<label for="desc_cs" class="block text-sm font-medium mb-1 text-adaptive-primary"
+					>{$_('common.description_czech')}</label
+				>
 				<textarea
 					id="desc_cs"
 					bind:value={formDescCS}

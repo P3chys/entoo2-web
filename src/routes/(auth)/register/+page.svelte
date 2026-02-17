@@ -125,7 +125,9 @@
 	</div>
 
 	<!-- Form Side (Right) -->
-	<div class="flex-1 flex items-center justify-center p-6 md:p-12 bg-light-bg-primary dark:bg-dark-bg-primary">
+	<div
+		class="flex-1 flex items-center justify-center p-6 md:p-12 bg-light-bg-primary dark:bg-dark-bg-primary"
+	>
 		<div class="w-full max-w-md">
 			<!-- Mobile Logo -->
 			<div class="md:hidden mb-8 text-center">
@@ -144,7 +146,13 @@
 			</div>
 
 			<!-- Form -->
-			<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-5">
+			<form
+				onsubmit={(e) => {
+					e.preventDefault();
+					handleSubmit();
+				}}
+				class="space-y-5"
+			>
 				{#if generalError}
 					<div
 						class="p-4 bg-error/10 border border-error rounded-lg text-error"

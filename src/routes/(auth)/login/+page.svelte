@@ -100,7 +100,10 @@
 
 <div class="min-h-screen flex flex-col md:flex-row" in:fade={{ duration: 200 }}>
 	<!-- Brand Side (Left) - Hidden on mobile, gradient on desktop -->
-	<div class="hidden md:flex md:w-1/2 lg:w-2/5 auth-brand items-center justify-center p-12" use:slideInFrom={{ direction: 'left' }}>
+	<div
+		class="hidden md:flex md:w-1/2 lg:w-2/5 auth-brand items-center justify-center p-12"
+		use:slideInFrom={{ direction: 'left' }}
+	>
 		<div class="max-w-md text-white">
 			<!-- Logo/Icon -->
 			<div class="mb-8" use:fadeSlideIn>
@@ -143,7 +146,10 @@
 	</div>
 
 	<!-- Form Side (Right) -->
-	<div class="flex-1 flex items-center justify-center p-6 md:p-12 bg-light-bg-primary dark:bg-dark-bg-primary" use:slideInFrom={{ direction: 'right' }}>
+	<div
+		class="flex-1 flex items-center justify-center p-6 md:p-12 bg-light-bg-primary dark:bg-dark-bg-primary"
+		use:slideInFrom={{ direction: 'right' }}
+	>
 		<div class="w-full max-w-md">
 			<!-- Mobile Logo -->
 			<div class="md:hidden mb-8 text-center" use:fadeSlideIn>
@@ -168,7 +174,15 @@
 			</div>
 
 			<!-- Form -->
-			<form bind:this={formElement} onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-5" use:fadeSlideIn={{ delay: 200 }}>
+			<form
+				bind:this={formElement}
+				onsubmit={(e) => {
+					e.preventDefault();
+					handleSubmit();
+				}}
+				class="space-y-5"
+				use:fadeSlideIn={{ delay: 200 }}
+			>
 				{#if generalError}
 					<div
 						class="p-4 bg-error/10 border border-error rounded-lg text-error"

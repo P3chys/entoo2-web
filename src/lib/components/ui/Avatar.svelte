@@ -40,16 +40,18 @@
 		anonymous
 			? '?'
 			: name
-				.split(' ')
-				.map(part => part.charAt(0))
-				.join('')
-				.toUpperCase()
-				.slice(0, 2) || '?'
+					.split(' ')
+					.map((part) => part.charAt(0))
+					.join('')
+					.toUpperCase()
+					.slice(0, 2) || '?'
 	);
 </script>
 
 <div
-	class="rounded-full bg-accent-primary/20 flex-center font-bold text-accent-primary {sizeClasses[size]} {className}"
+	class="rounded-full bg-accent-primary/20 flex-center font-bold text-accent-primary {sizeClasses[
+		size
+	]} {className}"
 	title={anonymous ? 'Anonymous' : name}
 >
 	{#if src}

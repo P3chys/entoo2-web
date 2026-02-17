@@ -188,9 +188,13 @@
 		<!-- Colors -->
 		<div class="dropdown dropdown-hover">
 			<div tabindex="0" role="button" class="btn btn-ghost btn-xs" title="Text Color">
-				<span class="w-4 h-4 rounded border border-base-300" style="background: currentColor;"></span>
+				<span class="w-4 h-4 rounded border border-base-300" style="background: currentColor;"
+				></span>
 			</div>
-			<div tabindex="0" class="dropdown-content z-50 bg-base-100 rounded-lg shadow-lg p-2 border border-base-300">
+			<div
+				tabindex="0"
+				class="dropdown-content z-50 bg-base-100 rounded-lg shadow-lg p-2 border border-base-300"
+			>
 				<div class="grid grid-cols-5 gap-1">
 					{#each ['#000000', '#EF4444', '#F59E0B', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899', '#6B7280', '#ffffff', '#374151'] as color}
 						<button
@@ -208,7 +212,10 @@
 			<div tabindex="0" role="button" class="btn btn-ghost btn-xs" title="Highlight">
 				<span class="w-4 h-4 rounded border border-base-300 bg-yellow-200"></span>
 			</div>
-			<div tabindex="0" class="dropdown-content z-50 bg-base-100 rounded-lg shadow-lg p-2 border border-base-300">
+			<div
+				tabindex="0"
+				class="dropdown-content z-50 bg-base-100 rounded-lg shadow-lg p-2 border border-base-300"
+			>
 				<div class="grid grid-cols-5 gap-1">
 					{#each ['#FEF08A', '#BBF7D0', '#BFDBFE', '#DDD6FE', '#FBCFE8'] as color}
 						<button

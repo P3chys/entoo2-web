@@ -49,7 +49,8 @@ function createActiveTypeStore() {
 				return newMap;
 			});
 		},
-		getActiveType: (subjectId: string, activeTypes: Map<string, string>) => activeTypes.get(subjectId),
+		getActiveType: (subjectId: string, activeTypes: Map<string, string>) =>
+			activeTypes.get(subjectId),
 		reset: () => set(new Map())
 	};
 }

@@ -43,21 +43,36 @@
 	}
 </script>
 
-<div class="min-h-screen flex items-center justify-center p-6 bg-light-bg dark:bg-dark-bg" in:fade={{ duration: 200 }}>
+<div
+	class="min-h-screen flex items-center justify-center p-6 bg-light-bg dark:bg-dark-bg"
+	in:fade={{ duration: 200 }}
+>
 	<div class="max-w-md w-full" use:slideInFrom={{ direction: 'bottom' }}>
 		<div class="text-center mb-8">
-			<div class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-accent-primary/10 rounded-full" use:fadeSlideIn>
+			<div
+				class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-accent-primary/10 rounded-full"
+				use:fadeSlideIn
+			>
 				<Icon name="mail" size={32} className="text-accent-primary" />
 			</div>
 
-			<h2 class="text-2xl font-bold mb-2 text-light-text-primary dark:text-dark-text-primary" use:fadeSlideIn>
+			<h2
+				class="text-2xl font-bold mb-2 text-light-text-primary dark:text-dark-text-primary"
+				use:fadeSlideIn
+			>
 				{$_('auth.checkYourEmail')}
 			</h2>
-			<p class="text-light-text-secondary dark:text-dark-text-secondary mb-6" use:fadeSlideIn={{ delay: 100 }}>
+			<p
+				class="text-light-text-secondary dark:text-dark-text-secondary mb-6"
+				use:fadeSlideIn={{ delay: 100 }}
+			>
 				{$_('auth.checkYourEmailMessage')}
 			</p>
 
-			<div class="bg-light-card dark:bg-dark-card rounded-lg p-6 space-y-4" use:fadeSlideIn={{ delay: 200 }}>
+			<div
+				class="bg-light-card dark:bg-dark-card rounded-lg p-6 space-y-4"
+				use:fadeSlideIn={{ delay: 200 }}
+			>
 				<div class="flex items-start gap-3 text-left">
 					<Icon name="info" size={20} className="text-accent-primary mt-0.5 flex-shrink-0" />
 					<div class="text-sm text-light-text-secondary dark:text-dark-text-secondary">
@@ -95,13 +110,22 @@
 						required
 					/>
 
-					<Button onclick={resendVerification} loading={resending} variant="secondary" fullWidth className="mt-3">
+					<Button
+						onclick={resendVerification}
+						loading={resending}
+						variant="secondary"
+						fullWidth
+						className="mt-3"
+					>
 						{$_('auth.resendEmail')}
 					</Button>
 				</div>
 
 				<div class="text-center mt-4">
-					<a href="/login" class="text-accent-primary hover:text-accent-secondary transition-colors text-sm">
+					<a
+						href="/login"
+						class="text-accent-primary hover:text-accent-secondary transition-colors text-sm"
+					>
 						{$_('auth.backToLogin')}
 					</a>
 				</div>

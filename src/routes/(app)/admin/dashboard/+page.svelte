@@ -20,7 +20,9 @@
 		loading = true;
 		error = null;
 
-		const res = await api.get<{ success: boolean; data: DashboardOverview }>('/api/v1/admin/stats/overview');
+		const res = await api.get<{ success: boolean; data: DashboardOverview }>(
+			'/api/v1/admin/stats/overview'
+		);
 
 		if (res.error || !res.data?.success) {
 			error = res.error?.message || 'Failed to load stats';
@@ -141,7 +143,9 @@
 		{#if loading && !stats}
 			<div class={cx(s.center, 'min-h-[40vh]')}>
 				<div class={s.stack.md}>
-					<div class="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-primary mx-auto"></div>
+					<div
+						class="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-primary mx-auto"
+					></div>
 					<p class={s.text.muted}>{$_('admin.dashboard.loading')}</p>
 				</div>
 			</div>
@@ -214,7 +218,9 @@
 						</div>
 						<div>
 							<p class={s.text.hint}>{$_('admin.dashboard.flashcardDecks')}</p>
-							<p class="font-semibold text-adaptive-primary">{stats.system.total_flashcard_decks}</p>
+							<p class="font-semibold text-adaptive-primary">
+								{stats.system.total_flashcard_decks}
+							</p>
 						</div>
 					</div>
 				</div>
@@ -227,13 +233,17 @@
 						</div>
 						<div>
 							<p class={s.text.muted}>{$_('admin.dashboard.apiUsage')}</p>
-							<p class="text-2xl font-bold text-adaptive-primary">{stats.api.total_requests.toLocaleString()}</p>
+							<p class="text-2xl font-bold text-adaptive-primary">
+								{stats.api.total_requests.toLocaleString()}
+							</p>
 						</div>
 					</div>
 					<div class={cx(s.row.lg, 'mt-4 pt-4 border-t border-adaptive')}>
 						<div>
 							<p class={s.text.hint}>{$_('admin.dashboard.requestsToday')}</p>
-							<p class="font-semibold text-orange-500">{stats.api.requests_today.toLocaleString()}</p>
+							<p class="font-semibold text-orange-500">
+								{stats.api.requests_today.toLocaleString()}
+							</p>
 						</div>
 					</div>
 				</div>
@@ -248,9 +258,12 @@
 						<div class={s.stack.sm}>
 							{#each stats.api.top_endpoints as endpoint}
 								<div class={cx(s.between, s.pad.sm, 'bg-adaptive-tertiary/30 rounded-lg')}>
-									<code class="text-sm text-adaptive-primary truncate flex-1 mr-4">{endpoint.endpoint}</code>
+									<code class="text-sm text-adaptive-primary truncate flex-1 mr-4"
+										>{endpoint.endpoint}</code
+									>
 									<span class="text-sm font-medium text-accent-primary whitespace-nowrap">
-										{endpoint.count.toLocaleString()} {$_('admin.dashboard.requests')}
+										{endpoint.count.toLocaleString()}
+										{$_('admin.dashboard.requests')}
 									</span>
 								</div>
 							{/each}

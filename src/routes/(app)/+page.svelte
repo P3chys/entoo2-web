@@ -12,9 +12,28 @@
 	import { s, cx } from '$styles';
 
 	const quickActions = $derived([
-		...($isAdmin ? [{ href: '/semesters', icon: 'semesters', label: $_('navigation.semesters'), desc: $_('dashboard.quickActionSemesters') }] : []),
-		{ href: '/subjects', icon: 'subjects', label: $_('navigation.subjects'), desc: $_('dashboard.quickActionSubjects') },
-		{ href: '/favorites', icon: 'favorites', label: $_('navigation.favorites'), desc: $_('dashboard.quickActionFavorites') }
+		...($isAdmin
+			? [
+					{
+						href: '/semesters',
+						icon: 'semesters',
+						label: $_('navigation.semesters'),
+						desc: $_('dashboard.quickActionSemesters')
+					}
+				]
+			: []),
+		{
+			href: '/subjects',
+			icon: 'subjects',
+			label: $_('navigation.subjects'),
+			desc: $_('dashboard.quickActionSubjects')
+		},
+		{
+			href: '/favorites',
+			icon: 'favorites',
+			label: $_('navigation.favorites'),
+			desc: $_('dashboard.quickActionFavorites')
+		}
 	]);
 
 	interface ActivityDisplay {
@@ -44,9 +63,11 @@
 	}
 
 	async function loadData() {
-		const activityRes = await api.get<{success: boolean, data: Activity[]}>('/api/v1/activities/recent?limit=10');
+		const activityRes = await api.get<{ success: boolean; data: Activity[] }>(
+			'/api/v1/activities/recent?limit=10'
+		);
 		if (activityRes.data?.success) {
-			recentActivity = (activityRes.data.data || []).map(a => {
+			recentActivity = (activityRes.data.data || []).map((a) => {
 				const isUpload = a.activity_type === 'document_uploaded';
 				const userName = a.user?.email || $_('common.unknown_user');
 				const subjectName = a.subject?.name_cs || $_('common.unknown_subject');
@@ -88,9 +109,17 @@
 			<!-- Search Bar -->
 			<div class={s.container.sm}>
 				<a href="/search" class="block group no-underline">
-					<div class={cx(s.row.md, s.pad.md, 'bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl border border-white/30 hover:border-white/50 hover:shadow-lg transition-all')}>
+					<div
+						class={cx(
+							s.row.md,
+							s.pad.md,
+							'bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl border border-white/30 hover:border-white/50 hover:shadow-lg transition-all'
+						)}
+					>
 						<Icon name="search" size={24} className="text-white" />
-						<span class="text-white/80 group-hover:text-white">{$_('dashboard.searchPlaceholder')}</span>
+						<span class="text-white/80 group-hover:text-white"
+							>{$_('dashboard.searchPlaceholder')}</span
+						>
 						<div class={cx('ml-auto', s.row.sm, 'px-3 py-1 bg-white/20 rounded-lg')}>
 							<span class="text-white/70 text-sm">{$_('dashboard.keyboardShortcut')}</span>
 						</div>
@@ -107,7 +136,12 @@
 			<SectionHeader icon="zap">{$_('dashboard.quickActions')}</SectionHeader>
 			<nav class={s.stack.sm} use:staggerFadeIn>
 				{#each quickActions as action}
-					<ListItem href={action.href} icon={action.icon} title={action.label} description={action.desc} />
+					<ListItem
+						href={action.href}
+						icon={action.icon}
+						title={action.label}
+						description={action.desc}
+					/>
 				{/each}
 			</nav>
 		</section>
@@ -129,7 +163,11 @@
 					{/each}
 				</div>
 			{:else}
-				<EmptyState icon="file-text" title={$_('dashboard.noActivity')} description={$_('dashboard.noActivityDesc')}>
+				<EmptyState
+					icon="file-text"
+					title={$_('dashboard.noActivity')}
+					description={$_('dashboard.noActivityDesc')}
+				>
 					<Button href="/semesters">📅 {$_('navigation.semesters')}</Button>
 					<Button href="/subjects" variant="ghost">📚 {$_('navigation.subjects')}</Button>
 				</EmptyState>
@@ -139,7 +177,12 @@
 
 	<!-- Study Tip -->
 	<section class="px-2" use:slideInFrom={{ direction: 'bottom', delay: 200 }}>
-		<div class={cx(s.pad.lg, 'bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 dark:from-accent-primary/20 dark:to-accent-secondary/20 rounded-xl border border-accent-primary/20')}>
+		<div
+			class={cx(
+				s.pad.lg,
+				'bg-gradient-to-r from-accent-primary/10 to-accent-secondary/10 dark:from-accent-primary/20 dark:to-accent-secondary/20 rounded-xl border border-accent-primary/20'
+			)}
+		>
 			<div class={cx(s.row.lg, 'items-start')}>
 				<div class="p-3 bg-accent-primary/10 rounded-lg shrink-0">
 					<Icon name="award" size={28} className="text-accent-primary" />

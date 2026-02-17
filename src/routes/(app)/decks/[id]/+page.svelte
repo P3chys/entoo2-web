@@ -55,9 +55,8 @@
 			// Parse options if it's a JSON string, otherwise use as-is
 			if (card.options) {
 				try {
-					cardData.options = typeof card.options === 'string'
-						? JSON.parse(card.options)
-						: card.options;
+					cardData.options =
+						typeof card.options === 'string' ? JSON.parse(card.options) : card.options;
 				} catch {
 					cardData.options = [];
 				}
@@ -169,9 +168,7 @@
 			<div class="flex items-start justify-between">
 				<div class="flex-1">
 					<div class="flex items-center gap-3 mb-2">
-						<h1
-							class="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary"
-						>
+						<h1 class="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary">
 							{deck.title}
 						</h1>
 						<button
@@ -209,7 +206,9 @@
 						</span>
 
 						{#if deck.creator}
-							<span class="flex items-center gap-1.5 text-light-text-secondary dark:text-dark-text-secondary">
+							<span
+								class="flex items-center gap-1.5 text-light-text-secondary dark:text-dark-text-secondary"
+							>
 								<Icon name="user" size={16} />
 								{deck.creator.display_name || deck.creator.email}
 							</span>
@@ -238,15 +237,15 @@
 			</div>
 		</div>
 
-	<!-- Start Study Button -->
-	{#if deck.card_count > 0}
-		<div class="mb-4" use:fadeSlideIn={{ delay: 100 }}>
-			<Button onclick={() => goto(`/decks/${deckId}/study`)} size="lg">
-				<Icon name="play" size={20} />
-				{$_('flashcards.start_study')}
-			</Button>
-		</div>
-	{/if}
+		<!-- Start Study Button -->
+		{#if deck.card_count > 0}
+			<div class="mb-4" use:fadeSlideIn={{ delay: 100 }}>
+				<Button onclick={() => goto(`/decks/${deckId}/study`)} size="lg">
+					<Icon name="play" size={20} />
+					{$_('flashcards.start_study')}
+				</Button>
+			</div>
+		{/if}
 
 		<!-- Add Card Button -->
 		{#if isOwner}

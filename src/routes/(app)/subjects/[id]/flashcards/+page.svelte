@@ -125,14 +125,20 @@
 			href="/subjects/{subjectId}"
 			class="inline-flex items-center gap-2 text-sm text-light-text-secondary dark:text-dark-text-secondary hover:text-accent-primary dark:hover:text-accent-primary transition-colors group"
 		>
-			<Icon name="arrow-left" size={16} className="group-hover:-translate-x-1 transition-transform" />
+			<Icon
+				name="arrow-left"
+				size={16}
+				className="group-hover:-translate-x-1 transition-transform"
+			/>
 			{$_('common.back')}
 		</a>
 	</div>
 
 	<!-- Header -->
 	<div class="mb-6" use:fadeSlideIn={{ delay: 50 }}>
-		<h1 class="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary flex items-center gap-3">
+		<h1
+			class="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary flex items-center gap-3"
+		>
 			<Icon name="layers" size={32} className="text-accent-primary" />
 			{$_('flashcards.title')}
 		</h1>
@@ -168,7 +174,8 @@
 				</label>
 
 				<span class="text-sm text-light-text-secondary dark:text-dark-text-secondary">
-					{decks.length} {$_('flashcards.decks')}
+					{decks.length}
+					{$_('flashcards.decks')}
 				</span>
 			</div>
 
@@ -181,7 +188,11 @@
 		<!-- Decks Grid -->
 		{#if decks.length === 0}
 			<div class="text-center py-12" use:fadeSlideIn={{ delay: 150 }}>
-				<Icon name="layers" size={64} className="text-light-text-secondary dark:text-dark-text-secondary mx-auto mb-4 opacity-50" />
+				<Icon
+					name="layers"
+					size={64}
+					className="text-light-text-secondary dark:text-dark-text-secondary mx-auto mb-4 opacity-50"
+				/>
 				<p class="text-light-text-secondary dark:text-dark-text-secondary mb-4">
 					{$_('flashcards.no_decks')}
 				</p>
@@ -190,7 +201,10 @@
 				</Button>
 			</div>
 		{:else}
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" use:fadeSlideIn={{ delay: 150 }}>
+			<div
+				class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+				use:fadeSlideIn={{ delay: 150 }}
+			>
 				{#each decks as deck (deck.id)}
 					<DeckCard
 						{deck}
@@ -213,13 +227,12 @@
 			if (e.target === e.currentTarget) showCreateModal = false;
 		}}
 	>
-		<div
-			class="card p-6 max-w-lg w-full space-y-4"
-			onclick={(e) => e.stopPropagation()}
-		>
+		<div class="card p-6 max-w-lg w-full space-y-4" onclick={(e) => e.stopPropagation()}>
 			<!-- Modal Header -->
 			<div class="flex items-center justify-between mb-2">
-				<h2 class="text-xl font-bold text-light-text-primary dark:text-dark-text-primary flex items-center gap-2">
+				<h2
+					class="text-xl font-bold text-light-text-primary dark:text-dark-text-primary flex items-center gap-2"
+				>
 					<Icon name="plus" size={24} className="text-accent-primary" />
 					{$_('flashcards.create_deck')}
 				</h2>
@@ -234,7 +247,9 @@
 			<!-- Form -->
 			<div class="space-y-4">
 				<div>
-					<label class="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-2">
+					<label
+						class="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-2"
+					>
 						{$_('flashcards.deck_title')} <span class="text-red-500">*</span>
 					</label>
 					<Input
@@ -245,7 +260,9 @@
 				</div>
 
 				<div>
-					<label class="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-2">
+					<label
+						class="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-2"
+					>
 						{$_('flashcards.deck_description')}
 					</label>
 					<textarea

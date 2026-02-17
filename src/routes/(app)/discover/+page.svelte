@@ -55,9 +55,7 @@
 		error = '';
 
 		// Load public decks
-		const decksRes = await api.get<{ success: boolean; data: FlashcardDeck[] }>(
-			'/api/v1/decks'
-		);
+		const decksRes = await api.get<{ success: boolean; data: FlashcardDeck[] }>('/api/v1/decks');
 
 		if (decksRes.error) {
 			error = decksRes.error.message || $_('common.failed_to_load');
@@ -87,9 +85,7 @@
 		}
 
 		// Load subjects for filtering
-		const subjectsRes = await api.get<{ success: boolean; data: Subject[] }>(
-			'/api/v1/subjects'
-		);
+		const subjectsRes = await api.get<{ success: boolean; data: Subject[] }>('/api/v1/subjects');
 
 		if (subjectsRes.data?.success) {
 			subjects = subjectsRes.data.data || [];
@@ -137,7 +133,9 @@
 <div class="h-full flex flex-col" in:fade={{ duration: 200 }}>
 	<!-- Header -->
 	<div class="mb-6" use:fadeSlideIn>
-		<h1 class="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary flex items-center gap-3">
+		<h1
+			class="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary flex items-center gap-3"
+		>
 			<Icon name="globe" size={32} className="text-accent-primary" />
 			{$_('flashcards.discover')}
 		</h1>
@@ -159,11 +157,7 @@
 		<div class="flex flex-col sm:flex-row gap-4 mb-6" use:fadeSlideIn={{ delay: 50 }}>
 			<!-- Search -->
 			<div class="flex-1">
-				<Input
-					bind:value={searchQuery}
-					placeholder={$_('flashcards.search_decks')}
-					icon="search"
-				/>
+				<Input bind:value={searchQuery} placeholder={$_('flashcards.search_decks')} icon="search" />
 			</div>
 
 			<!-- Subject filter -->
@@ -184,8 +178,12 @@
 		</div>
 
 		<!-- Stats -->
-		<div class="mb-6 text-sm text-light-text-secondary dark:text-dark-text-secondary" use:fadeSlideIn={{ delay: 75 }}>
-			{filteredDecks.length} {$_('flashcards.decks')}
+		<div
+			class="mb-6 text-sm text-light-text-secondary dark:text-dark-text-secondary"
+			use:fadeSlideIn={{ delay: 75 }}
+		>
+			{filteredDecks.length}
+			{$_('flashcards.decks')}
 			{#if selectedSubjectId || searchQuery}
 				<button
 					class="ml-2 text-accent-primary hover:underline"
@@ -202,7 +200,11 @@
 		<!-- Decks Grid -->
 		{#if filteredDecks.length === 0}
 			<div class="text-center py-12" use:fadeSlideIn={{ delay: 100 }}>
-				<Icon name="globe" size={64} className="text-light-text-secondary dark:text-dark-text-secondary mx-auto mb-4 opacity-50" />
+				<Icon
+					name="globe"
+					size={64}
+					className="text-light-text-secondary dark:text-dark-text-secondary mx-auto mb-4 opacity-50"
+				/>
 				<p class="text-light-text-secondary dark:text-dark-text-secondary mb-2">
 					{$_('flashcards.no_public_decks')}
 				</p>
@@ -211,7 +213,10 @@
 				</p>
 			</div>
 		{:else}
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" use:fadeSlideIn={{ delay: 100 }}>
+			<div
+				class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+				use:fadeSlideIn={{ delay: 100 }}
+			>
 				{#each filteredDecks as deck (deck.id)}
 					<div class="relative">
 						<DeckCard

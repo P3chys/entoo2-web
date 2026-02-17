@@ -11,7 +11,13 @@
 		onRatingChange?: () => void;
 	}
 
-	let { teacherId, averageRating = 0, totalRatings = 0, userRating, onRatingChange }: Props = $props();
+	let {
+		teacherId,
+		averageRating = 0,
+		totalRatings = 0,
+		userRating,
+		onRatingChange
+	}: Props = $props();
 
 	let hoveredStar = $state<number | null>(null);
 	let isSubmitting = $state(false);
@@ -51,7 +57,7 @@
 	}
 
 	function getStarClass(starNumber: number): string {
-		const effectiveRating = hoveredStar !== null ? hoveredStar : (userRating || 0);
+		const effectiveRating = hoveredStar !== null ? hoveredStar : userRating || 0;
 
 		if (effectiveRating >= starNumber) {
 			return 'text-yellow-400 fill-yellow-400';
@@ -70,12 +76,15 @@
 						<Icon
 							name="star"
 							size={14}
-							className={i < Math.round(averageRating || 0) ? 'text-yellow-400 fill-yellow-400' : 'text-light-text-tertiary/30'}
+							className={i < Math.round(averageRating || 0)
+								? 'text-yellow-400 fill-yellow-400'
+								: 'text-light-text-tertiary/30'}
 						/>
 					{/each}
 				</div>
 				<span class="text-xs text-light-text-secondary dark:text-dark-text-secondary font-medium">
-					{(averageRating || 0).toFixed(1)} ({totalRatings} {totalRatings === 1 ? 'hodnocení' : 'hodnocení'})
+					{(averageRating || 0).toFixed(1)} ({totalRatings}
+					{totalRatings === 1 ? 'hodnocení' : 'hodnocení'})
 				</span>
 			</div>
 		{:else}
@@ -94,16 +103,12 @@
 					<button
 						class="transition-transform hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
 						onclick={() => handleRate(i + 1)}
-						onmouseenter={() => hoveredStar = i + 1}
-						onmouseleave={() => hoveredStar = null}
+						onmouseenter={() => (hoveredStar = i + 1)}
+						onmouseleave={() => (hoveredStar = null)}
 						disabled={isSubmitting}
 						title={`Rate ${i + 1} stars`}
 					>
-						<Icon
-							name="star"
-							size={16}
-							className={getStarClass(i + 1)}
-						/>
+						<Icon name="star" size={16} className={getStarClass(i + 1)} />
 					</button>
 				{/each}
 			</div>

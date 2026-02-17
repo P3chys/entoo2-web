@@ -54,13 +54,16 @@
 	<div class="w-full max-w-2xl mb-6">
 		<div class="flex items-center justify-between mb-2">
 			<span class="text-sm text-light-text-secondary dark:text-dark-text-secondary">
-				{$_('flashcards.card')} {cardNumber} / {totalCards}
+				{$_('flashcards.card')}
+				{cardNumber} / {totalCards}
 			</span>
 			<span class="text-sm text-light-text-secondary dark:text-dark-text-secondary">
 				{Math.round((cardNumber / totalCards) * 100)}%
 			</span>
 		</div>
-		<div class="w-full h-2 bg-light-bg-tertiary dark:bg-dark-bg-tertiary rounded-full overflow-hidden">
+		<div
+			class="w-full h-2 bg-light-bg-tertiary dark:bg-dark-bg-tertiary rounded-full overflow-hidden"
+		>
 			<div
 				class="h-full bg-accent-primary transition-all duration-300"
 				style="width: {(cardNumber / totalCards) * 100}%"
@@ -74,7 +77,9 @@
 		<div class="w-full max-w-2xl">
 			<div class="card p-8 relative">
 				<div class="absolute top-4 left-4">
-					<span class="text-xs font-medium text-accent-primary bg-accent-primary/10 px-3 py-1.5 rounded-full flex items-center gap-1">
+					<span
+						class="text-xs font-medium text-accent-primary bg-accent-primary/10 px-3 py-1.5 rounded-full flex items-center gap-1"
+					>
 						<Icon name="list" size={12} />
 						{$_('flashcards.multiple_choice')}
 					</span>
@@ -82,7 +87,9 @@
 
 				<!-- Question -->
 				<div class="pt-8 pb-6">
-					<p class="text-2xl font-medium text-light-text-primary dark:text-dark-text-primary text-center">
+					<p
+						class="text-2xl font-medium text-light-text-primary dark:text-dark-text-primary text-center"
+					>
 						{flashcard.front_text}
 					</p>
 				</div>
@@ -96,19 +103,21 @@
 							disabled={showResult}
 							class="w-full p-4 rounded-lg text-left transition-all duration-200 flex items-center gap-3
 								{showResult && index === flashcard.correct_option
-									? 'bg-green-100 dark:bg-green-900/30 border-2 border-green-500 text-green-700 dark:text-green-400'
-									: showResult && selectedOption === index && !isAnswerCorrect
-										? 'bg-red-100 dark:bg-red-900/30 border-2 border-red-500 text-red-700 dark:text-red-400'
-										: selectedOption === index
-											? 'bg-accent-primary/10 border-2 border-accent-primary'
-											: 'bg-light-bg-tertiary dark:bg-dark-bg-tertiary border-2 border-transparent hover:border-accent-primary/50'}"
+								? 'bg-green-100 dark:bg-green-900/30 border-2 border-green-500 text-green-700 dark:text-green-400'
+								: showResult && selectedOption === index && !isAnswerCorrect
+									? 'bg-red-100 dark:bg-red-900/30 border-2 border-red-500 text-red-700 dark:text-red-400'
+									: selectedOption === index
+										? 'bg-accent-primary/10 border-2 border-accent-primary'
+										: 'bg-light-bg-tertiary dark:bg-dark-bg-tertiary border-2 border-transparent hover:border-accent-primary/50'}"
 						>
-							<span class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
+							<span
+								class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
 								{showResult && index === flashcard.correct_option
 									? 'bg-green-500 text-white'
 									: showResult && selectedOption === index && !isAnswerCorrect
 										? 'bg-red-500 text-white'
-										: 'bg-light-bg-primary dark:bg-dark-bg-primary text-light-text-secondary dark:text-dark-text-secondary'}">
+										: 'bg-light-bg-primary dark:bg-dark-bg-primary text-light-text-secondary dark:text-dark-text-secondary'}"
+							>
 								{#if showResult && index === flashcard.correct_option}
 									<Icon name="check" size={16} />
 								{:else if showResult && selectedOption === index && !isAnswerCorrect}
@@ -126,10 +135,12 @@
 
 				<!-- Result Message -->
 				{#if showResult}
-					<div class="mt-6 p-4 rounded-lg text-center
+					<div
+						class="mt-6 p-4 rounded-lg text-center
 						{isAnswerCorrect
 							? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-							: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'}">
+							: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'}"
+					>
 						{#if isAnswerCorrect}
 							<div class="flex items-center justify-center gap-2">
 								<Icon name="check" size={20} />
@@ -141,7 +152,8 @@
 								<span class="font-medium">{$_('flashcards.incorrect')}</span>
 							</div>
 							<p class="mt-2 text-sm">
-								{$_('flashcards.correct_answer_was')}: <strong>{parsedOptions[flashcard.correct_option ?? 0]}</strong>
+								{$_('flashcards.correct_answer_was')}:
+								<strong>{parsedOptions[flashcard.correct_option ?? 0]}</strong>
 							</p>
 						{/if}
 					</div>
@@ -174,15 +186,21 @@
 				<!-- Front of card -->
 				<div class="flashcard-face flashcard-front">
 					<div class="absolute top-4 left-4">
-						<span class="text-xs font-medium text-accent-primary bg-accent-primary/10 px-3 py-1.5 rounded-full">
+						<span
+							class="text-xs font-medium text-accent-primary bg-accent-primary/10 px-3 py-1.5 rounded-full"
+						>
 							{$_('flashcards.front')}
 						</span>
 					</div>
 					<div class="flex flex-col items-center justify-center h-full px-8">
-						<p class="text-2xl font-medium text-light-text-primary dark:text-dark-text-primary text-center mb-6">
+						<p
+							class="text-2xl font-medium text-light-text-primary dark:text-dark-text-primary text-center mb-6"
+						>
 							{flashcard.front_text}
 						</p>
-						<div class="flex items-center gap-2 text-light-text-secondary dark:text-dark-text-secondary text-sm">
+						<div
+							class="flex items-center gap-2 text-light-text-secondary dark:text-dark-text-secondary text-sm"
+						>
 							<Icon name="layers" size={16} />
 							<span>{$_('flashcards.click_to_reveal')}</span>
 						</div>
@@ -197,7 +215,9 @@
 						</span>
 					</div>
 					<div class="flex flex-col items-center justify-center h-full px-8">
-						<p class="text-2xl font-medium text-light-text-primary dark:text-dark-text-primary text-center">
+						<p
+							class="text-2xl font-medium text-light-text-primary dark:text-dark-text-primary text-center"
+						>
 							{flashcard.back_text}
 						</p>
 					</div>
@@ -268,7 +288,9 @@
 					</button>
 				</div>
 				<!-- Legend/hint on desktop -->
-				<p class="text-center text-xs text-light-text-secondary dark:text-dark-text-secondary hidden sm:block">
+				<p
+					class="text-center text-xs text-light-text-secondary dark:text-dark-text-secondary hidden sm:block"
+				>
 					0-2: {$_('flashcards.incorrect')} • 3-5: {$_('flashcards.correct')}
 				</p>
 			</div>

@@ -29,7 +29,12 @@
 			<Icon name={icon} size={24} className="text-accent-primary" />
 		{/if}
 		<div class="flex-1 min-w-0">
-			<span class={cx(s.text.body, 'block font-medium group-hover:text-accent-primary transition-colors')}>
+			<span
+				class={cx(
+					s.text.body,
+					'block font-medium group-hover:text-accent-primary transition-colors'
+				)}
+			>
 				{title}
 			</span>
 			{#if description}
@@ -37,7 +42,11 @@
 			{/if}
 		</div>
 		{#if chevron}
-			<Icon name="chevron-right" size={16} className="text-adaptive-tertiary group-hover:text-accent-primary group-hover:translate-x-1 transition-all" />
+			<Icon
+				name="chevron-right"
+				size={16}
+				className="text-adaptive-tertiary group-hover:text-accent-primary group-hover:translate-x-1 transition-all"
+			/>
 		{/if}
 	</a>
 {:else}

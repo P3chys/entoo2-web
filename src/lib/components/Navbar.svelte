@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import { authStore, isAdmin } from '$stores/auth';
 	import ThemeToggle from './ThemeToggle.svelte';
-    import Icon from './Icon.svelte';
+	import Icon from './Icon.svelte';
 
 	let mobileMenuOpen = $state(false);
 
@@ -22,8 +22,12 @@
 
 	const navItems = $derived([
 		{ href: '/', label: $_('navigation.home'), icon: 'home' },
-		...($isAdmin ? [{ href: '/admin/dashboard', label: $_('navigation.dashboard'), icon: 'bar-chart' }] : []),
-		...($isAdmin ? [{ href: '/semesters', label: $_('navigation.semesters'), icon: 'semesters' }] : []),
+		...($isAdmin
+			? [{ href: '/admin/dashboard', label: $_('navigation.dashboard'), icon: 'bar-chart' }]
+			: []),
+		...($isAdmin
+			? [{ href: '/semesters', label: $_('navigation.semesters'), icon: 'semesters' }]
+			: []),
 		{ href: '/subjects', label: $_('navigation.subjects'), icon: 'subjects' },
 		{ href: '/discover', label: $_('flashcards.discover'), icon: 'globe' },
 		{ href: '/favorites', label: $_('navigation.favorites'), icon: 'favorites' }
@@ -54,14 +58,16 @@
 							aria-current={$page.url.pathname === item.href ? 'page' : undefined}
 							class={$page.url.pathname === item.href ? 'nav-link-active' : 'nav-link-inactive'}
 						>
-                            <Icon name={item.icon} size={20} />
+							<Icon name={item.icon} size={20} />
 							{item.label}
 						</a>
 					{/each}
 					<a
 						href="/search"
 						aria-label={$_('common.search')}
-						class={$page.url.pathname.startsWith('/search') ? 'nav-link-active' : 'nav-link-inactive'}
+						class={$page.url.pathname.startsWith('/search')
+							? 'nav-link-active'
+							: 'nav-link-inactive'}
 					>
 						<Icon name="search" size={20} />
 					</a>
@@ -111,7 +117,8 @@
 						href={item.href}
 						aria-current={$page.url.pathname === item.href ? 'page' : undefined}
 						onclick={closeMobileMenu}
-						class="block px-3 py-2 rounded-lg text-base font-medium no-underline {$page.url.pathname === item.href
+						class="block px-3 py-2 rounded-lg text-base font-medium no-underline {$page.url
+							.pathname === item.href
 							? 'bg-accent-primary text-white'
 							: 'text-adaptive-primary hover:bg-adaptive-hover'}"
 					>
@@ -121,7 +128,9 @@
 				<a
 					href="/search"
 					onclick={closeMobileMenu}
-					class="block px-3 py-2 rounded-lg text-base font-medium no-underline {$page.url.pathname.startsWith('/search')
+					class="block px-3 py-2 rounded-lg text-base font-medium no-underline {$page.url.pathname.startsWith(
+						'/search'
+					)
 						? 'bg-accent-primary text-white'
 						: 'text-adaptive-primary hover:bg-adaptive-hover'}"
 				>

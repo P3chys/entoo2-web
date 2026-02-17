@@ -20,10 +20,12 @@ export const buttonVariants = cva(
 		variants: {
 			variant: {
 				primary: 'bg-accent-primary text-white hover:bg-accent-hover active:scale-95',
-				secondary: 'bg-adaptive-tertiary text-adaptive-primary hover:bg-adaptive-hover active:scale-95',
+				secondary:
+					'bg-adaptive-tertiary text-adaptive-primary hover:bg-adaptive-hover active:scale-95',
 				ghost: 'bg-transparent hover:bg-adaptive-hover text-adaptive-primary active:scale-95',
 				danger: 'bg-error text-white hover:bg-error/90 active:scale-95',
-				outline: 'border-2 border-adaptive bg-transparent text-adaptive-primary hover:bg-adaptive-hover active:scale-95'
+				outline:
+					'border-2 border-adaptive bg-transparent text-adaptive-primary hover:bg-adaptive-hover active:scale-95'
 			},
 			size: {
 				sm: 'px-3 py-1.5 text-sm',
@@ -54,7 +56,8 @@ export const cardVariants = cva(
 		variants: {
 			variant: {
 				default: '',
-				interactive: 'hover:shadow-md hover:border-accent-primary/30 cursor-pointer hover:scale-[1.01] active:scale-[0.99]',
+				interactive:
+					'hover:shadow-md hover:border-accent-primary/30 cursor-pointer hover:scale-[1.01] active:scale-[0.99]',
 				outlined: 'border-2',
 				elevated: 'shadow-md hover:shadow-lg'
 			},

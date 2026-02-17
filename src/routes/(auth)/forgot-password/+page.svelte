@@ -68,7 +68,10 @@
 
 <div class="min-h-screen flex flex-col md:flex-row" in:fade={{ duration: 200 }}>
 	<!-- Brand Side (Left) - Hidden on mobile, gradient on desktop -->
-	<div class="hidden md:flex md:w-1/2 lg:w-2/5 auth-brand items-center justify-center p-12" use:slideInFrom={{ direction: 'left' }}>
+	<div
+		class="hidden md:flex md:w-1/2 lg:w-2/5 auth-brand items-center justify-center p-12"
+		use:slideInFrom={{ direction: 'left' }}
+	>
 		<div class="max-w-md text-white">
 			<!-- Logo/Icon -->
 			<div class="mb-8" use:fadeSlideIn>
@@ -99,12 +102,17 @@
 	</div>
 
 	<!-- Form Side (Right) -->
-	<div class="flex-1 flex items-center justify-center p-6 md:p-12" use:slideInFrom={{ direction: 'right' }}>
+	<div
+		class="flex-1 flex items-center justify-center p-6 md:p-12"
+		use:slideInFrom={{ direction: 'right' }}
+	>
 		<div class="w-full max-w-md">
 			{#if success}
 				<!-- Success State -->
 				<div class="text-center" use:fadeSlideIn>
-					<div class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-success/10 rounded-full">
+					<div
+						class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-success/10 rounded-full"
+					>
 						<Icon name="mail" size={32} className="text-success" />
 					</div>
 					<h2 class="text-3xl font-bold mb-4 text-light-text-primary dark:text-dark-text-primary">
@@ -141,7 +149,9 @@
 				<div use:fadeSlideIn>
 					<!-- Mobile Logo (shown only on mobile) -->
 					<div class="md:hidden mb-8 text-center">
-						<div class="inline-flex items-center justify-center w-12 h-12 mb-3 bg-accent-primary/10 rounded-xl">
+						<div
+							class="inline-flex items-center justify-center w-12 h-12 mb-3 bg-accent-primary/10 rounded-xl"
+						>
 							<Icon name="lock" size={24} className="text-accent-primary" />
 						</div>
 						<h2 class="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary">
@@ -156,9 +166,18 @@
 						Zadejte svůj e-mail a zašleme vám odkaz pro obnovení hesla.
 					</p>
 
-					<form bind:this={formElement} onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-5">
+					<form
+						bind:this={formElement}
+						onsubmit={(e) => {
+							e.preventDefault();
+							handleSubmit();
+						}}
+						class="space-y-5"
+					>
 						{#if error}
-							<div class="p-4 bg-error/10 border border-error rounded-lg text-error text-sm flex items-start gap-2">
+							<div
+								class="p-4 bg-error/10 border border-error rounded-lg text-error text-sm flex items-start gap-2"
+							>
 								<Icon name="alert-circle" size={20} className="flex-shrink-0 mt-0.5" />
 								<span>{error}</span>
 							</div>
@@ -208,7 +227,8 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+		background:
+			radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
 			radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
 		pointer-events: none;
 	}

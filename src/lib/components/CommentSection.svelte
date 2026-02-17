@@ -21,7 +21,9 @@
 
 	async function loadComments() {
 		loading = true;
-		const res = await api.get<{ success: boolean; data: Comment[] }>(`/api/v1/subjects/${subjectId}/comments`);
+		const res = await api.get<{ success: boolean; data: Comment[] }>(
+			`/api/v1/subjects/${subjectId}/comments`
+		);
 		if (res.data?.success) {
 			comments = res.data.data;
 		}
@@ -34,10 +36,13 @@
 		submitting = true;
 		error = '';
 
-		const res = await api.post<{ success: boolean; data: Comment }>(`/api/v1/subjects/${subjectId}/comments`, {
-			content,
-			is_anonymous: isAnonymous
-		});
+		const res = await api.post<{ success: boolean; data: Comment }>(
+			`/api/v1/subjects/${subjectId}/comments`,
+			{
+				content,
+				is_anonymous: isAnonymous
+			}
+		);
 
 		if (res.data?.success) {
 			comments = [res.data.data, ...comments];
@@ -55,7 +60,7 @@
 
 		const res = await api.delete<{ success: boolean }>(`/api/v1/comments/${id}`);
 		if (res.data?.success) {
-			comments = comments.filter(c => c.id !== id);
+			comments = comments.filter((c) => c.id !== id);
 		} else {
 			alert(res.error?.message || 'Failed to delete comment');
 		}
@@ -70,7 +75,9 @@
 	});
 </script>
 
-<div class="h-full flex flex-col bg-adaptive-secondary rounded-xl overflow-hidden border border-adaptive">
+<div
+	class="h-full flex flex-col bg-adaptive-secondary rounded-xl overflow-hidden border border-adaptive"
+>
 	<!-- Header -->
 	<div class="p-4 border-b border-adaptive flex-between bg-adaptive-tertiary">
 		<h3 class="font-bold flex-gap-2">
@@ -83,7 +90,9 @@
 	</div>
 
 	<!-- Comments List -->
-	<div class="flex-1 overflow-y-auto p-4 space-y-4 min-h-[300px] max-h-[600px] lg:max-h-[calc(100vh-300px)]">
+	<div
+		class="flex-1 overflow-y-auto p-4 space-y-4 min-h-[300px] max-h-[600px] lg:max-h-[calc(100vh-300px)]"
+	>
 		{#if loading}
 			<div class="flex justify-center py-8">
 				<div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-500"></div>
@@ -94,7 +103,10 @@
 			</div>
 		{:else}
 			{#each comments as comment (comment.id)}
-				<div class="group relative bg-adaptive-primary p-3 rounded-lg border border-adaptive" transition:slide>
+				<div
+					class="group relative bg-adaptive-primary p-3 rounded-lg border border-adaptive"
+					transition:slide
+				>
 					<div class="flex items-start justify-between gap-2 mb-2">
 						<UserInfo
 							user={comment.user}
@@ -139,17 +151,23 @@
 
 		<div class="flex-between mt-2">
 			<label class="flex-gap-2 text-sm text-adaptive-secondary cursor-pointer select-none">
-				<input type="checkbox" bind:checked={isAnonymous} class="rounded text-accent-primary focus:ring-accent-primary" />
+				<input
+					type="checkbox"
+					bind:checked={isAnonymous}
+					class="rounded text-accent-primary focus:ring-accent-primary"
+				/>
 				{$_('comments.postAnonymously', { default: 'Post Anonymously' })}
 			</label>
 
-			<Button 
-				variant="primary" 
-				size="sm" 
+			<Button
+				variant="primary"
+				size="sm"
 				disabled={!content.trim() || submitting}
 				onclick={handleSubmit}
 			>
-				{submitting ? $_('common.sending', { default: 'Sending...' }) : $_('common.send', { default: 'Send' })}
+				{submitting
+					? $_('common.sending', { default: 'Sending...' })
+					: $_('common.send', { default: 'Send' })}
 			</Button>
 		</div>
 	</div>

@@ -20,12 +20,7 @@
 		children?: Snippet;
 	}
 
-	let {
-		variant = 'primary',
-		size = 'md',
-		class: className = '',
-		children
-	}: Props = $props();
+	let { variant = 'primary', size = 'md', class: className = '', children }: Props = $props();
 
 	const variantClasses: Record<Variant, string> = {
 		primary: 'badge-primary',

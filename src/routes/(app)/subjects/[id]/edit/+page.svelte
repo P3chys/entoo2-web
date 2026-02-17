@@ -15,7 +15,7 @@
 	let loading = $state(true);
 	let saving = $state(false);
 	let error = $state('');
-	
+
 	let formData = $state({
 		code: '',
 		name_cs: '',
@@ -37,10 +37,11 @@
 				name_cs: s.name_cs,
 				description_cs: s.description_cs || '',
 				credits: s.credits,
-				teachers: s.teachers?.map(t => ({
-					name: t.teacher_name,
-					topic_cs: t.topic_cs || ''
-				})) || []
+				teachers:
+					s.teachers?.map((t) => ({
+						name: t.teacher_name,
+						topic_cs: t.topic_cs || ''
+					})) || []
 			};
 		}
 		loading = false;
@@ -51,7 +52,10 @@
 		error = '';
 
 		// Use the ADMIN endpoint
-		const res = await api.put<{ success: boolean; data: Subject }>(`/api/v1/admin/subjects/${subjectId}`, formData);
+		const res = await api.put<{ success: boolean; data: Subject }>(
+			`/api/v1/admin/subjects/${subjectId}`,
+			formData
+		);
 
 		if (res.error) {
 			error = res.error.message || $_('common.failed_to_update_subject');
@@ -77,8 +81,15 @@
 <div class="max-w-4xl mx-auto h-full flex flex-col pb-10" in:fade={{ duration: 200 }}>
 	<!-- Back link -->
 	<div class="mb-4" use:fadeSlideIn>
-		<a href="/subjects/{subjectId}" class="inline-flex items-center gap-2 text-sm text-light-text-secondary dark:text-dark-text-secondary hover:text-accent-primary dark:hover:text-accent-primary transition-colors group">
-			<Icon name="arrow-left" size={16} className="group-hover:-translate-x-1 transition-transform" />
+		<a
+			href="/subjects/{subjectId}"
+			class="inline-flex items-center gap-2 text-sm text-light-text-secondary dark:text-dark-text-secondary hover:text-accent-primary dark:hover:text-accent-primary transition-colors group"
+		>
+			<Icon
+				name="arrow-left"
+				size={16}
+				className="group-hover:-translate-x-1 transition-transform"
+			/>
 			{$_('common.back')}
 		</a>
 	</div>
@@ -95,22 +106,35 @@
 			</div>
 		{:else}
 			{#if error}
-				<div class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-4 rounded-lg mb-6">
+				<div
+					class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-4 rounded-lg mb-6"
+				>
 					{error}
 				</div>
 			{/if}
 
-			<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-8">
+			<form
+				onsubmit={(e) => {
+					e.preventDefault();
+					handleSubmit();
+				}}
+				class="space-y-8"
+			>
 				<!-- Basic Info Section -->
 				<section class="space-y-6">
-					<h3 class="text-lg font-semibold border-b border-light-border-primary dark:border-dark-border-primary pb-2">
+					<h3
+						class="text-lg font-semibold border-b border-light-border-primary dark:border-dark-border-primary pb-2"
+					>
 						{$_('common.basic_info')}
 					</h3>
-					
+
 					<!-- Code & Credits -->
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 						<div>
-							<label for="code" class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
+							<label
+								for="code"
+								class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1"
+							>
 								{$_('common.code')}
 							</label>
 							<input
@@ -122,7 +146,10 @@
 							/>
 						</div>
 						<div>
-							<label for="credits" class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
+							<label
+								for="credits"
+								class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1"
+							>
 								{$_('common.credits')}
 							</label>
 							<input
@@ -138,7 +165,10 @@
 
 					<!-- Name -->
 					<div>
-						<label for="name_cs" class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
+						<label
+							for="name_cs"
+							class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1"
+						>
 							{$_('common.name_cs')}
 						</label>
 						<input
@@ -152,19 +182,24 @@
 
 					<!-- Description -->
 					<div>
-						<label for="description_cs" class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">
+						<label
+							for="description_cs"
+							class="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2"
+						>
 							{$_('common.description_cs')}
 						</label>
 						<RichTextEditor
 							content={formData.description_cs}
-							onUpdate={(html) => formData.description_cs = html}
+							onUpdate={(html) => (formData.description_cs = html)}
 						/>
 					</div>
 				</section>
 
 				<!-- Teachers Section -->
 				<section class="space-y-4">
-					<div class="flex items-center justify-between border-b border-light-border-primary dark:border-dark-border-primary pb-2">
+					<div
+						class="flex items-center justify-between border-b border-light-border-primary dark:border-dark-border-primary pb-2"
+					>
 						<h3 class="text-lg font-semibold">
 							{$_('common.teachers')}
 						</h3>
@@ -179,14 +214,19 @@
 					</div>
 
 					{#if formData.teachers.length === 0}
-						<div class="text-center py-6 text-light-text-secondary dark:text-dark-text-secondary italic bg-light-bg-tertiary dark:bg-dark-bg-tertiary rounded-lg">
+						<div
+							class="text-center py-6 text-light-text-secondary dark:text-dark-text-secondary italic bg-light-bg-tertiary dark:bg-dark-bg-tertiary rounded-lg"
+						>
 							{$_('subjects.noTeachers')}
 						</div>
 					{/if}
-					
+
 					<div class="space-y-4">
 						{#each formData.teachers as teacher, i}
-							<div class="p-4 bg-light-bg-tertiary dark:bg-dark-bg-tertiary rounded-lg relative group" transition:slide>
+							<div
+								class="p-4 bg-light-bg-tertiary dark:bg-dark-bg-tertiary rounded-lg relative group"
+								transition:slide
+							>
 								<button
 									type="button"
 									onclick={() => removeTeacher(i)}
@@ -198,7 +238,10 @@
 
 								<div class="grid grid-cols-1 md:grid-cols-2 gap-4 pr-8">
 									<div>
-										<label for="teacher-name-{i}" class="block text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
+										<label
+											for="teacher-name-{i}"
+											class="block text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1"
+										>
 											{$_('common.teacher_name')}
 										</label>
 										<input
@@ -210,7 +253,10 @@
 										/>
 									</div>
 									<div>
-										<label for="teacher-topic-{i}" class="block text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">
+										<label
+											for="teacher-topic-{i}"
+											class="block text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1"
+										>
 											{$_('common.teacher_topic_cs')}
 										</label>
 										<input
@@ -227,7 +273,9 @@
 				</section>
 
 				<!-- Actions -->
-				<div class="flex items-center justify-end gap-3 pt-6 border-t border-light-border-primary dark:border-dark-border-primary">
+				<div
+					class="flex items-center justify-end gap-3 pt-6 border-t border-light-border-primary dark:border-dark-border-primary"
+				>
 					<a
 						href="/subjects/{subjectId}"
 						class="px-4 py-2 rounded-lg text-light-text-secondary dark:text-dark-text-secondary hover:bg-light-bg-secondary dark:hover:bg-dark-bg-secondary transition-colors"

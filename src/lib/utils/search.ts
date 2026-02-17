@@ -92,9 +92,21 @@ export function debounce<T extends (...args: any[]) => any>(
 export const FILE_TYPE_FILTERS: FileTypeFilter[] = [
 	{ label: 'All Files', mimeType: '', icon: '📎' },
 	{ label: 'PDF', mimeType: 'application/pdf', icon: '📄' },
-	{ label: 'Word', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', icon: '📝' },
-	{ label: 'PowerPoint', mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', icon: '📽️' },
-	{ label: 'Excel', mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', icon: '📊' },
+	{
+		label: 'Word',
+		mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		icon: '📝'
+	},
+	{
+		label: 'PowerPoint',
+		mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+		icon: '📽️'
+	},
+	{
+		label: 'Excel',
+		mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		icon: '📊'
+	},
 	{ label: 'Images', mimeType: 'image/', icon: '🖼️' },
 	{ label: 'Text', mimeType: 'text/', icon: '📃' }
 ];

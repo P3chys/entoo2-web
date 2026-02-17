@@ -59,7 +59,8 @@ export const s = {
 
 	// === SURFACES ===
 	card: 'bg-adaptive-secondary border border-adaptive rounded-lg',
-	cardHover: 'bg-adaptive-secondary border border-adaptive rounded-lg hover:border-accent-primary/30 hover:shadow-md transition-all cursor-pointer',
+	cardHover:
+		'bg-adaptive-secondary border border-adaptive rounded-lg hover:border-accent-primary/30 hover:shadow-md transition-all cursor-pointer',
 
 	// === COMMON PATTERNS ===
 	center: 'flex items-center justify-center',
@@ -87,6 +88,17 @@ export const s = {
 
 // Backward compatibility exports
 export const spacing = { card: s.pad, gap: s.stack, section: s.pad };
-export const text = { heading: s.text, body: { md: s.text.body }, muted: { sm: s.text.muted, md: s.text.muted }, hint: { sm: s.text.hint, xs: s.text.hint, md: s.text.hint } };
-export const layout = { stack: s.stack, inline: s.row, flex: { center: s.center, start: 'flex items-center justify-start' }, grid: { cols: s.grid }, container: s.container };
+export const text = {
+	heading: s.text,
+	body: { md: s.text.body },
+	muted: { sm: s.text.muted, md: s.text.muted },
+	hint: { sm: s.text.hint, xs: s.text.hint, md: s.text.hint }
+};
+export const layout = {
+	stack: s.stack,
+	inline: s.row,
+	flex: { center: s.center, start: 'flex items-center justify-start' },
+	grid: { cols: s.grid },
+	container: s.container
+};
 export const interactive = { hover: { subtle: s.hover } };

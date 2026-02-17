@@ -15,7 +15,9 @@
 	let cardType = $state<CardType>((flashcard.card_type as CardType) || 'standard');
 	let frontText = $state(flashcard.front_text || '');
 	let backText = $state(flashcard.back_text || '');
-	let options = $state<string[]>(flashcard.options ? JSON.parse(flashcard.options) : ['', '', '', '']);
+	let options = $state<string[]>(
+		flashcard.options ? JSON.parse(flashcard.options) : ['', '', '', '']
+	);
 	let correctOption = $state(flashcard.correct_option ?? 0);
 	let saving = $state(false);
 	let error = $state('');
@@ -23,10 +25,10 @@
 	const isStandardValid = $derived(frontText.trim().length > 0 && backText.trim().length > 0);
 	const isMultipleChoiceValid = $derived(
 		frontText.trim().length > 0 &&
-		options.filter(o => o.trim().length > 0).length >= 2 &&
-		correctOption >= 0 &&
-		correctOption < options.length &&
-		options[correctOption]?.trim().length > 0
+			options.filter((o) => o.trim().length > 0).length >= 2 &&
+			correctOption >= 0 &&
+			correctOption < options.length &&
+			options[correctOption]?.trim().length > 0
 	);
 	const isValid = $derived(cardType === 'standard' ? isStandardValid : isMultipleChoiceValid);
 
@@ -45,7 +47,7 @@
 			};
 
 			if (cardType === 'multiple_choice') {
-				cardData.options = JSON.stringify(options.filter(o => o.trim().length > 0));
+				cardData.options = JSON.stringify(options.filter((o) => o.trim().length > 0));
 				cardData.correct_option = correctOption;
 			}
 
@@ -81,14 +83,16 @@
 	}
 
 	function updateOption(index: number, value: string) {
-		options = options.map((o, i) => i === index ? value : o);
+		options = options.map((o, i) => (i === index ? value : o));
 	}
 </script>
 
 <div class="card p-6 space-y-4">
 	<!-- Header -->
 	<div class="flex items-center justify-between mb-2">
-		<h3 class="text-lg font-bold text-light-text-primary dark:text-dark-text-primary flex items-center gap-2">
+		<h3
+			class="text-lg font-bold text-light-text-primary dark:text-dark-text-primary flex items-center gap-2"
+		>
 			<Icon name="edit" size={20} className="text-accent-primary" />
 			{flashcard.id ? $_('flashcards.edit_card') : $_('flashcards.add_card')}
 		</h3>
@@ -106,9 +110,9 @@
 		<button
 			class="flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center justify-center gap-2
 				   {cardType === 'standard'
-				   	? 'bg-white dark:bg-dark-bg-secondary text-accent-primary shadow-sm'
-				   	: 'text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text-primary dark:hover:text-dark-text-primary'}"
-			onclick={() => cardType = 'standard'}
+				? 'bg-white dark:bg-dark-bg-secondary text-accent-primary shadow-sm'
+				: 'text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text-primary dark:hover:text-dark-text-primary'}"
+			onclick={() => (cardType = 'standard')}
 		>
 			<Icon name="file-text" size={16} />
 			{$_('flashcards.standard_card')}
@@ -116,9 +120,9 @@
 		<button
 			class="flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all flex items-center justify-center gap-2
 				   {cardType === 'multiple_choice'
-				   	? 'bg-white dark:bg-dark-bg-secondary text-accent-primary shadow-sm'
-				   	: 'text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text-primary dark:hover:text-dark-text-primary'}"
-			onclick={() => cardType = 'multiple_choice'}
+				? 'bg-white dark:bg-dark-bg-secondary text-accent-primary shadow-sm'
+				: 'text-light-text-secondary dark:text-dark-text-secondary hover:text-light-text-primary dark:hover:text-dark-text-primary'}"
+			onclick={() => (cardType = 'multiple_choice')}
 		>
 			<Icon name="list" size={16} />
 			{$_('flashcards.multiple_choice')}
@@ -127,7 +131,9 @@
 
 	<!-- Front Side / Question -->
 	<div>
-		<label class="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-2">
+		<label
+			class="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-2"
+		>
 			{$_('flashcards.front_question')}
 			<span class="text-red-500">*</span>
 		</label>
@@ -151,7 +157,9 @@
 	{#if cardType === 'standard'}
 		<!-- Back Side (Standard Card) -->
 		<div>
-			<label class="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-2">
+			<label
+				class="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-2"
+			>
 				{$_('flashcards.back_answer')}
 				<span class="text-red-500">*</span>
 			</label>
@@ -174,7 +182,9 @@
 	{:else}
 		<!-- Multiple Choice Options -->
 		<div>
-			<label class="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-2">
+			<label
+				class="block text-sm font-medium text-light-text-primary dark:text-dark-text-primary mb-2"
+			>
 				{$_('flashcards.options')}
 				<span class="text-red-500">*</span>
 				<span class="text-light-text-secondary dark:text-dark-text-secondary font-normal ml-2">
@@ -186,11 +196,11 @@
 					<div class="flex items-center gap-2">
 						<button
 							type="button"
-							onclick={() => correctOption = index}
+							onclick={() => (correctOption = index)}
 							class="w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all flex-shrink-0
 								   {correctOption === index
-								   	? 'border-green-500 bg-green-500 text-white'
-								   	: 'border-light-border-primary dark:border-dark-border-primary hover:border-green-400'}"
+								? 'border-green-500 bg-green-500 text-white'
+								: 'border-light-border-primary dark:border-dark-border-primary hover:border-green-400'}"
 							title={$_('flashcards.mark_correct')}
 						>
 							{#if correctOption === index}
@@ -238,7 +248,9 @@
 
 	<!-- Error Message -->
 	{#if error}
-		<div class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-3 rounded-lg text-sm flex items-center gap-2">
+		<div
+			class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 p-3 rounded-lg text-sm flex items-center gap-2"
+		>
 			<Icon name="alert" size={16} />
 			{error}
 		</div>
@@ -261,7 +273,9 @@
 	</div>
 
 	<!-- Keyboard Hints -->
-	<div class="text-xs text-light-text-secondary dark:text-dark-text-secondary text-center pt-2 border-t border-light-border-primary dark:border-dark-border-primary">
+	<div
+		class="text-xs text-light-text-secondary dark:text-dark-text-secondary text-center pt-2 border-t border-light-border-primary dark:border-dark-border-primary"
+	>
 		<span class="inline-flex items-center gap-1">
 			<kbd class="px-2 py-0.5 bg-light-bg-tertiary dark:bg-dark-bg-tertiary rounded">Ctrl</kbd> +
 			<kbd class="px-2 py-0.5 bg-light-bg-tertiary dark:bg-dark-bg-tertiary rounded">Enter</kbd>

@@ -76,10 +76,16 @@
 	}
 </script>
 
-<div class="min-h-screen flex items-center justify-center p-6 bg-light-bg dark:bg-dark-bg" in:fade={{ duration: 200 }}>
+<div
+	class="min-h-screen flex items-center justify-center p-6 bg-light-bg dark:bg-dark-bg"
+	in:fade={{ duration: 200 }}
+>
 	<div class="max-w-md w-full" use:slideInFrom={{ direction: 'bottom' }}>
 		<div class="text-center mb-8">
-			<div class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-accent-primary/10 rounded-full" use:fadeSlideIn>
+			<div
+				class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-accent-primary/10 rounded-full"
+				use:fadeSlideIn
+			>
 				{#if verifying}
 					<Icon name="loader" size={32} className="text-accent-primary animate-spin" />
 				{:else if success}
@@ -92,17 +98,26 @@
 			</div>
 
 			{#if verifying}
-				<h2 class="text-2xl font-bold mb-2 text-light-text-primary dark:text-dark-text-primary" use:fadeSlideIn={{ delay: 100 }}>
+				<h2
+					class="text-2xl font-bold mb-2 text-light-text-primary dark:text-dark-text-primary"
+					use:fadeSlideIn={{ delay: 100 }}
+				>
 					{$_('auth.verifying')}
 				</h2>
-				<p class="text-light-text-secondary dark:text-dark-text-secondary" use:fadeSlideIn={{ delay: 200 }}>
+				<p
+					class="text-light-text-secondary dark:text-dark-text-secondary"
+					use:fadeSlideIn={{ delay: 200 }}
+				>
 					{$_('auth.pleaseWait')}
 				</p>
 			{:else if success}
 				<h2 class="text-2xl font-bold mb-2 text-success" use:fadeSlideIn>
 					{$_('auth.verificationSuccess')}
 				</h2>
-				<p class="text-light-text-secondary dark:text-dark-text-secondary" use:fadeSlideIn={{ delay: 100 }}>
+				<p
+					class="text-light-text-secondary dark:text-dark-text-secondary"
+					use:fadeSlideIn={{ delay: 100 }}
+				>
 					{$_('auth.verificationSuccessMessage')}
 				</p>
 			{:else if error}
@@ -112,7 +127,10 @@
 				<p class="text-error mb-6" use:fadeSlideIn={{ delay: 100 }}>{error}</p>
 
 				<!-- Resend form -->
-				<div class="bg-light-card dark:bg-dark-card rounded-lg p-6 space-y-4 text-left" use:fadeSlideIn={{ delay: 200 }}>
+				<div
+					class="bg-light-card dark:bg-dark-card rounded-lg p-6 space-y-4 text-left"
+					use:fadeSlideIn={{ delay: 200 }}
+				>
 					<h3 class="text-lg font-semibold text-light-text-primary dark:text-dark-text-primary">
 						{$_('auth.resendVerification')}
 					</h3>
@@ -130,7 +148,10 @@
 					</Button>
 
 					<div class="text-center mt-4">
-						<a href="/login" class="text-accent-primary hover:text-accent-secondary transition-colors text-sm">
+						<a
+							href="/login"
+							class="text-accent-primary hover:text-accent-secondary transition-colors text-sm"
+						>
 							{$_('auth.backToLogin')}
 						</a>
 					</div>

@@ -25,7 +25,9 @@
 		</div>
 	</div>
 {:else}
-	<div class="min-h-screen flex items-center justify-center bg-light-bg-primary dark:bg-dark-bg-primary">
+	<div
+		class="min-h-screen flex items-center justify-center bg-light-bg-primary dark:bg-dark-bg-primary"
+	>
 		<div class="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-primary"></div>
 	</div>
 {/if}

@@ -35,18 +35,20 @@
 		avatarSize = 'sm'
 	}: Props = $props();
 
-	const displayName = $derived(anonymous ? anonymousLabel : (user?.display_name || user?.email || 'Unknown'));
+	const displayName = $derived(
+		anonymous ? anonymousLabel : user?.display_name || user?.email || 'Unknown'
+	);
 </script>
 
 <div class="flex-gap-2 {className}">
-	<Avatar
-		name={displayName}
-		{anonymous}
-		size={avatarSize}
-	/>
+	<Avatar name={displayName} {anonymous} size={avatarSize} />
 
 	<div class="flex flex-col">
-		<span class="text-sm font-medium {anonymous ? 'text-adaptive-tertiary italic' : 'text-adaptive-primary'}">
+		<span
+			class="text-sm font-medium {anonymous
+				? 'text-adaptive-tertiary italic'
+				: 'text-adaptive-primary'}"
+		>
 			{displayName}
 		</span>
 

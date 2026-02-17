@@ -25,7 +25,9 @@
 
 	// Fetch document types for current subject
 	async function fetchDocumentTypes() {
-		const { data, error } = await api.get<{ success: boolean; data: DocumentType[] }>(`/api/v1/subjects/${subjectId}/types`);
+		const { data, error } = await api.get<{ success: boolean; data: DocumentType[] }>(
+			`/api/v1/subjects/${subjectId}/types`
+		);
 		if (!error && data?.data) {
 			documentTypes = data.data.sort((a, b) => a.order_index - b.order_index);
 			// Auto-select first type
@@ -37,7 +39,9 @@
 
 	// Fetch categories for current subject
 	async function fetchCategories() {
-		const { data, error } = await api.get<{ success: boolean; data: DocumentCategory[] }>(`/api/v1/subjects/${subjectId}/categories`);
+		const { data, error } = await api.get<{ success: boolean; data: DocumentCategory[] }>(
+			`/api/v1/subjects/${subjectId}/categories`
+		);
 		if (!error && data?.data) {
 			categories = data.data;
 			// Auto-select first category for current type
@@ -47,7 +51,7 @@
 
 	function updateSelectedCategory() {
 		if (!selectedTypeId) return;
-		const typeCategories = categories.filter(cat => cat.type_id === selectedTypeId);
+		const typeCategories = categories.filter((cat) => cat.type_id === selectedTypeId);
 		if (typeCategories.length > 0) {
 			selectedCategoryId = typeCategories[0].id;
 		} else {
@@ -127,7 +131,9 @@
 
 	// Filter categories by current type
 	const filteredCategories = $derived(
-		categories.filter(cat => cat.type_id === selectedTypeId).sort((a, b) => a.order_index - b.order_index)
+		categories
+			.filter((cat) => cat.type_id === selectedTypeId)
+			.sort((a, b) => a.order_index - b.order_index)
 	);
 </script>
 
@@ -153,7 +159,7 @@
 
 	<div class="flex flex-col items-center gap-3">
 		<div class="p-3 bg-base-200 rounded-full text-primary">
-            <Icon name="upload" size={24} />
+			<Icon name="upload" size={24} />
 		</div>
 
 		<div>
@@ -212,12 +218,7 @@
 		{/if}
 
 		<!-- Pass onclick as a prop to Button, as Button.svelte uses $props() and expects onclick prop -->
-		<Button
-			variant="primary"
-			size="sm"
-			disabled={uploading}
-			onclick={() => fileInput.click()}
-		>
+		<Button variant="primary" size="sm" disabled={uploading} onclick={() => fileInput.click()}>
 			{$t('common.upload')}
 		</Button>
 	</div>

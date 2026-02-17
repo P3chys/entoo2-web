@@ -110,11 +110,7 @@
 		<div class="flex flex-col items-center justify-center min-h-[500px]" use:fadeSlideIn>
 			<div class="card p-8 max-w-2xl w-full text-center">
 				<div class="mb-6">
-					<Icon
-						name="award"
-						size={64}
-						className="text-accent-primary mx-auto mb-4"
-					/>
+					<Icon name="award" size={64} className="text-accent-primary mx-auto mb-4" />
 					<h1 class="text-3xl font-bold text-light-text-primary dark:text-dark-text-primary mb-2">
 						{$_('flashcards.study_complete')}
 					</h1>

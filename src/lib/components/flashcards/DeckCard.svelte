@@ -22,7 +22,7 @@
 
 <div
 	class="card p-6 hover:shadow-xl transition-all duration-300 cursor-pointer group"
-	onclick={onclick}
+	{onclick}
 	use:hoverScale
 	role="button"
 	tabindex="0"
@@ -30,7 +30,9 @@
 	<!-- Subject Badge -->
 	{#if deck.subject}
 		<div class="mb-3">
-			<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-accent-primary/10 text-accent-primary text-sm font-medium rounded-full">
+			<span
+				class="inline-flex items-center gap-1.5 px-3 py-1 bg-accent-primary/10 text-accent-primary text-sm font-medium rounded-full"
+			>
 				<Icon name="book" size={14} />
 				{deck.subject.name_cs}
 			</span>
@@ -40,7 +42,9 @@
 	<!-- Header -->
 	<div class="flex justify-between items-start mb-3">
 		<div class="flex-1 pr-4">
-			<h3 class="font-bold text-xl text-light-text-primary dark:text-dark-text-primary group-hover:text-accent-primary transition-colors">
+			<h3
+				class="font-bold text-xl text-light-text-primary dark:text-dark-text-primary group-hover:text-accent-primary transition-colors"
+			>
 				{deck.title}
 			</h3>
 			{#if deck.creator}
@@ -82,7 +86,11 @@
 					{#if deck.is_favorite}
 						<Icon name="star" size={24} className="text-yellow-400 fill-yellow-400" />
 					{:else}
-						<Icon name="star" size={24} className="text-light-text-secondary dark:text-dark-text-secondary hover:text-yellow-400 transition-colors" />
+						<Icon
+							name="star"
+							size={24}
+							className="text-light-text-secondary dark:text-dark-text-secondary hover:text-yellow-400 transition-colors"
+						/>
 					{/if}
 				</button>
 			{/if}
@@ -101,7 +109,9 @@
 		<span class="flex items-center gap-1.5">
 			<Icon name="layers" size={16} className="text-accent-primary" />
 			<span class="font-medium">{deck.card_count}</span>
-			<span class="text-light-text-secondary dark:text-dark-text-secondary">{$_('flashcards.cards')}</span>
+			<span class="text-light-text-secondary dark:text-dark-text-secondary"
+				>{$_('flashcards.cards')}</span
+			>
 		</span>
 
 		{#if progress && progress.cards_due_today > 0}
@@ -123,7 +133,9 @@
 	<!-- Progress Bar -->
 	{#if progress && progress.total_cards > 0}
 		<div class="space-y-2">
-			<div class="flex justify-between text-xs text-light-text-secondary dark:text-dark-text-secondary">
+			<div
+				class="flex justify-between text-xs text-light-text-secondary dark:text-dark-text-secondary"
+			>
 				<span>{$_('flashcards.progress')}</span>
 				<span>{masteredPercent}%</span>
 			</div>
@@ -136,7 +148,9 @@
 			<div class="flex justify-between text-xs">
 				<span class="text-green-500">{progress.mastered_cards} {$_('flashcards.mastered')}</span>
 				<span class="text-blue-500">{progress.learning_cards} {$_('flashcards.learning')}</span>
-				<span class="text-light-text-secondary dark:text-dark-text-secondary">{progress.new_cards} {$_('flashcards.new')}</span>
+				<span class="text-light-text-secondary dark:text-dark-text-secondary"
+					>{progress.new_cards} {$_('flashcards.new')}</span
+				>
 			</div>
 		</div>
 	{/if}

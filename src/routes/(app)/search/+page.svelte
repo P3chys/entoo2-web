@@ -63,8 +63,8 @@
 			subjectCount = 0;
 		} else if (data?.success && data.data) {
 			// Handle new response format with separate documents and subjects
-			const docs = data.data.documents as unknown as MeilisearchHit[] || [];
-			const subs = data.data.subjects as unknown as MeilisearchHit[] || [];
+			const docs = (data.data.documents as unknown as MeilisearchHit[]) || [];
+			const subs = (data.data.subjects as unknown as MeilisearchHit[]) || [];
 
 			documentResults = docs.map(transformMeilisearchHit);
 			subjectResults = subs.map(transformMeilisearchHit);
@@ -238,10 +238,16 @@
 
 		<!-- Advanced Filters -->
 		{#if showAdvancedFilters}
-			<div class="flex flex-wrap gap-4 items-center p-4 rounded-lg bg-light-bg-secondary dark:bg-dark-bg-secondary border border-light-border-primary dark:border-dark-border-primary" in:fade={{ duration: 200 }}>
+			<div
+				class="flex flex-wrap gap-4 items-center p-4 rounded-lg bg-light-bg-secondary dark:bg-dark-bg-secondary border border-light-border-primary dark:border-dark-border-primary"
+				in:fade={{ duration: 200 }}
+			>
 				<!-- Subject Filter -->
 				<div class="flex flex-col gap-1">
-					<label for="subject-filter" class="text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary">
+					<label
+						for="subject-filter"
+						class="text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary"
+					>
 						Subject
 					</label>
 					<select
@@ -260,7 +266,10 @@
 				<!-- File Type Filter -->
 				{#if typeFilter === 'all' || typeFilter === 'documents'}
 					<div class="flex flex-col gap-1">
-						<label for="mime-filter" class="text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary">
+						<label
+							for="mime-filter"
+							class="text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary"
+						>
 							File Type
 						</label>
 						<select
@@ -271,7 +280,8 @@
 						>
 							{#each FILE_TYPE_FILTERS as filter}
 								<option value={filter.mimeType}>
-									{filter.icon} {filter.label}
+									{filter.icon}
+									{filter.label}
 								</option>
 							{/each}
 						</select>
@@ -280,7 +290,10 @@
 
 				<!-- Exact Match Toggle -->
 				<div class="flex flex-col gap-1">
-					<label for="exact-match" class="text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary">
+					<label
+						for="exact-match"
+						class="text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary"
+					>
 						Search Mode
 					</label>
 					<button
@@ -344,7 +357,9 @@
 			<div class="flex items-center justify-between" use:bounceIn>
 				<p class="text-sm text-light-text-secondary dark:text-dark-text-secondary font-medium">
 					<Icon name="check" size={16} className="inline text-success" />
-					{$_('search.found')}{filteredResults.length}{filteredResults.length === 1 ? $_('search.result') : $_('search.results_plural')}
+					{$_('search.found')}{filteredResults.length}{filteredResults.length === 1
+						? $_('search.result')
+						: $_('search.results_plural')}
 				</p>
 			</div>
 

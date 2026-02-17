@@ -31,13 +31,24 @@
 	let selectedTypeId = $state<string | null>(null);
 	let categoryFormNameCS = $state('');
 
-	const iconOptions = ['folder', 'book-open', 'users', 'file-text', 'clipboard', 'archive', 'layers', 'bookmark'];
+	const iconOptions = [
+		'folder',
+		'book-open',
+		'users',
+		'file-text',
+		'clipboard',
+		'archive',
+		'layers',
+		'bookmark'
+	];
 
 	async function fetchData() {
 		loading = true;
 		const [typesRes, categoriesRes] = await Promise.all([
 			api.get<{ success: boolean; data: DocumentType[] }>(`/api/v1/subjects/${subjectId}/types`),
-			api.get<{ success: boolean; data: DocumentCategory[] }>(`/api/v1/subjects/${subjectId}/categories`)
+			api.get<{ success: boolean; data: DocumentCategory[] }>(
+				`/api/v1/subjects/${subjectId}/categories`
+			)
 		]);
 
 		if (!typesRes.error && typesRes.data?.data) {
@@ -178,7 +189,9 @@
 	}
 
 	function getCategoriesForType(typeId: string) {
-		return categories.filter(c => c.type_id === typeId).sort((a, b) => a.order_index - b.order_index);
+		return categories
+			.filter((c) => c.type_id === typeId)
+			.sort((a, b) => a.order_index - b.order_index);
 	}
 
 	const isUnassigned = (category: DocumentCategory) => category.name_cs === 'Nepřiřazeno';
@@ -190,9 +203,11 @@
 	});
 </script>
 
-<Modal isOpen={isOpen} onClose={onClose} maxWidth="5xl">
+<Modal {isOpen} {onClose} maxWidth="5xl">
 	<!-- Header -->
-	<div class="flex items-center justify-between pb-4 mb-4 border-b border-surface-200 dark:border-surface-700">
+	<div
+		class="flex items-center justify-between pb-4 mb-4 border-b border-surface-200 dark:border-surface-700"
+	>
 		<h2 class="text-2xl font-bold">{$_('documents.manageTypesAndCategories')}</h2>
 		<button class="btn btn-ghost btn-sm btn-circle" onclick={onClose} type="button">
 			<Icon name="x" size={20} />
@@ -212,7 +227,7 @@
 						{$_('documents.documentTypes')}
 					</h3>
 					{#if !showCreateTypeForm && !editingType}
-						<Button variant="primary" size="sm" onclick={() => showCreateTypeForm = true}>
+						<Button variant="primary" size="sm" onclick={() => (showCreateTypeForm = true)}>
 							<Icon name="plus" size={16} />
 							{$_('documents.createType')}
 						</Button>
@@ -221,7 +236,9 @@
 
 				<!-- Create/Edit Type Form -->
 				{#if showCreateTypeForm || editingType}
-					<div class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 mb-4 bg-surface-100 dark:bg-surface-900">
+					<div
+						class="border border-surface-200 dark:border-surface-700 rounded-lg p-4 mb-4 bg-surface-100 dark:bg-surface-900"
+					>
 						<h4 class="font-semibold mb-3">
 							{editingType ? $_('documents.editType') : $_('documents.createType')}
 						</h4>
@@ -258,7 +275,9 @@
 				<!-- Types List with Categories -->
 				<div class="space-y-4">
 					{#each documentTypes as docType (docType.id)}
-						<div class="border border-surface-200 dark:border-surface-700 rounded-lg overflow-hidden">
+						<div
+							class="border border-surface-200 dark:border-surface-700 rounded-lg overflow-hidden"
+						>
 							<!-- Type Header -->
 							<div class="flex items-center justify-between p-3 bg-surface-100 dark:bg-surface-800">
 								<div class="flex items-center gap-3">
@@ -268,15 +287,15 @@
 								<div class="flex gap-2">
 									<button
 										class="btn btn-ghost btn-xs"
-										onclick={() => { selectedTypeId = docType.id; showCreateCategoryForm = true; }}
+										onclick={() => {
+											selectedTypeId = docType.id;
+											showCreateCategoryForm = true;
+										}}
 										title={$_('documents.addCategory')}
 									>
 										<Icon name="folder-plus" size={16} />
 									</button>
-									<button
-										class="btn btn-ghost btn-xs"
-										onclick={() => startEditType(docType)}
-									>
+									<button class="btn btn-ghost btn-xs" onclick={() => startEditType(docType)}>
 										<Icon name="edit" size={16} />
 									</button>
 									<button
@@ -291,7 +310,9 @@
 							<!-- Categories for this Type -->
 							<div class="p-3 space-y-2">
 								{#each getCategoriesForType(docType.id) as category (category.id)}
-									<div class="flex items-center justify-between p-2 bg-surface-50 dark:bg-surface-900 rounded">
+									<div
+										class="flex items-center justify-between p-2 bg-surface-50 dark:bg-surface-900 rounded"
+									>
 										<span class={isUnassigned(category) ? 'italic text-surface-500' : ''}>
 											{category.name_cs}
 										</span>
@@ -329,8 +350,14 @@
 
 			<!-- Create Category Modal Form -->
 			{#if showCreateCategoryForm || editingCategory}
-				<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onclick={resetCategoryForm}>
-					<div class="bg-surface-50 dark:bg-surface-800 rounded-lg p-6 max-w-md w-full mx-4" onclick={(e) => e.stopPropagation()}>
+				<div
+					class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+					onclick={resetCategoryForm}
+				>
+					<div
+						class="bg-surface-50 dark:bg-surface-800 rounded-lg p-6 max-w-md w-full mx-4"
+						onclick={(e) => e.stopPropagation()}
+					>
 						<h4 class="font-semibold mb-4">
 							{editingCategory ? $_('documents.editCategory') : $_('documents.createCategory')}
 						</h4>
@@ -349,7 +376,11 @@
 							<Button variant="ghost" size="sm" onclick={resetCategoryForm}>
 								{$_('common.cancel')}
 							</Button>
-							<Button variant="primary" size="sm" onclick={editingCategory ? updateCategory : createCategory}>
+							<Button
+								variant="primary"
+								size="sm"
+								onclick={editingCategory ? updateCategory : createCategory}
+							>
 								{editingCategory ? $_('common.save') : $_('common.create')}
 							</Button>
 						</div>

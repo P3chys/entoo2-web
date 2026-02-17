@@ -49,7 +49,7 @@
 		disabled={disabled || loading}
 		aria-busy={loading}
 		aria-label={ariaLabel || undefined}
-		onclick={onclick}
+		{onclick}
 		use:rippleEffect
 		use:clickPulse
 		use:hoverScale
@@ -63,7 +63,14 @@
 					fill="none"
 					viewBox="0 0 24 24"
 				>
-					<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+					<circle
+						class="opacity-25"
+						cx="12"
+						cy="12"
+						r="10"
+						stroke="currentColor"
+						stroke-width="4"
+					/>
 					<path
 						class="opacity-75"
 						fill="currentColor"

@@ -45,7 +45,10 @@ function createAuthStore() {
 		async login(credentials: LoginRequest) {
 			update((state) => ({ ...state, loading: true }));
 
-			const { data, error } = await api.post<{ success: boolean; data: AuthResponse }>('/api/v1/auth/login', credentials);
+			const { data, error } = await api.post<{ success: boolean; data: AuthResponse }>(
+				'/api/v1/auth/login',
+				credentials
+			);
 
 			if (error || !data || !data.success) {
 				update((state) => ({ ...state, loading: false }));
@@ -62,11 +65,16 @@ function createAuthStore() {
 		async register(credentials: RegisterRequest) {
 			update((state) => ({ ...state, loading: true }));
 
-			const { data, error } = await api.post<{ success: boolean; data: AuthResponse }>('/api/v1/auth/register', credentials);
+			const { data, error } = await api.post<{ success: boolean; data: AuthResponse }>(
+				'/api/v1/auth/register',
+				credentials
+			);
 
 			if (error || !data || !data.success) {
 				update((state) => ({ ...state, loading: false }));
-				return { error: error || { error: 'Unknown error', message: 'Registration failed', status: 500 } };
+				return {
+					error: error || { error: 'Unknown error', message: 'Registration failed', status: 500 }
+				};
 			}
 
 			const authData = data.data;

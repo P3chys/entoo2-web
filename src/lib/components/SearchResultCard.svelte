@@ -11,7 +11,8 @@
 
 	let { result, query = '' }: Props = $props();
 
-	const sanitize = (html: string) => DOMPurify.sanitize(html, { ALLOWED_TAGS: ['mark', 'em', 'strong', 'b', 'i', 'p', 'br'] });
+	const sanitize = (html: string) =>
+		DOMPurify.sanitize(html, { ALLOWED_TAGS: ['mark', 'em', 'strong', 'b', 'i', 'p', 'br'] });
 
 	const isDocument = $derived(result.type === 'document');
 	const href = $derived(isDocument ? `/subjects/${result.subject_id}` : `/subjects/${result.id}`);
@@ -43,9 +44,7 @@
 			<div
 				class="flex items-center gap-2 text-xs text-light-text-tertiary dark:text-dark-text-tertiary mt-1"
 			>
-				<span
-					class="px-2 py-0.5 rounded bg-accent-primary/10 text-accent-primary font-medium"
-				>
+				<span class="px-2 py-0.5 rounded bg-accent-primary/10 text-accent-primary font-medium">
 					{isDocument ? $_('documents.title') : $_('subjects.title')}
 				</span>
 
@@ -83,12 +82,7 @@
 			stroke="currentColor"
 			viewBox="0 0 24 24"
 		>
-			<path
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				d="M9 5l7 7-7 7"
-			/>
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
 		</svg>
 	</div>
 </a>

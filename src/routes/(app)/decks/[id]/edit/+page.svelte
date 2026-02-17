@@ -129,8 +129,14 @@
 					>
 						{$_('flashcards.deck_title')} <span class="text-red-500">*</span>
 					</label>
-					<Input bind:value={title} placeholder={$_('flashcards.deck_title_placeholder')} maxlength={200} />
-					<div class="text-xs text-light-text-secondary dark:text-dark-text-secondary mt-1 text-right">
+					<Input
+						bind:value={title}
+						placeholder={$_('flashcards.deck_title_placeholder')}
+						maxlength={200}
+					/>
+					<div
+						class="text-xs text-light-text-secondary dark:text-dark-text-secondary mt-1 text-right"
+					>
 						{title.length} / 200
 					</div>
 				</div>
@@ -182,7 +188,9 @@
 				{/if}
 
 				<!-- Actions -->
-				<div class="flex gap-3 justify-end pt-4 border-t border-light-border-primary dark:border-dark-border-primary">
+				<div
+					class="flex gap-3 justify-end pt-4 border-t border-light-border-primary dark:border-dark-border-primary"
+				>
 					<Button variant="ghost" onclick={handleCancel} disabled={saving}>
 						{$_('common.cancel')}
 					</Button>

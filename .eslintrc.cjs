@@ -18,6 +18,14 @@ module.exports = {
 		es2017: true,
 		node: true
 	},
+	rules: {
+		'@typescript-eslint/no-explicit-any': 'warn',
+		'@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+		'@typescript-eslint/ban-ts-comment': 'warn',
+		'prefer-const': 'warn',
+		'svelte/no-at-html-tags': 'warn',
+		'svelte/valid-compile': 'warn'
+	},
 	overrides: [
 		{
 			files: ['*.svelte'],
