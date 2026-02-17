@@ -16,12 +16,37 @@ if (browser) {
 export class ApiClient {
 	private baseUrl: string;
 	private token: string | null = null;
+	private isRefreshing: boolean = false;
+	private readonly REQUEST_TIMEOUT = 30000; // 30 seconds
 
 	constructor(baseUrl: string = API_URL) {
 		this.baseUrl = baseUrl;
 		if (browser) {
 			this.token = localStorage.getItem('access_token');
 		}
+	}
+
+	private async refreshToken(): Promise<boolean> {
+		if (this.isRefreshing) {
+			return false;
+		}
+		this.isRefreshing = true;
+		try {
+			const response = await fetch(`${this.baseUrl}/api/v1/auth/refresh`, {
+				method: 'POST',
+				credentials: 'include',
+			});
+			if (response.ok) {
+				const data = await response.json();
+				this.setToken(data.data.access_token);
+				return true;
+			}
+		} catch (e) {
+			// Refresh failed
+		} finally {
+			this.isRefreshing = false;
+		}
+		return false;
 	}
 
 	setToken(token: string | null) {
@@ -41,7 +66,8 @@ export class ApiClient {
 
 	private async request<T>(
 		endpoint: string,
-		options: RequestInit = {}
+		options: RequestInit = {},
+		isRetry: boolean = false
 	): Promise<{ data?: T; error?: ApiError }> {
 		const headers: any = {
 			'Content-Type': 'application/json',
@@ -52,11 +78,18 @@ export class ApiClient {
 			headers['Authorization'] = `Bearer ${this.token}`;
 		}
 
+		// Create AbortController for timeout
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), this.REQUEST_TIMEOUT);
+
 		try {
 			const response = await fetch(`${this.baseUrl}${endpoint}`, {
 				...options,
-				headers
+				headers,
+				signal: controller.signal
 			});
+
+			clearTimeout(timeoutId);
 
 			const text = await response.text();
 			let data;
@@ -73,6 +106,15 @@ export class ApiClient {
 			}
 
 			if (!response.ok) {
+				// Handle 401 with token refresh (only if not already a retry)
+				if (response.status === 401 && !isRetry && this.token) {
+					const refreshed = await this.refreshToken();
+					if (refreshed) {
+						// Retry the original request
+						return this.request<T>(endpoint, options, true);
+					}
+				}
+
 				// Handle nested error object from backend (e.g., { error: { code: "...", message: "..." } })
 				const errorObj = typeof data.error === 'object' && data.error !== null ? data.error : {};
 				const errorCode = errorObj.code || data.error || 'Unknown error';
@@ -90,6 +132,19 @@ export class ApiClient {
 
 			return { data };
 		} catch (error) {
+			clearTimeout(timeoutId);
+
+			// Handle timeout specifically
+			if (error instanceof Error && error.name === 'AbortError') {
+				return {
+					error: {
+						error: 'Timeout',
+						message: 'Request timed out after 30 seconds',
+						status: 0
+					}
+				};
+			}
+
 			return {
 				error: {
 					error: 'Network error',
@@ -141,23 +196,40 @@ export class ApiClient {
 
 	async postFormData<T>(
 		endpoint: string,
-		formData: FormData
+		formData: FormData,
+		isRetry: boolean = false
 	): Promise<{ data?: T; error?: ApiError }> {
 		const headers: Record<string, string> = {};
 		if (this.token) {
 			headers['Authorization'] = `Bearer ${this.token}`;
 		}
 
+		// Create AbortController for timeout
+		const controller = new AbortController();
+		const timeoutId = setTimeout(() => controller.abort(), this.REQUEST_TIMEOUT);
+
 		try {
 			const response = await fetch(`${this.baseUrl}${endpoint}`, {
 				method: 'POST',
 				headers,
-				body: formData
+				body: formData,
+				signal: controller.signal
 			});
+
+			clearTimeout(timeoutId);
 
 			const data = await response.json();
 
 			if (!response.ok) {
+				// Handle 401 with token refresh (only if not already a retry)
+				if (response.status === 401 && !isRetry && this.token) {
+					const refreshed = await this.refreshToken();
+					if (refreshed) {
+						// Retry the original request
+						return this.postFormData<T>(endpoint, formData, true);
+					}
+				}
+
 				// Handle nested error object from backend (e.g., { error: { code: "...", message: "..." } })
 				const errorObj = typeof data.error === 'object' && data.error !== null ? data.error : {};
 				const errorCode = errorObj.code || data.error || 'Unknown error';
@@ -175,6 +247,19 @@ export class ApiClient {
 
 			return { data };
 		} catch (error) {
+			clearTimeout(timeoutId);
+
+			// Handle timeout specifically
+			if (error instanceof Error && error.name === 'AbortError') {
+				return {
+					error: {
+						error: 'Timeout',
+						message: 'Request timed out after 30 seconds',
+						status: 0
+					}
+				};
+			}
+
 			return {
 				error: {
 					error: 'Network error',

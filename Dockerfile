@@ -18,6 +18,9 @@ RUN npm run build
 # Production stage
 FROM node:20-alpine
 
+# Create non-root user
+RUN adduser -D -u 1001 appuser
+
 WORKDIR /app
 
 # Copy package files
@@ -28,6 +31,10 @@ RUN npm install --omit=dev
 
 # Copy built application from builder
 COPY --from=builder /app/build ./build
+
+RUN chown -R appuser:appuser /app
+
+USER appuser
 
 # Expose port
 EXPOSE 3000

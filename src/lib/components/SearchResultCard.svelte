@@ -2,6 +2,7 @@
 	import { _ } from 'svelte-i18n';
 	import type { SearchResult } from '$types';
 	import { formatFileSize, getFileTypeIcon, getFileTypeName } from '$lib/utils/search';
+	import DOMPurify from 'dompurify';
 
 	interface Props {
 		result: SearchResult;
@@ -9,6 +10,8 @@
 	}
 
 	let { result, query = '' }: Props = $props();
+
+	const sanitize = (html: string) => DOMPurify.sanitize(html, { ALLOWED_TAGS: ['mark', 'em', 'strong', 'b', 'i', 'p', 'br'] });
 
 	const isDocument = $derived(result.type === 'document');
 	const href = $derived(isDocument ? `/subjects/${result.subject_id}` : `/subjects/${result.id}`);
@@ -33,7 +36,7 @@
 		<div class="flex-1 min-w-0">
 			<!-- Title -->
 			<h3 class="font-medium text-light-text-primary dark:text-dark-text-primary truncate">
-				{@html displayTitle}
+				{@html sanitize(displayTitle)}
 			</h3>
 
 			<!-- Metadata -->
@@ -68,7 +71,7 @@
 				<p
 					class="text-sm text-light-text-secondary dark:text-dark-text-secondary mt-2 line-clamp-2"
 				>
-					{@html result.highlight || result.description}
+					{@html sanitize(result.highlight || result.description || '')}
 				</p>
 			{/if}
 		</div>
