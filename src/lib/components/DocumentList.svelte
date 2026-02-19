@@ -152,6 +152,32 @@
 			previewDocument = doc;
 		}
 	};
+
+	const editCategory = async (categoryId: string) => {
+		const category = categories.find((c) => c.id === categoryId);
+		if (!category) return;
+
+		const newName = prompt($t('documents.editCategory'), category.name_cs);
+		if (!newName || newName === category.name_cs) return;
+
+		const { error } = await api.put(`/api/v1/admin/categories/${categoryId}`, {
+			name_cs: newName
+		});
+		if (!error) {
+			await fetchCategories();
+			onRefresh();
+		}
+	};
+
+	const deleteCategory = async (categoryId: string) => {
+		if (!confirm($t('documents.confirmDeleteCategory'))) return;
+
+		const { error } = await api.delete(`/api/v1/admin/categories/${categoryId}`);
+		if (!error) {
+			await fetchCategories();
+			onRefresh();
+		}
+	};
 </script>
 
 <div class="space-y-4">
@@ -192,6 +218,8 @@
 					documents={categoryDocs}
 					{currentUserId}
 					{isAdmin}
+					onEdit={editCategory}
+					onDelete={deleteCategory}
 					onDocumentDelete={deleteDocument}
 					onDocumentFavorite={toggleFavorite}
 					onDocumentPreview={handlePreview}
