@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
+	import { env } from '$env/dynamic/public';
 	import Button from '$components/Button.svelte';
 	import Icon from '$components/Icon.svelte';
 	import Input from '$components/Input.svelte';
 	import { fade } from 'svelte/transition';
 	import { slideInFrom, fadeSlideIn } from '$lib/utils/animation';
+
+	const apiUrl = env.PUBLIC_API_URL || '';
 
 	let resending = $state(false);
 	let email = $state('');
@@ -21,7 +24,7 @@
 		successMessage = '';
 
 		try {
-			const response = await fetch('/api/v1/auth/verify-email/request', {
+			const response = await fetch(`${apiUrl}/api/v1/auth/verify-email/request`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ email })

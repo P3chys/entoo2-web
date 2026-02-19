@@ -3,11 +3,14 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { env } from '$env/dynamic/public';
 	import Button from '$components/Button.svelte';
 	import Icon from '$components/Icon.svelte';
 	import Input from '$components/Input.svelte';
 	import { fade } from 'svelte/transition';
 	import { slideInFrom, fadeSlideIn } from '$lib/utils/animation';
+
+	const apiUrl = env.PUBLIC_API_URL || '';
 
 	// Get token from URL path parameter
 	let token = $state($page.params.token || '');
@@ -28,7 +31,7 @@
 		error = '';
 
 		try {
-			const response = await fetch(`/api/v1/auth/verify-email/${token}`);
+			const response = await fetch(`${apiUrl}/api/v1/auth/verify-email/${token}`);
 			const data = await response.json();
 
 			verifying = false;
@@ -53,7 +56,7 @@
 		error = '';
 
 		try {
-			const response = await fetch('/api/v1/auth/verify-email/request', {
+			const response = await fetch(`${apiUrl}/api/v1/auth/verify-email/request`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ email })

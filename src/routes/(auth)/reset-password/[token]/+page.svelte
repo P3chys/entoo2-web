@@ -2,6 +2,7 @@
 	import { _ } from 'svelte-i18n';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { env } from '$env/dynamic/public';
 	import { onMount } from 'svelte';
 	import Button from '$components/Button.svelte';
 	import Icon from '$components/Icon.svelte';
@@ -9,6 +10,7 @@
 	import { fade } from 'svelte/transition';
 	import { slideInFrom, fadeSlideIn, shake } from '$lib/utils/animation';
 
+	const apiUrl = env.PUBLIC_API_URL || '';
 	let token = $state($page.params.token);
 	let password = $state('');
 	let confirmPassword = $state('');
@@ -30,7 +32,7 @@
 		validatingToken = true;
 
 		try {
-			const response = await fetch(`/api/v1/auth/password-reset/verify/${token}`);
+			const response = await fetch(`${apiUrl}/api/v1/auth/password-reset/verify/${token}`);
 			const data = await response.json();
 
 			validatingToken = false;
@@ -83,7 +85,7 @@
 		generalError = '';
 
 		try {
-			const response = await fetch('/api/v1/auth/password-reset/confirm', {
+			const response = await fetch(`${apiUrl}/api/v1/auth/password-reset/confirm`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({

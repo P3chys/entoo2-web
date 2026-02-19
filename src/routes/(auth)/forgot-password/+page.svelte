@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
+	import { env } from '$env/dynamic/public';
 	import Button from '$components/Button.svelte';
 	import Icon from '$components/Icon.svelte';
 	import Input from '$components/Input.svelte';
 	import { fade } from 'svelte/transition';
 	import { slideInFrom, fadeSlideIn, shake } from '$lib/utils/animation';
 
+	const apiUrl = env.PUBLIC_API_URL || '';
 	let email = $state('');
 	let loading = $state(false);
 	let success = $state(false);
@@ -43,7 +45,7 @@
 		error = '';
 
 		try {
-			const response = await fetch('/api/v1/auth/password-reset/request', {
+			const response = await fetch(`${apiUrl}/api/v1/auth/password-reset/request`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ email })

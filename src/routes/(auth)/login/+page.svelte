@@ -1,12 +1,15 @@
 <script lang="ts">
 	import { _ } from 'svelte-i18n';
 	import { goto } from '$app/navigation';
+	import { env } from '$env/dynamic/public';
 	import { authStore } from '$stores/auth';
 	import Input from '$components/Input.svelte';
 	import Button from '$components/Button.svelte';
 	import Icon from '$components/Icon.svelte';
 	import { fade } from 'svelte/transition';
 	import { slideInFrom, fadeSlideIn, staggerFadeIn, shake } from '$lib/utils/animation';
+
+	const apiUrl = env.PUBLIC_API_URL || '';
 
 	let email = $state('');
 	let password = $state('');
@@ -76,7 +79,7 @@
 		generalError = '';
 
 		try {
-			const response = await fetch('/api/v1/auth/verify-email/request', {
+			const response = await fetch(`${apiUrl}/api/v1/auth/verify-email/request`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ email })
