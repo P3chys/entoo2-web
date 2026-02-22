@@ -18,6 +18,7 @@ export class ApiClient {
 	private token: string | null = null;
 	private isRefreshing: boolean = false;
 	private readonly REQUEST_TIMEOUT = 30000; // 30 seconds
+	private readonly UPLOAD_TIMEOUT = 120000; // 2 minutes for file uploads
 
 	constructor(baseUrl: string = API_URL) {
 		this.baseUrl = baseUrl;
@@ -204,9 +205,9 @@ export class ApiClient {
 			headers['Authorization'] = `Bearer ${this.token}`;
 		}
 
-		// Create AbortController for timeout
+		// Create AbortController for timeout (longer timeout for uploads)
 		const controller = new AbortController();
-		const timeoutId = setTimeout(() => controller.abort(), this.REQUEST_TIMEOUT);
+		const timeoutId = setTimeout(() => controller.abort(), this.UPLOAD_TIMEOUT);
 
 		try {
 			const response = await fetch(`${this.baseUrl}${endpoint}`, {
@@ -218,7 +219,20 @@ export class ApiClient {
 
 			clearTimeout(timeoutId);
 
-			const data = await response.json();
+			// Safe JSON parsing — response may be empty or non-JSON (e.g. proxy errors)
+			const text = await response.text();
+			let data;
+			try {
+				data = text ? JSON.parse(text) : {};
+			} catch {
+				return {
+					error: {
+						error: 'Server Error',
+						message: text || `Server returned ${response.status}`,
+						status: response.status
+					}
+				};
+			}
 
 			if (!response.ok) {
 				// Handle 401 with token refresh (only if not already a retry)
@@ -254,7 +268,7 @@ export class ApiClient {
 				return {
 					error: {
 						error: 'Timeout',
-						message: 'Request timed out after 30 seconds',
+						message: 'Upload timed out. The file may be too large or the connection too slow.',
 						status: 0
 					}
 				};
