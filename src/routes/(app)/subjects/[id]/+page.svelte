@@ -16,6 +16,7 @@
 	import Button from '$lib/components/Button.svelte';
 	import StarRating from '$lib/components/StarRating.svelte';
 	import { fadeSlideIn, slideInFrom, staggerFadeIn, bounceIn } from '$lib/utils/animation';
+	import { toasts } from '$stores/toast';
 	import type { Subject, Document } from '$types';
 
 	let subject: Subject | null = $state(null);
@@ -55,7 +56,7 @@
 	}
 
 	function handleUploadError(msg: string) {
-		alert(msg);
+		toasts.error(msg);
 	}
 
 	function handleDelete(docId: string) {

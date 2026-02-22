@@ -110,14 +110,18 @@
 				continue;
 			}
 
+			const additionalData: Record<string, string> = {};
+			if (selectedTypeId) additionalData.type_id = selectedTypeId;
+			if (selectedCategoryId) additionalData.category_id = selectedCategoryId;
+
 			const { data, error } = await api.upload<{ success: boolean; data: Document }>(
 				`/api/v1/subjects/${subjectId}/documents`,
 				file,
-				{ type_id: selectedTypeId, category_id: selectedCategoryId }
+				additionalData
 			);
 
 			if (error) {
-				onError(`${file.name}: ${error}`);
+				onError(`${file.name}: ${error.message || error.error || 'Upload failed'}`);
 			} else if (data?.success && data.data) {
 				onSuccess(data.data);
 			}
