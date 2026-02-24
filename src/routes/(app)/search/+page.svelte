@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
 	import { _ } from 'svelte-i18n';
 	import { fade } from 'svelte/transition';
 	import { api } from '$lib/utils/api';
@@ -98,7 +97,7 @@
 		if (exactMatch) params.set('exact', 'true');
 
 		const url = params.toString() ? `/search?${params.toString()}` : '/search';
-		goto(url, { replaceState: true, noScroll: true });
+		history.replaceState(history.state, '', url);
 	}
 
 	function filterResults(): SearchResult[] {
