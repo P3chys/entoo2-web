@@ -89,7 +89,7 @@ export interface Document {
 	original_name: string;
 	file_size: number;
 	mime_type: string;
-	minio_path: string;
+	file_path: string;
 	content_text?: string;
 	created_at: string;
 	subject?: Subject;
